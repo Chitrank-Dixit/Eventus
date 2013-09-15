@@ -67,4 +67,18 @@ Information about the winning developers and Apps will be posted to this website
 
 Downloads
 ===========
-- Google Datastore for local testing : https://developers.google.com/datastore/docs/downloads
+
+Google Datastore for local testing :
+------------------------------------
+- https://developers.google.com/datastore/docs/downloads (install 'googledatastore' python package as well to interact with Google Cloud Datastore
+
+ 
+
+
+Google + Sign Feature Help Links:
+------------------------------------
+- https://developers.google.com/+/
+- https://developers.google.com/+/quickstart/python (follow simple steps)
+- https://developers.google.com/api-client-library/python/start/installation (client API that interacts with main server of G+)
+- https://pypi.python.org/pypi/Flask-KVSession (cookie based session management in Flask)
+- 

@@ -38,6 +38,7 @@
     })();
 	</script>
 	<!-- END Pre-requisites -->
+	
   </head>
 
   <body>
@@ -74,15 +75,16 @@
           <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="">Default</a></li>
             <li><a href="">Static top</a></li>
-            <li><div id="signinButton">
+            <li href="/login/"><div id="signinButton" style="padding-top: 9px;">
 				<span 
 				data-scope="https://www.googleapis.com/auth/plus.login"
 				class="g-signin"
-				data-clientid="YOUR_CLIENT_ID"
+				data-clientid="1075048200759-5hunu03e087bha87d48874veh1rvr97f.apps.googleusercontent.com"
 				data-redirecturi="postmessage"
 				data-accesstype="offline"
 				data-cookiepolicy="single_host_origin"
-				data-callback="signInCallback">
+				data-callback="signInCallback"
+				data-width= "wide">
 				</span>
 			</div><div id="result"></div></li>
           </ul>
