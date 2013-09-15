@@ -63,3 +63,8 @@ Information about the winning developers and Apps will be posted to this website
 
 - Semi-Final Round: December 5th
 - Winners: January 28th
+
+
+Downloads
+===========
+- Google Datastore for local testing : https://developers.google.com/datastore/docs/downloads
