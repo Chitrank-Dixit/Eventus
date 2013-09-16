@@ -32,6 +32,8 @@ class Login(flask.views.MethodView):
         # serving it.
         response = make_response(
         render_template('index.html',CLIENT_ID='1075048200759-5hunu03e087bha87d48874veh1rvr97f.apps.googleusercontent.com', STATE=state, APPLICATION_NAME='uscore_signin'))
+        response.headers['Content-Type']='text/html'
+        return response
 
 app.add_url_rule('/',view_func=View.as_view('main'),methods=['GET','POST'])
 app.add_url_rule('/login/',view_func=Login.as_view('login_user'),methods= ['GET','POST'])
