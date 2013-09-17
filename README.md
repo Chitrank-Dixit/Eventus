@@ -90,6 +90,14 @@ Flask Good practices
 - http://www.realpython.com/blog/python/testing-in-django-part-2-model-mommy-vs-django-testing-fixtures/#.UjdCvlEW0T8
 - http://www.realpython.com/blog/python/python-web-applications-with-flask-part-ii-app-creation/#.UjdCtlEW0T8
 
+Using Google App Engine from virtualenv
+---------------------------------------
+- http://www.anler.me/blog/2012/jun/google-app-engine-in-virtualenv/
+- http://monocaffe.blogspot.in/2013/04/python-virtualenv-for-google-app-engine.html
+  or use this simple command each time (I prefer this fed up of making symbolic links and path creations so currently I am using this)
+<pre class="console">
+  export PATH=$PATH:/home/chitrank/google_appengine/
+</pre>
 
 _______________________________________________________________________________________
 
