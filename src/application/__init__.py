@@ -4,31 +4,31 @@ Initialize Flask app
 """
 from flask import Flask
 
-#from flask_debugtoolbar import DebugToolbarExtension
-#from gae_mini_profiler import profiler, templatetags
-#from werkzeug.debug import DebuggedApplication
+from flask_debugtoolbar import DebugToolbarExtension
+from gae_mini_profiler import profiler, templatetags
+from werkzeug.debug import DebuggedApplication
 
 
 app = Flask('application')
 app.config.from_object('application.settings')
 
 # Enable jinja2 loop controls extension
-# app.jinja_env.add_extension('jinja2.ext.loopcontrols')
+app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
 
-#@app.context_processor
-#def inject_profiler():
-#    return dict(profiler_includes=templatetags.profiler_includes())
+@app.context_processor
+def inject_profiler():
+    return dict(profiler_includes=templatetags.profiler_includes())
 
 # Pull in URL dispatch routes
-# import urls
+import urls
 
 # Flask-DebugToolbar (only enabled when DEBUG=True)
-# toolbar = DebugToolbarExtension(app)
+toolbar = DebugToolbarExtension(app)
 
 # Werkzeug Debugger (only enabled when DEBUG=True)
-#if app.debug:
-#    app.wsgi_app = DebuggedApplication(app.wsgi_app, evalex=True)
+if app.debug:
+    app.wsgi_app = DebuggedApplication(app.wsgi_app, evalex=True)
 
 # GAE Mini Profiler (only enabled on dev server)
-# app.wsgi_app = profiler.ProfilerWSGIMiddleware(app.wsgi_app)
+app.wsgi_app = profiler.ProfilerWSGIMiddleware(app.wsgi_app)

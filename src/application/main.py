@@ -1,8 +1,8 @@
 # flask minimal application
 import flask, flask.views
- #from flask import Flask, render_template
-#import flask.request
-#from flask.views import MethodView
+# from flask import Flask, render_template
+# import flask.request
+# from flask.views import MethodView
 import os
 app = flask.Flask(__name__)
 

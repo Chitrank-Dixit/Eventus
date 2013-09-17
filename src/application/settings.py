@@ -10,7 +10,7 @@ Important: Place your keys in the secret_keys.py module,
 
 import os
 
-# from secret_keys import CSRF_SECRET_KEY, SESSION_KEY
+from secret_keys import CSRF_SECRET_KEY, SESSION_KEY
 
 
 DEBUG_MODE = False
@@ -22,8 +22,8 @@ if 'SERVER_SOFTWARE' in os.environ and os.environ['SERVER_SOFTWARE'].startswith(
 DEBUG = DEBUG_MODE
 
 # Set secret keys for CSRF protection
-# SECRET_KEY = CSRF_SECRET_KEY
-# CSRF_SESSION_KEY = SESSION_KEY
+SECRET_KEY = CSRF_SECRET_KEY
+CSRF_SESSION_KEY = SESSION_KEY
 
 CSRF_ENABLED = True
 
