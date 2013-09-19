@@ -89,6 +89,8 @@ Flask Good practices
 -------------------------
 - http://www.realpython.com/blog/python/testing-in-django-part-2-model-mommy-vs-django-testing-fixtures/#.UjdCvlEW0T8
 - http://www.realpython.com/blog/python/python-web-applications-with-flask-part-ii-app-creation/#.UjdCtlEW0T8
+- Using Class based views: http://flask.pocoo.org/docs/views/
+- We are using a better structured project here as per the Flask Good Practices says
 
 Using Google App Engine from virtualenv
 ---------------------------------------
@@ -99,6 +101,12 @@ Using Google App Engine from virtualenv
   export PATH=$PATH:/home/chitrank/google_appengine/
 </pre>
 
+
+Google Cloud Datastore (NoSQL DB made for scalability)
+--------------------------------------------------------
+- https://developers.google.com/datastore/docs/getstarted/
+- https://developers.google.com/appengine/docs/python/datastore/
+- https://developers.google.com/appengine/docs/python/datastore/queryclass
 _______________________________________________________________________________________
 
 

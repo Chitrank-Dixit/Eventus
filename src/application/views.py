@@ -12,7 +12,7 @@ from google.appengine.api import users
 from google.appengine.runtime.apiproxy_errors import CapabilityDisabledError
 
 from flask import request, render_template, flash, url_for, redirect
-
+import flask,flask.views
 from flask_cache import Cache
 
 from application import app
@@ -23,7 +23,6 @@ from models import ExampleModel
 
 # Flask-Cache (configured to use App Engine Memcache API)
 cache = Cache(app)
-
 
 def home():
     return redirect(url_for('list_examples'))
@@ -103,3 +102,30 @@ def warmup():
     """
     return ''
 
+
+class View(flask.views.MethodView):
+    def get(self):
+        return flask.render_template('index.html')
+
+    def post(self):
+        result = eval(flask.request.form['expression'])
+        flask.flash(result)
+        return self.get()
+        
+        
+class Login(flask.views.MethodView):
+    def get(self):
+        return None
+
+    def post(self):
+        # Create a state token to prevent request forgery.
+        # Store it in the session for later validation.
+        state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                  for x in xrange(32))
+        session['state'] = state
+        # Set the Client ID, Token State, and Application Name in the HTML while
+        # serving it.
+        response = make_response(
+        render_template('index.html',CLIENT_ID='1075048200759-5hunu03e087bha87d48874veh1rvr97f.apps.googleusercontent.com', STATE=state, APPLICATION_NAME='uscore_signin'))
+        response.headers['Content-Type']='text/html'
+        return response
