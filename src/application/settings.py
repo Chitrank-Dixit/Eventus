@@ -34,3 +34,10 @@ DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 # Flask-Cache settings
 CACHE_TYPE = 'gaememcached'
+
+# google settings file
+GOOGLE_API_CLIENT_ID = '1075048200759-5hunu03e087bha87d48874veh1rvr97f.apps.googleusercontent.com'
+GOOGLE_API_CLIENT_SECRET = 'SFxHRvAvD_w9JzfUhI8EiJrS'
+GOOGLE_API_SCOPE = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
+GOOGLE_OAUTH2_URL = 'https://accounts.google.com/o/oauth2/'
+GOOGLE_API_URL = 'https://www.googleapis.com/oauth2/v1/'

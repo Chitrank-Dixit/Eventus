@@ -5,7 +5,7 @@ URL dispatch route mappings and error handlers
 
 """
 from flask import render_template
-from views import View, Login
+from views import View # , Login
 from application import app
 from application import views
 
@@ -13,7 +13,7 @@ from application import views
 ## URL dispatch rules
 # App Engine warm up handler
 # See http://code.google.com/appengine/docs/python/config/appconfig.html#Warming_Requests
-app.add_url_rule('/_ah/warmup', 'warmup', view_func=views.warmup)
+# app.add_url_rule('/_ah/warmup', 'warmup', view_func=views.warmup)
 
 # Home page
 # app.add_url_rule('/','home',view_func=views.home)
@@ -39,8 +39,19 @@ app.add_url_rule('/_ah/warmup', 'warmup', view_func=views.warmup)
 # This is the homepage of my custom site
 app.add_url_rule('/',view_func=views.View.as_view('main'),methods=['GET','POST'])
 
+# This is login user url
+# app.add_url_rule('/login/',view_func=views.Login.as_view('login_user'),methods= ['GET','POST'])
 # This is the login user button of my custom site
-app.add_url_rule('/login/',view_func=views.Login.as_view('login_user'),methods= ['GET','POST'])
+# app.add_url_rule('/login/',view_func=views.Login.as_view('login_user'),methods= ['GET','POST'])
+
+# sign up for the users
+#app.add_url_rule('/signup/',view_func=views.View.as_view('signup_user').methods=['GET','POST'])
+
+# Sign in for the users
+#app.add_url_rule('/signin/',view_func=views.View.as_view('signin_user').methods=['GET','POST'])
+
+# Sign out the users
+#app.add_url_rule('/signout/',view_func=views.View.as_view('signout_user').methods=['GET','POST'])
 
 ## Error handlers
 # Handle 404 errors

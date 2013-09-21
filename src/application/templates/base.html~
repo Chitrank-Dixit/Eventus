@@ -33,7 +33,7 @@
         </div>
     </div><!-- /container -->
     <div id="footer" class="container">
-        {% include 'addables/footer.html' %}
+            {% block footer %}Ankit Kulkarni and Chitrank Dixit{% endblock %}
     </div><!-- /footer -->
     
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/{{ jquery_version }}/jquery.min.js"></script> -->

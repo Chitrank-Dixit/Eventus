@@ -24,3 +24,16 @@ ExampleForm = model_form(ExampleModel, wtf.Form, field_args={
     'example_name': dict(validators=[validators.Required()]),
     'example_description': dict(validators=[validators.Required()]),
 })
+
+class ClassicSignupForm(wtf.Form):
+    user_name = wtf.TextField('username', validators=[validators.Required()])
+    e_mail= wtf.TextField('email', validators=[validators.Required()])
+    password = wtf.TextField('password', validators=[validators.Required()])
+    
+#App Engine ndb model form example
+SignupForm = model_form(ExampleModel, wtf.Form, field_args={
+    'username': dict(validators=[validators.Required()]),
+    'email': dict(validators=[validators.Required()]),
+    'password': dict(validators=[validators.Required()])
+})
+    

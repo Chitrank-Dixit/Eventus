@@ -83,6 +83,9 @@ Google + Sign Feature Help Links:
 - http://stackoverflow.com/questions/3858772/how-to-use-virtualenv-with-google-app-engine-sdk-on-mac-os-x-10-6
 - http://stackoverflow.com/questions/16505094/python-virtualenv-module-not-being-imported
 - http://stackoverflow.com/questions/9499286/using-google-oauth2-with-flask
+- http://stackoverflow.com/questions/11751972/new-to-flask-and-flask-login-importerror-no-module-named-login (one of the prominent one)
+- https://flask-login.readthedocs.org/en/latest/ (Flask-Login)
+- This is one of the best app I have seen with all socio integration using flask (https://bitbucket.org/chitrank_dixit/gae-init).
 
 
 Flask Good practices
@@ -91,6 +94,7 @@ Flask Good practices
 - http://www.realpython.com/blog/python/python-web-applications-with-flask-part-ii-app-creation/#.UjdCtlEW0T8
 - Using Class based views: http://flask.pocoo.org/docs/views/
 - We are using a better structured project here as per the Flask Good Practices says
+- Best tutorial for all the stuff (http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 
 Using Google App Engine from virtualenv
 ---------------------------------------
@@ -107,6 +111,13 @@ Google Cloud Datastore (NoSQL DB made for scalability)
 - https://developers.google.com/datastore/docs/getstarted/
 - https://developers.google.com/appengine/docs/python/datastore/
 - https://developers.google.com/appengine/docs/python/datastore/queryclass
+_______________________________________________________________________________________
+
+
+HTML5 References
+=========================
+- Character references:http://dev.w3.org/html5/html-author/charref
+
 _______________________________________________________________________________________
 
 
