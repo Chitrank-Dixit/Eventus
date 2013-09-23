@@ -4,12 +4,42 @@ decorators.py
 Decorators for URL handlers
 
 """
-
-from functools import wraps
+from google.appengine.ext import ndb
 from google.appengine.api import users
-from flask import redirect, request, abort
+
+import functools
+
+import flask
+import util
 
 
+def login_required(f):
+  @functools.wraps(f)
+  def decorated_function(*args, **kws):
+    if is_logged_in():
+      return f(*args, **kws)
+    if flask.request.path.startswith('/_s/'):
+      return flask.abort(401)
+    return flask.redirect(flask.url_for('signin', next=flask.request.url))
+  return decorated_function
+
+
+def admin_required(f):
+  @functools.wraps(f)
+  def decorated_function(*args, **kws):
+    if is_logged_in() and current_user_db().admin:
+      return f(*args, **kws)
+    if not is_logged_in() and flask.request.path.startswith('/_s/'):
+      return flask.abort(401)
+    if not is_logged_in():
+      return flask.redirect(flask.url_for('signin', next=flask.request.url))
+    return flask.abort(403)
+  return decorated_function
+
+
+
+
+'''
 def login_required(func):
     """Requires standard login credentials"""
     @wraps(func)
@@ -30,3 +60,4 @@ def admin_required(func):
             return func(*args, **kwargs)
         return redirect(users.create_login_url(request.url))
     return decorated_view
+'''

@@ -7,106 +7,87 @@ App Engine datastore models
 
 
 from google.appengine.ext import ndb
+from google.appengine.api import users
+
+import functools
+
+import flask
+from flaskext import login
+from flaskext import oauth
+
+import util
+import model
+import config
+
+from application import app
 
 # from application.metadata import Session, Base
 
 
-class SignupUser(ndb.Model):
-    """Signup model"""
-    username = ndb.StringProperty(required=True)
-    email = ndb.StringProperty(required=True)
-    password = ndb.StringProperty(required=True)
+################################################################################
+# Flaskext Login
+################################################################################
+login_manager = login.LoginManager()
 
-class SigninUser(ndb.Model):
-    __tablename__ = 'uscore_users'
 
-    user_id = ndb.IntegerProperty(required=True)
-    email = ndb.StringProperty(required=True)
-    username = ndb.StringProperty(required=True)
+class AnonymousUser(login.AnonymousUserMixin):
+  id = 0
+  admin = False
+  name = 'Anonymous'
+  user_db = None
 
-    def __init__(self, email, username):
-        self.email = email
-        self.username = username
+  def key(self):
+    return None
 
-    def __repr__(self):
-        return "<User('%d', '%s', '%s')>" \
-                % (self.user_id, self.username, self.email)
+login_manager.anonymous_user = AnonymousUser
 
-    @classmethod
-    def get_or_create(cls, data):
-        '''
-        data contains:
-            {u'family_name': u'Surname',
-            u'name': u'Name Surname',
-            u'picture': u'https://link.to.photo',
-            u'locale': u'en',
-            u'gender': u'male',
-            u'email': u'propper@email.com',
-            u'birthday': u'0000-08-17',
-            u'link': u'https://plus.google.com/id',
-            u'given_name': u'Name',
-            u'id': u'Google ID',
-            u'verified_email': True}
-        '''
-        try:
-            #.one() ensures that there would be just one user with that email.
-            # Although database should prevent that from happening -
-            # lets make it buletproof
-            user = Session.query(cls).filter_by(email=data['email']).one()
-        except NoResultFound:
-            user = cls(
-                    email=data['email'],
-                    username=data['given_name'],
-                )
-            Session.add(user)
-            Session.commit()
-        return user
 
-    def is_active(self):
-        return True
+class FlaskUser(AnonymousUser):
+  def __init__(self, user_db):
+    self.user_db = user_db
+    self.id = user_db.key.id()
+    self.name = user_db.name
+    self.admin = user_db.admin
 
-    def is_authenticated(self):
-        """
-        Returns `True`. User is always authenticated. Herp Derp.
-        """
-        return True
+  def key(self):
+    return self.user_db.key.urlsafe()
 
-    def is_anonymous(self):
-        """
-        Returns `False`. There are no Anonymous here.
-        """
-        return False
+  def get_id(self):
+    return self.user_db.key.urlsafe()
 
-    def get_id(self):
-        """
-        Assuming that the user object has an `id` attribute, this will take
-        that and convert it to `unicode`.
-        """
-        try:
-            return unicode(self.user_id)
-        except AttributeError:
-            raise NotImplementedError("No `id` attribute - override get_id")
+  def is_authenticated(self):
+    return True
 
-    def __eq__(self, other):
-        """
-        Checks the equality of two `UserMixin` objects using `get_id`.
-        """
-        if isinstance(other, UserMixin):
-            return self.get_id() == other.get_id()
-        return NotImplemented
+  def is_active(self):
+    return self.user_db.active
 
-    def __ne__(self, other):
-        """
-        Checks the inequality of two `UserMixin` objects using `get_id`.
-        """
-        equal = self.__eq__(other)
-        if equal is NotImplemented:
-            return NotImplemented
-        return not equal    
+  def is_anonymous(self):
+    return False
 
-class ExampleModel(ndb.Model):
-    """Example Model"""
-    example_name = ndb.StringProperty(required=True)
-    example_description = ndb.TextProperty(required=True)
-    added_by = ndb.UserProperty()
-    timestamp = ndb.DateTimeProperty(auto_now_add=True)
+
+@login_manager.user_loader
+def load_user(key):
+  user_db = ndb.Key(urlsafe=key).get()
+  if user_db:
+    return FlaskUser(user_db)
+  return None
+
+
+login_manager.init_app(app)
+
+
+def current_user_id():
+  return login.current_user.id
+
+
+def current_user_key():
+  return login.current_user.user_db.key if login.current_user.user_db else None
+
+
+def current_user_db():
+  return login.current_user.user_db
+
+
+def is_logged_in():
+  return login.current_user.id != 0
+

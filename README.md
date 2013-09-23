@@ -118,6 +118,11 @@ HTML5 References
 =========================
 - Character references:http://dev.w3.org/html5/html-author/charref
 
+Font Awesome (Icon package for bootstrap)
+
+Less 
+
+
 _______________________________________________________________________________________
 
 
