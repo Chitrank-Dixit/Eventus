@@ -17,7 +17,7 @@ from flask import request, render_template, flash, url_for, redirect
 import flask,flask.views
 from flask_cache import Cache
 
-from application import app
+from application import app #, googlelogin
 from decorators import login_required, admin_required
 #from forms import ExampleForm
 from models import *
@@ -120,12 +120,17 @@ def warmup():
 '''
 
 
-class Index(flask.views.MethodView):
-    def get(self):
-        # check if the user is logged in or not
-        #if not current_user.is_authenticated():
-        #    return app.login_manager.unauthorized()
-        return flask.render_template('index.html')
+@app.route('/sample/')
+def not_working():
+	return "Sorry try again it is not working"
+
+
+
+@app.route('/')
+def index():
+	return flask.render_template('index.html')
+	
+	
 
 class Signin(flask.views.MethodView):
     def get(self):
@@ -140,7 +145,7 @@ class Signup(flask.views.MethodView):
     def get(self):
         return flask.render_template('signup.html')
     
-	
+
 
 
 class Signin_action(flask.views.MethodView):
@@ -176,11 +181,54 @@ class Signout(flask.views.MethodView):
         login.logout_user()
         flask.flash(u'You have been signed out.')
         return flask.render_template('index.html')
-
-
         
         
+        
+'''
+################################################################################
+# Google + Signin
+################################################################################
 
+#@googlelogin.user_loader
+#def get_user(userid):
+#    return users.get(userid)
+
+
+@app.route('/signin/google_oauth/')
+def googleplus():
+    logurlplus=googlelogin.login_url(
+            approval_prompt='force',
+            scopes=['https://www.googleapis.com/auth/drive'],
+            access_type='offline')
+    return flask.redirect(logurlplus)
+    
+
+@app.route('/profile')
+@login_required
+def save_to_db():
+    user_db = retrieve_user_from_google(google_user)
+    return signin_user_db(user_db)
+    return """
+        <p>Hello, %s</p>
+        <p><img src="%s" width="100" height="100"></p>
+        <p>Token: %r</p>
+        <p>Extra: %r</p>
+        <p><a href="/logout">Logout</a></p>
+        """ % (current_user.name, current_user.picture, session.get('token'),
+               session.get('extra'))
+
+
+@app.route('/oauth2callback')
+@googlelogin.oauth2callback
+def login(token, userinfo, **params):
+    user = users[userinfo['id']] = User(userinfo)
+    login_user(user)
+    session['token'] = json.dumps(token)
+    session['extra'] = params.get('extra')
+    return redirect(params.get('next', url_for('.profile')))
+        
+        
+'''
 ################################################################################
 # Google Signin
 ################################################################################

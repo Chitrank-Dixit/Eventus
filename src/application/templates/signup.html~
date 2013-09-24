@@ -1,16 +1,21 @@
 <title>Sign up | Uscore </title>
 {% extends "base.html" %}
+{% block style_block %}
+	<link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
+{% endblock %}
 {% block content %}
 	<div class="container theme-showcase">
 	<div class="row">
 	
 		
-			<center>Sign Up Uscore</center>
+			<h3><center>Sign Up Uscore</center></h3><br><br>
 		<div class="col-sm-6">
   			<form name="signin" class="navbar-form form-inline" action="/signin/" method="post" >
   				<input type="text" name="username" value="" placeholder="your username" class="form-control" /><br><br>
+  				<input type="text" name="email" value="" placeholder="your email" class="form-control" /><br><br>
   				<input type="text" name="password" value="" placeholder="your password" class="form-control" /><br><br><br>
-  				<input type="checkbox" name="remember" value="" class="form-control" style="width: 15px;"/> Remember me
+  				<input type="checkbox" name="remember" value="" class="form-control" style="width: 15px; height: 12px;"/> Remember me
   				<a href="" class="pull-right">forgot password</a><br><br><br>
   				<input type="submit" name="signin_submit" value"Sign In" class="btn btn-success" />
   				Already a Member<a href="" > Sign in </a>
@@ -20,18 +25,19 @@
     			
   			
 		</div>
-		<div class="col-sm-6">
-			<center>Or Sign in using</center>
-			<a class="btn btn-block btn-lg btn-google" href="{{google_signin_url}}">
+		<div class="col-sm-1">
+		</div>
+		<div class="col-sm-5">
+			<a class="btn btn-block btn-lg btn-google-plus" href="{{google_signin_url}}">
         		<i class="icon icon-google-plus"></i>
         			Sign in with Google
       	</a>	
-			<a class="btn btn-block btn-lg btn-google" href="{{facebook_signin_url}}">
-        		<i class="icon icon-google-plus"></i>
+			<a class="btn btn-block btn-lg btn-facebook" href="{{facebook_signin_url}}">
+        		<i class="icon icon-facebook"></i>
         			Sign in with Facebook
       	</a>	
-      	<a class="btn btn-block btn-lg btn-google" href="{{twitter_signin_url}}">
-        		<i class="icon icon-google-plus"></i>
+      	<a class="btn btn-block btn-lg btn-twitter" href="{{twitter_signin_url}}">
+        		<i class="icon icon-twitter"></i>
         			Sign in with Twitter
       	</a>	
 		

@@ -122,6 +122,20 @@ Font Awesome (Icon package for bootstrap)
 
 Less 
 
+Angular Js (for straight forward models and dynamic update)
+- http://angularjs.org/#
+
+
+Tech Stack
+--------------------
+- Python Flask
+- Google APIs
+- Bootstrap 2
+- Angular.js
+- Google App Engine
+- Google Cloud Datastore (NoSQL DB)
+- Font Awesome, bootstrap-social-buttons
+
 
 _______________________________________________________________________________________
 

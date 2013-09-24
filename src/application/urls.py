@@ -5,7 +5,7 @@ URL dispatch route mappings and error handlers
 
 """
 from flask import render_template
-from views import Index  , Signin , Signout
+from views import  Signin , Signout
 from application import app
 from application import views
 
@@ -37,7 +37,7 @@ from application import views
 #app.add_url_rule('/examples/<int:example_id>/delete', view_func=views.delete_example, methods=['POST'])
 
 # This is the homepage of my custom site
-app.add_url_rule('/',view_func=views.Index.as_view('main'),methods=['GET','POST'])
+# app.add_url_rule('/',view_func=views.Index.as_view('main'),methods=['GET','POST'])
 
 # Sign in view or Social Login
 app.add_url_rule('/signin/',view_func=views.Signin.as_view('signin_page'),methods=['GET','POST'])
