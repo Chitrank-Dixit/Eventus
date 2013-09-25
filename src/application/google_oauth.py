@@ -65,13 +65,14 @@ def profile():
 @app.route('/oauth2callback')
 @googlelogin.oauth2callback
 def login(token, userinfo, **params):
+    
     user = users[userinfo['id']] = User(userinfo)
     login_user(user)
     session['token'] = json.dumps(token)
     session['extra'] = params.get('extra')
-    return redirect(params.get('next', url_for('.profile')))
-
-
+    return redirect(params.get('next', url_for('profile')))
+    #return redirect(url_for('profile'))
+    
 @app.route('/logout')
 def logout():
     logout_user()

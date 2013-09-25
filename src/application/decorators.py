@@ -8,11 +8,11 @@ from google.appengine.ext import ndb
 from google.appengine.api import users
 
 import functools
-
+from functools import wraps
 import flask
 import util
 
-
+'''
 def login_required(f):
   @functools.wraps(f)
   def decorated_function(*args, **kws):
@@ -60,4 +60,3 @@ def admin_required(func):
             return func(*args, **kwargs)
         return redirect(users.create_login_url(request.url))
     return decorated_view
-'''

@@ -29,7 +29,11 @@ class Config(Base, modelx.ConfigX):
   announcement_type = ndb.StringProperty(default='info', choices=[
       'info', 'warning', 'success', 'danger',
     ])
-  brand_name = ndb.StringProperty(default='gae-init')
+  brand_name = ndb.StringProperty(default='uscore-testing')
+  linkedin_app_id=ndb.StringProperty(default='')
+  linkedin_app_secret=ndb.StringProperty(default='')
+  googleplus_app_id=ndb.StringProperty(default='')
+  googleplus_app_secret=ndb.StringProperty(default='')
   facebook_app_id = ndb.StringProperty(default='')
   facebook_app_secret = ndb.StringProperty(default='')
   feedback_email = ndb.StringProperty(default='')
@@ -42,6 +46,8 @@ class Config(Base, modelx.ConfigX):
       'announcement_html',
       'announcement_type',
       'brand_name',
+      'googleplus_app_id',
+      'googleplus_app_secret',
       'facebook_app_id',
       'facebook_app_secret',
       'feedback_email',
@@ -58,9 +64,14 @@ class User(Base, modelx.UserX):
 
   active = ndb.BooleanProperty(default=True)
   admin = ndb.BooleanProperty(default=False)
+  creator = ndb.BooleanProperty(default=False)
+  manager= ndb.BooleanProperty(default=False)
+  end_client = ndb.BooleanProperty(default=False)
 
   federated_id = ndb.StringProperty(indexed=True, default='')
   facebook_id = ndb.StringProperty(indexed=True, default='')
+  googleplus_id = ndb.StringProperty(indexed=True, default='')
+  linkedin_id = ndb.StringProperty(indexed=True, default='')
   twitter_id = ndb.StringProperty(indexed=True, default='')
 
   _PROPERTIES = Base._PROPERTIES.union(set([

@@ -17,7 +17,7 @@ from flask import request, render_template, flash, url_for, redirect
 import flask,flask.views
 from flask_cache import Cache
 
-from application import app #, googlelogin
+from application import app  # , googlelogin
 from decorators import login_required, admin_required
 #from forms import ExampleForm
 from models import *
@@ -189,9 +189,9 @@ class Signout(flask.views.MethodView):
 # Google + Signin
 ################################################################################
 
-#@googlelogin.user_loader
-#def get_user(userid):
-#    return users.get(userid)
+@googlelogin.user_loader
+def get_user(userid):
+    return users.get(userid)
 
 
 @app.route('/signin/google_oauth/')
@@ -203,22 +203,20 @@ def googleplus():
     return flask.redirect(logurlplus)
     
 
-@app.route('/profile')
+@app.route('/registered/')
 @login_required
 def save_to_db():
+    google_user = users.get_current_user()
+    if google_user is None:
+        flask.flash(u'You denied the request to sign in.')
+    return flask.redirect(util.get_next_url())
     user_db = retrieve_user_from_google(google_user)
-    return signin_user_db(user_db)
-    return """
-        <p>Hello, %s</p>
-        <p><img src="%s" width="100" height="100"></p>
-        <p>Token: %r</p>
-        <p>Extra: %r</p>
-        <p><a href="/logout">Logout</a></p>
-        """ % (current_user.name, current_user.picture, session.get('token'),
-               session.get('extra'))
+    signin_user_db(user_db)
+    return flask.render_template('index.html')
+    
 
 
-@app.route('/oauth2callback')
+@app.route('/oauth2callback/')
 @googlelogin.oauth2callback
 def login(token, userinfo, **params):
     user = users[userinfo['id']] = User(userinfo)
@@ -418,7 +416,7 @@ def signin_user_db(user_db):
     flask.flash('Hello %s, welcome to %s!!!' % (
         user_db.name, config.CONFIG_DB.brand_name,
       ), category='success')
-    return flask.redirect(util.get_next_url())
+    return flask.redirect(flask.url_for('index'))
   else:
     flask.flash('Sorry, but you could not sign in.', category='danger')
     return flask.redirect(flask.url_for('signin'))                

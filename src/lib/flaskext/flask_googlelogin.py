@@ -189,7 +189,10 @@ class GoogleLogin(object):
             code = request.args.get('code')
 
             # Web server flow
+            
             if code:
+		# token = self.exchange_code(code, request.url)
+                
                 token = self.exchange_code(
                     code,
                     url_for(
@@ -198,7 +201,9 @@ class GoogleLogin(object):
                         _scheme=self.redirect_scheme,
                     ),
                 )
-                userinfo = self.get_userinfo(token['access_token'])
+                
+                received = self.get_access_token(token['access_token'])
+                userinfo = self.get_userinfo(received)
                 params.update(token=token, userinfo=userinfo)
 
             # Browser flow
