@@ -12,7 +12,7 @@ For example the *say_hello* handler, handling the URL route '/hello/<username>',
 from google.appengine.runtime.apiproxy_errors import CapabilityDisabledError
 import logging
 
-from flask import request, render_template, flash, url_for, redirect
+from flask import request, render_template, flash, url_for, redirect, sessions
 # from flask.ext import 
 import flask,flask.views
 from flask_cache import Cache
@@ -278,8 +278,8 @@ twitter = twitter_oauth.remote_app(
     request_token_url='https://api.twitter.com/oauth/request_token',
     access_token_url='https://api.twitter.com/oauth/access_token',
     authorize_url='https://api.twitter.com/oauth/authorize',
-    consumer_key=config.CONFIG_DB.twitter_consumer_key,
-    consumer_secret=config.CONFIG_DB.twitter_consumer_secret,
+    consumer_key='LTjPJGBUqaFXaqW7tj0gpQ',
+    consumer_secret='baTEyBGq07hKGQiXAQSSe76VYBQI92P2k8Cl5ZkDgQ',
   )
 
 
@@ -342,8 +342,8 @@ facebook = facebook_oauth.remote_app(
     request_token_url=None,
     access_token_url='/oauth/access_token',
     authorize_url='https://www.facebook.com/dialog/oauth',
-    consumer_key=config.CONFIG_DB.facebook_app_id,
-    consumer_secret=config.CONFIG_DB.facebook_app_secret,
+    consumer_key='165055130361980',
+    consumer_secret='3d18b99751acc6cfd7b0277aa1b308a8',
     request_token_params={'scope': 'email'},
   )
 
