@@ -9,6 +9,7 @@ from gae_mini_profiler import profiler, templatetags
 from werkzeug.debug import DebuggedApplication
 #from flaskext.flask_googlelogin import GoogleLogin
 
+
 app = Flask('application')
 app.config.from_object('application.settings')
 app.config.update(
@@ -17,7 +18,8 @@ app.config.update(
     GOOGLE_LOGIN_CLIENT_SECRET='SFxHRvAvD_w9JzfUhI8EiJrS',
     GOOGLE_LOGIN_REDIRECT_URI='http://localhost:8080/registered/')
     
-# googlelogin = GoogleLogin(app)
+
+                          
 
 # Enable jinja2 loop controls extension
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')

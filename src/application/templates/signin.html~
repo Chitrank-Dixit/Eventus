@@ -40,7 +40,7 @@
         		<i class="icon icon-facebook"></i>
         			Sign in with Facebook
       	</a>	
-      	<a class="btn btn-block btn-lg btn-twitter" href="{{twitter_signin_url}}">
+      	<a class="btn btn-block btn-lg btn-twitter" href="/signin/twitter/">
         		<i class="icon icon-twitter"></i>
         			Sign in with Twitter
       	</a>	

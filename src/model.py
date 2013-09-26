@@ -79,3 +79,19 @@ class User(Base, modelx.UserX):
       'username',
       'avatar_url',
     ]))
+
+class Event(Base,modelx.EventX):
+    name = ndb.StringProperty(indexed=True, required=True)
+    creator = ndb.StringProperty(indexed=True, required=True)
+    manager = ndb.StringProperty(indexed=True)
+    url = ndb.StringProperty(indexed=True, default='')
+    venue = ndb.StringProperty(indexed=True, required='')
+    googleplus_page = ndb.StringProperty(indexed=True, required='')
+    facebook_page = ndb.StringProperty(indexed=True, required='')
+    twitter_id = ndb.StringProperty(indexed=True, required='')
+    active = ndb.BooleanProperty(default=True)
+    public = ndb.BooleanProperty(default=True)
+    private= ndb.BooleanProperty(default=False)
+    
+
+    

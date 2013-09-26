@@ -111,6 +111,10 @@ Google Cloud Datastore (NoSQL DB made for scalability)
 - https://developers.google.com/datastore/docs/getstarted/
 - https://developers.google.com/appengine/docs/python/datastore/
 - https://developers.google.com/appengine/docs/python/datastore/queryclass
+
+Google Cloud
+--------------------------------------------------------
+- Access Google Cloud Datastore from here( https://cloud.google.com/console#/project/apps~uscore-test/datastore/query)
 _______________________________________________________________________________________
 
 
