@@ -466,7 +466,7 @@ def google_oauth_authorized(resp):
                          headers={'Authorization': 'OAuth ' + access_token})
       if r.ok:
           data = loads(r.text)
-          oauth_id = data['id']
+          #username = data['name']
           # googleuser = FlaskUser.add(**data)
   
   user_db = retrieve_user_from_google(data)
@@ -499,17 +499,24 @@ def retrieve_user_from_google(google_user):
       user_db.admin = True
       user_db.put()
     return user_db
-
+  
   return create_user_db(
       #google_user.nickname().split('@')[0].replace('.', ' ').title(),
-      google_user['email'],
+      google_user['email'].split('@')[0].replace('.', ' ').title(),
       google_user['email'],
       google_user['email'],
       federated_id=google_user['id'],
       admin=users.is_current_user_admin(),
     )
 
+'''
 
+Google Plus Data
+{u'family_name': u'Dixit', u'name': u'Chitrank Dixit',
+u'picture': u'https://lh4.googleusercontent.com/-HuXao5NNMpQ/AAAAAAAAAAI/AAAAAAAABCE/9EqQWN1g90s/photo.jpg', u'locale': u'en', u'gender': u'male', u'email': u'chitrankdixit@gmail.com', u'birthday': u'0000-02-18', u'link': u'https://plus.google.com/113942220708315173370',
+u'given_name': u'Chitrank', u'id': u'113942220708315173370', u'verified_email': True}
+
+'''
 
 
 ################################################################################
@@ -682,7 +689,8 @@ def retrieve_user_from_facebook(response):
 # Helpers
 ################################################################################
 def create_user_db(name, username, email='', **params):
-  username = username.split('@')[0]
+  if '@' in username:
+      username = username.split('@')[0]
   new_username = username
   n = 1
   while model.User.retrieve_one_by('username', new_username) is not None:

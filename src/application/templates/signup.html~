@@ -28,11 +28,15 @@
 		<div class="col-sm-1">
 		</div>
 		<div class="col-sm-5">
-			<a class="btn btn-block btn-lg btn-google-plus" href="{{google_signin_url}}">
+			<a class="btn btn-block btn-lg btn-google-plus" href="/signin/google/">
         		<i class="icon icon-google-plus"></i>
         			Sign in with Google
       	</a>	
-			<a class="btn btn-block btn-lg btn-facebook" href="{{facebook_signin_url}}">
+      	<a class="btn btn-block btn-lg btn-google-plus" href="/signin/googleoauth/">
+        		<i class="icon icon-google-plus"></i>
+        			Sign in with Google plus
+      	</a>	
+			<a class="btn btn-block btn-lg btn-facebook" href="/signin/facebook/">
         		<i class="icon icon-facebook"></i>
         			Sign in with Facebook
       	</a>	
