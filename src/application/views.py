@@ -24,10 +24,10 @@ from application import app
 from decorators import login_required, admin_required
 #from forms import ExampleForm
 from models import *
-
+import requests
 
 from google.appengine.api import users
-
+from json import dumps, loads
 
 import flask
 from flaskext import login
@@ -130,10 +130,6 @@ def warmup():
 '''
 
 
-@app.route('/sample/')
-def not_working():
-	return "Sorry try again it is not working"
-
 
 
 @app.route('/')
@@ -221,6 +217,7 @@ class Signout(flask.views.MethodView):
 ################################################################################
 # Google + Signin
 ################################################################################
+'''
 APPLICATION_NAME = 'Uscore_Authentication'
 
 # See the simplekv documentation for details
@@ -238,7 +235,7 @@ CLIENT_ID = json.loads(
 SERVICE = build('plus', 'v1')
 
 
-@app.route('/google_oauth/', methods=['GET'])
+@app.route('/signin/google_oauth/', methods=['GET'])
 def google_signin():
   """Initialize a session for the current user, and render index.html."""
   # Create a state token to prevent request forgery.
@@ -249,7 +246,7 @@ def google_signin():
   # Set the Client ID, Token State, and Application Name in the HTML while
   # serving it.
   response = make_response(
-      render_template('index.html',
+      render_template("index.html",
                       CLIENT_ID=CLIENT_ID,
                       STATE=state,
                       APPLICATION_NAME=APPLICATION_NAME))
@@ -366,6 +363,7 @@ def people():
     response = make_response(json.dumps('Failed to refresh access token.'), 500)
     response.headers['Content-Type'] = 'application/json'
     return response
+'''
 
 '''
 GOOGLE_CLIENT_ID = '1075048200759-5hunu03e087bha87d48874veh1rvr97f.apps.googleusercontent.com'
@@ -407,7 +405,7 @@ def google_signin():
             return redirect(url_for('login'))
         return res.read()
 
-    return res.read()
+    return res['email']
 
 
 @app.route('/login')
@@ -429,9 +427,96 @@ def authorized(resp):
 def get_access_token():
     return session.get('access_token')
 '''
+
+GOOGLE_CLIENT_ID = '284844940078.apps.googleusercontent.com'
+GOOGLE_CLIENT_SECRET = '1AXUm5M_1tYd13xNfn3MxDj6'
+REDIRECT_URI = 'http://localhost:8080/oauth-authorized/'  # one of the Redirect URIs from Google APIs console
+
+
+google_oauth = oauth.OAuth()
+
+
+google = google_oauth.remote_app('google',
+                          base_url='https://www.google.com/accounts/',
+                          authorize_url='https://accounts.google.com/o/oauth2/auth',
+                          request_token_url=None,
+                          request_token_params={'scope': 'https://www.googleapis.com/auth/userinfo.email',
+                                                'response_type': 'code'},
+                          access_token_url='https://accounts.google.com/o/oauth2/token',
+                          access_token_method='POST',
+                          access_token_params={'grant_type': 'authorization_code'},
+                          consumer_key=GOOGLE_CLIENT_ID,
+                          consumer_secret=GOOGLE_CLIENT_SECRET)
+
+@app.route('/oauth-authorized/')
+@google.authorized_handler
+def google_oauth_authorized(resp):
+  if resp is None:
+    flask.flash(u'You denied the request to sign in.')
+    return flask.redirect(util.get_next_url())
+
+  flask.session['access_token'] = (
+    resp['access_token']
+    #resp['client_secret']
+  )
+  access_token= resp['access_token']
+  session['access_token'] = access_token, ''
+  if access_token:
+      r = requests.get('https://www.googleapis.com/oauth2/v1/userinfo',
+                         headers={'Authorization': 'OAuth ' + access_token})
+      if r.ok:
+          data = loads(r.text)
+          oauth_id = data['id']
+          # googleuser = FlaskUser.add(**data)
+  
+  user_db = retrieve_user_from_google(data)
+  return signin_user_db(user_db)
+
+@app.route('/signin/googleoauth/')
+def signin_googleoauth():
+  '''  
+  flask.session.pop('access_token', None)
+  try:
+    return google.authorize(
+        callback=flask.url_for('google_oauth_authorized',
+        next=util.get_next_url()),
+      )
+  except:
+    flask.flash(
+        'Something went terribly wrong with Twitter sign in. Please try again.',
+        category='danger',
+      )
+    return flask.redirect(flask.url_for('signin', next=util.get_next_url()))
+  '''
+  session['next'] = request.args.get('next') or request.referrer or None
+  callback=url_for('google_oauth_authorized', _external=True)    
+  return google.authorize(callback=callback)
+  
+def retrieve_user_from_google(google_user):
+  user_db = model.User.retrieve_one_by('federated_id', google_user['id']) # google_user.user_id()
+  if user_db:
+    if not user_db.admin and users.is_current_user_admin():
+      user_db.admin = True
+      user_db.put()
+    return user_db
+
+  return create_user_db(
+      #google_user.nickname().split('@')[0].replace('.', ' ').title(),
+      google_user['email'],
+      google_user['email'],
+      google_user['email'],
+      federated_id=google_user['id'],
+      admin=users.is_current_user_admin(),
+    )
+
+
+
+
 ################################################################################
 # Google Signin
 ################################################################################
+
+
 @app.route('/signin/google/')
 def signin_google():
   google_url = users.create_login_url(
@@ -447,11 +532,11 @@ def google_authorized():
     flask.flash(u'You denied the request to sign in.')
     return flask.redirect(util.get_next_url())
 
-  user_db = retrieve_user_from_google(google_user)
+  user_db = retrieve_user_from_googleopen(google_user)
   return signin_user_db(user_db)
 
 
-def retrieve_user_from_google(google_user):
+def retrieve_user_from_googleopen(google_user):
   user_db = model.User.retrieve_one_by('federated_id', google_user.user_id())
   if user_db:
     if not user_db.admin and users.is_current_user_admin():
@@ -466,6 +551,10 @@ def retrieve_user_from_google(google_user):
       federated_id=google_user.user_id(),
       admin=users.is_current_user_admin(),
     )
+
+
+
+
 
 
 ################################################################################

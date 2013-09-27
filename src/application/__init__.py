@@ -18,7 +18,6 @@ app.config.update(
     GOOGLE_LOGIN_CLIENT_SECRET='SFxHRvAvD_w9JzfUhI8EiJrS',
     GOOGLE_LOGIN_REDIRECT_URI='http://localhost:8080/registered/')
     
-
                           
 
 # Enable jinja2 loop controls extension
