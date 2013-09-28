@@ -20,10 +20,12 @@ from flask import make_response, request, render_template, flash, url_for, redir
 import flask,flask.views
 from flask_cache import Cache
 
+#from models import FlaskUser
 from application import app  
 from decorators import login_required, admin_required
 #from forms import ExampleForm
 from models import *
+#from model import *
 import requests
 
 from google.appengine.api import users
@@ -37,7 +39,7 @@ from flaskext import oauth
 import util
 import model
 import config
-
+from forms import SignupForm
 # Google API python Oauth 2.0
 import httplib2
 from oauth2client.client import AccessTokenRefreshError
@@ -154,29 +156,30 @@ class Signup(flask.views.MethodView):
 
 
 
-class Signin_action(flask.views.MethodView):
+class Signup_action(flask.views.MethodView):
     def get(self):
         return None
     
     def post(self):
         error = None
+        form = SignupForm()
         next = request.args.get('next')
         if request.method == 'POST':
-            username = request.form['username']
-            password = request.form['password']
+            username=''
+            if form.validate_on_submit():
+                username = form.data.get('username')
+                email = form.data.get('email')
+                password = form.data.get('password')
+                print username,password
+                user_db = model.User(username=username,email=email.lower(),password=password,**params)
+                user_db.put()                                
+            flash(u'User %s successfully Registered Please check your mail for more details.' % username, 'success')
+            return redirect(url_for('index'))
+                        
+        return flask.render_template('signup.html',login=True, next=next, error=error)
 
-
-            if authenticate(app.config['AUTH_SERVER'], username, password):
-                user = User.query.filter_by(username=username).first()
-                if user:
-                    if login_user(DbUser(user)):
-                        # do stuff
-                        flash("You have logged in")
-                        return redirect(next or url_for('index', error=error))
-            error = "Login failed"
-        return flask.render_template('index.html',login=True, next=next, error=error)
-        
-class Signup_action(flask.views.MethodView):
+'''        
+class Signin_action(flask.views.MethodView):
     def get(self):
         return None
     
@@ -198,7 +201,7 @@ class Signup_action(flask.views.MethodView):
                         return redirect(next or url_for('index', error=error))
             error = "Login failed"
         return flask.render_template('index.html',login=True, next=next, error=error)
-
+'''
 
 class Signout(flask.views.MethodView):
     def get(self):
@@ -435,12 +438,15 @@ REDIRECT_URI = 'http://localhost:8080/oauth-authorized/'  # one of the Redirect 
 
 google_oauth = oauth.OAuth()
 
-
+# resources can be demanded using request_token_params['scope'] ='https://www.googleapis.com/auth/userinfo.email' or
+# 'https://www.googleapis.com/auth/userinfo.profile' and many more
 google = google_oauth.remote_app('google',
                           base_url='https://www.google.com/accounts/',
                           authorize_url='https://accounts.google.com/o/oauth2/auth',
                           request_token_url=None,
-                          request_token_params={'scope': 'https://www.googleapis.com/auth/userinfo.email',
+                          request_token_params={'scope': 'https://www.googleapis.com/auth/userinfo.email \
+                          https://www.googleapis.com/auth/userinfo.profile', 
+                                                
                                                 'response_type': 'code'},
                           access_token_url='https://accounts.google.com/o/oauth2/token',
                           access_token_method='POST',
@@ -493,7 +499,7 @@ def signin_googleoauth():
   return google.authorize(callback=callback)
   
 def retrieve_user_from_google(google_user):
-  user_db = model.User.retrieve_one_by('federated_id', google_user['id']) # google_user.user_id()
+  user_db = model.User.retrieve_one_by('googleplus_id', google_user['id']) # google_user.user_id()
   if user_db:
     if not user_db.admin and users.is_current_user_admin():
       user_db.admin = True
@@ -502,10 +508,10 @@ def retrieve_user_from_google(google_user):
   
   return create_user_db(
       #google_user.nickname().split('@')[0].replace('.', ' ').title(),
-      google_user['email'].split('@')[0].replace('.', ' ').title(),
+      google_user['name'],
+      google_user['name'],
       google_user['email'],
-      google_user['email'],
-      federated_id=google_user['id'],
+      googleplus_id=google_user['id'],
       admin=users.is_current_user_admin(),
     )
 
@@ -719,7 +725,10 @@ def signin_user_db(user_db):
   else:
     flask.flash('Sorry, but you could not sign in.', category='danger')
     return flask.redirect(flask.url_for('signin'))                
-       
+ 
+
+
+
 '''        
 class Login(flask.views.MethodView):
     def get(self):

@@ -11,13 +11,14 @@
 		
 			<h3><center>Sign Up Uscore</center></h3><br><br>
 		<div class="col-sm-6">
-  			<form name="signin" class="navbar-form form-inline" action="/signin/" method="post" >
-  				<input type="text" name="username" value="" placeholder="your username" class="form-control" /><br><br>
-  				<input type="text" name="email" value="" placeholder="your email" class="form-control" /><br><br>
-  				<input type="text" name="password" value="" placeholder="your password" class="form-control" /><br><br><br>
+  			<form name="signup" class="navbar-form form-inline" action="{{ url_for('signup_action') }}" method="post" >
+  				<input type="text" name="username" value="" placeholder="your username" class="form-control"></input><br><br>
+  				<input type="text" name="email" value="" placeholder="your email" class="form-control"></input><br><br>
+  				<input type="password" name="password" value="" placeholder="your password" class="form-control"></input><br><br>
+  				<input type="password" name="confpassword" value="" placeholder="retype password" class="form-control" /><br><br><br>
   				<input type="checkbox" name="remember" value="" class="form-control" style="width: 15px; height: 12px;"/> Remember me
   				<a href="" class="pull-right">forgot password</a><br><br><br>
-  				<input type="submit" name="signin_submit" value"Sign In" class="btn btn-success" />
+  				<input type="submit" name="signup_submit" value"Sign Up" class="btn btn-success" />
   				Already a Member<a href="" > Sign in </a>
   			
   			</form>
