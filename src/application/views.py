@@ -213,7 +213,11 @@ class Signout(flask.views.MethodView):
         
         
         
-
+class admin(flask.views.MethodView):
+  """This function renders the view to admin after singin."""
+  def get(self):
+    return flask.render_template('uscore-admin.html')
+    
 ################################################################################
 # Google + Signin
 ################################################################################
