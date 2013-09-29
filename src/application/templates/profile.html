@@ -1,80 +1,63 @@
-<!DOCTYPE html>
-<html>
-    <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='bootstrap/ico/favicon.png') }} ">
 
-    <title>Uscore | by DC Developers</title>
-	<!-- google sign in API
-	 https://developers.google.com/+/web/signin/server-side-flow
-	 -->
+{% extends 'base.html' %}
+{% block title %}{{current_user.name}} Profile | Eventus {% endblock %}
+{% block style_block %}
+	<link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
+	<style type="text/css">
+		.background {
+			 background-color: #F3F3F3;
+			}
 	
-    <!-- Bootstrap core CSS -->
-    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='bootstrap/css/navbar-fixed-top.css') }}" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="../../assets/js/html5shiv.js"></script>
-      <script src="../../assets/js/respond.min.js"></script>
-    <![endif]-->
-    <!-- Google Sign in API -->
-    <!-- BEGIN Pre-requisites -->
+	</style>
+{% endblock %}
+{% block content %}
 	
-  </head>
-    <body>
+	<div class="container theme-showcase">
+	<div class="row">
 	
-	<hr> 
-	
-    {% include './addables/header.html' %}
-       
-     
-            
-     <div class="container">
+		
+		
+		<div class="col-sm-3 background" >
+  			
+  				user settings <br>
+  				<img src="# " class="img-rounded" width="150px" height="100px"> <button class="btn btn-default" data-toggle="tooltip" title="Edit Account Settings">Edit</button> <br>
+  				+ status (ol offline)
+  			
+    			
+    				
+      	
+            connect to the user<br>
+            G+ <br>
+            FB <br>
+            Twitter <br>				      	
+      	
+    			
+    			
+  			
+		</div>
+		<div class="col-sm-9">
+		<ul class="nav nav-tabs">
+  				<li class="active">
+    				<a href="#posts" data-toggle="tab">Posts</a>
+  		</li>
+ 	 	<li><a href="#favourites" data-toggle="tab">Favourites</a></li>
+  		<li><a href="#events" data-toggle="tab">Events</a></li>
+  		<li><a href="#followers" data-toggle="tab">Followers</a></li>
+  		<li><a href="#following" data-toggle="tab">Following</a></li>
+		</ul>
+		<div class="tab-content">
+		<div class="tab-pane active" id="posts">Heheh</div>
+		<div class="tab-pane" id="favourites">oheheh</div>
+		<div class="tab-pane" id="events">ooheheh</div>
+		<div class="tab-pane" id="followers">oooheheh</div>
+		<div class="tab-pane" id="following">oooheheh</div>
+		</div>
+		</div>
+		
+  		</div>
+  		
+	</div>
+	<hr>
 
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <h1>Navbar example</h1>
-        <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>To see the difference between static and fixed top navbars, just scroll.</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-        </p>
-        Enter Python to Execute:
-       <form action="/" method="post">
-           <input type="text" name="expression" />
-           <input type="submit" class="btn btn-lg btn-primary" value="Execute" />
-       </form>
-       {% with messages = get_flashed_messages() %}
-           {% if messages %}
-               Results:
-               <pre>
-                  {% for message in messages %}
-                     {{message}}  
-                  {% endfor %}
-           {% endif %}
-        {% endwith %}
-      </div>
-
-    </div> <!-- /container -->   
-        
-     
-     
-     {% include './addables/footer.html' %}
-        
-     <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{{ url_for('static', filename='bootstrap/js/jquery.js') }}"></script>
-   <!--  <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script> -->
-   <!-- <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }} "></script> -->
-   
-    </body>
-
-
-</html>
+{% endblock %}

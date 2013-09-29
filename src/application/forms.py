@@ -10,7 +10,7 @@ See: http://flask.pocoo.org/docs/patterns/wtforms/
 
 from flaskext import wtf
 from flaskext.wtf import validators
-from wtforms import TextField
+from wtforms import TextField , BooleanField
 from wtforms.ext.appengine.ndb import model_form
 
 from model import User
@@ -27,14 +27,16 @@ ExampleForm = model_form(ExampleModel, wtf.Form, field_args={
 })
 '''
 class CSignupForm(wtf.Form):
-    username = wtf.TextField('username', validators=[validators.Required()])
-    email= wtf.TextField('email', validators=[validators.Required()])
-    password = wtf.TextField('password', validators=[validators.Required()])
+    username = TextField('username', validators=[validators.Required()])
+    email= TextField('email', validators=[validators.Required()])
+    password = TextField('password', validators=[validators.Required()])
+    remember_me = BooleanField('remember_me', default = False)
    
 #App Engine ndb model form example
 SignupForm = model_form(User, wtf.Form, field_args={
     'username': dict(validators=[validators.Required()]),
     'email': dict(validators=[validators.Required()]),
     'password': dict(validators=[validators.Required()]),
+    'remember_me': dict(),
 })
  

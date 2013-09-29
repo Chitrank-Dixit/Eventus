@@ -95,6 +95,8 @@ Flask Good practices
 - Using Class based views: http://flask.pocoo.org/docs/views/
 - We are using a better structured project here as per the Flask Good Practices says
 - Best tutorial for all the stuff (http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+- http://ryaneshea.com/lightweight-python-apps-with-flask-twitter-bootstrap-and-heroku
+- http://f.souza.cc/2010/08/flying-with-flask-on-google-app-engine.html
 
 Using Google App Engine from virtualenv
 ---------------------------------------
@@ -140,7 +142,9 @@ Tech Stack
 - Google Cloud Datastore (NoSQL DB)
 - Font Awesome, bootstrap-social-buttons
 
-
+jinja2 template settings in Google App Engine
+---------------------------------------------
+- https://developers.google.com/appengine/docs/python/gettingstartedpython27/templates
 _______________________________________________________________________________________
 
 

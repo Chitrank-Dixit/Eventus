@@ -5,7 +5,7 @@ URL dispatch route mappings and error handlers
 
 """
 from flask import render_template
-from views import  Signin , Signout , Signup_action
+from views import  Signin , Signout , Signup_action 
 from application import app
 from application import views
 
@@ -47,6 +47,7 @@ app.add_url_rule('/signup/',view_func=views.Signup.as_view('signup_page'),method
 
 # Signup action page
 app.add_url_rule('/signup_action/',view_func=views.Signup_action.as_view('signup_action'),methods=['GET','POST'])
+
 
 # Sign out from Uscore
 app.add_url_rule('/signout/',view_func=views.Signout.as_view('signout_page'),methods=['GET','POST'])

@@ -178,6 +178,11 @@ class Signup_action(flask.views.MethodView):
                         
         return flask.render_template('signup.html',login=True, next=next, error=error)
 
+@app.route('/profile/')
+def profile():
+    return flask.render_template('profile.html')
+
+
 '''        
 class Signin_action(flask.views.MethodView):
     def get(self):
@@ -207,12 +212,12 @@ class Signout(flask.views.MethodView):
     def get(self):
         login.logout_user()
         flask.flash(u'You have been signed out.')
-        return flask.render_template('index.html')
+        return redirect(url_for('index'))
     
     def post(self):
         login.logout_user()
         flask.flash(u'You have been signed out.')
-        return flask.render_template('index.html')
+        return redirect(url_for('index'))
         
         
         
@@ -508,8 +513,8 @@ def retrieve_user_from_google(google_user):
   
   return create_user_db(
       #google_user.nickname().split('@')[0].replace('.', ' ').title(),
-      google_user['name'],
-      google_user['name'],
+      google_user['given_name'],
+      google_user['email'],
       google_user['email'],
       googleplus_id=google_user['id'],
       admin=users.is_current_user_admin(),
@@ -718,7 +723,7 @@ def signin_user_db(user_db):
     return flask.redirect(flask.url_for('signin'))
   flask_user_db = FlaskUser(user_db)
   if login.login_user(flask_user_db):
-    flask.flash('Hello %s, welcome to %s!!!' % (
+    flask.flash('Hello %s, welcome to %s' % (
         user_db.name, config.CONFIG_DB.brand_name,
       ), category='success')
     return flask.redirect(flask.url_for('index'))
