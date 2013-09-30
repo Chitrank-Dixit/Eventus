@@ -63,6 +63,7 @@ class User(Base, modelx.UserX):
   username = ndb.StringProperty(indexed=True, required=True)
   email = ndb.StringProperty(indexed=True, default='')
   password = ndb.StringProperty(indexed=True , default='')
+  confirm = ndb.StringProperty(indexed=True , default='')
 
   active = ndb.BooleanProperty(default=True)
   admin = ndb.BooleanProperty(default=False)

@@ -6,6 +6,10 @@ URL route handlers
 Note that any handler params must match the URL route params.
 For example the *say_hello* handler, handling the URL route '/hello/<username>',
   must be passed *username* as the argument.
+  
+only 1 page for sending the user and db data 
+so no need to make one page for signup page view and other for signup data save that 
+was creating problem with form name undefined
 
 """
 
@@ -148,41 +152,47 @@ class Signin(flask.views.MethodView):
         return flask.render_template('signin.html')
                 
 
-
+'''
 class Signup(flask.views.MethodView):
     def get(self):
         return flask.render_template('signup.html')
-    
+'''    
 
 
 
-class Signup_action(flask.views.MethodView):
-    def get(self):
-        return None
-    
-    def post(self):
-        error = None
-        form = SignupForm()
-        next = request.args.get('next')
-        if request.method == 'POST':
-            username=''
-            if form.validate_on_submit():
-                username = form.data.get('username')
-                email = form.data.get('email')
-                password = form.data.get('password')
-                print username,password
-                user_db = model.User(username=username,email=email.lower(),password=password,**params)
-                user_db.put()                                
-            flash(u'User %s successfully Registered Please check your mail for more details.' % username, 'success')
+@app.route('/signup/',methods = ['POST','GET'])
+def Signup():
+    #error = None
+    #signups = User.query()
+    form = SignupForm(request.form)
+    #next = request.args.get('next')
+    if form.validate_on_submit():
+        signup = model.User(
+             name = form.name.data,
+             username = form.username.data,
+             email = form.email.data,
+             password = form.password.data,
+             
+        )
+        #session['remember_me']=form.remeber_me.data
+        print form.name.data
+        try:
+            signup.put()
+            #signup_id = .key.id()
+            flash(u'User %s successfully Registered Please check your mail for more details.' % form.username.data, 'success')
             return redirect(url_for('index'))
-                        
-        return flask.render_template('signup.html',login=True, next=next, error=error)
+        except CapabilityDisabledError:
+            flash(u'App Engine Datastore is currently in read-only mode.', 'info')
+            return redirect(url_for('index'))
+    return flask.render_template('signup.html',form=form)
 
 @app.route('/profile/')
 def profile():
     return flask.render_template('profile.html')
 
-
+@app.route('/signup_form/')
+def signup_form():
+    return flask.render_template('signup_form.html')
 '''        
 class Signin_action(flask.views.MethodView):
     def get(self):

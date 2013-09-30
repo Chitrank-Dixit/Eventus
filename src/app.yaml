@@ -16,7 +16,7 @@ libraries:
 - name: jinja2
   version: latest
 - name: markupsafe
-  version: "0.15"
+  version: latest
 
 inbound_services:
 - warmup
