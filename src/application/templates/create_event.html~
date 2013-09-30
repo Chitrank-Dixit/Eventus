@@ -1,0 +1,63 @@
+
+{% extends 'base.html' %}
+{% block title %} Create an Event | Eventus {% endblock %}
+{% block style_block %}
+	<link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
+	<style type="text/css">
+		.background {
+			 background-color: #F3F3F3;
+			}
+	
+	</style>
+{% endblock %}
+{% block content %}
+	
+	<div class="container theme-showcase">
+	<div class="row">
+	
+		
+		
+		<div class="col-sm-3 background" >
+  			
+  				user settings <br>
+  				<img src="# " class="img-rounded" width="150px" height="100px"> <button class="btn btn-default" data-toggle="tooltip" title="Edit Account Settings">Edit</button> <br>
+  				+ status (ol offline)
+  			
+    			
+    				
+      	
+            connect to the user<br>
+            G+ <br>
+            FB <br>
+            Twitter <br>				      	
+      	
+    			
+    			
+  			
+		</div>
+		<div class="col-sm-9">
+		<ul class="nav nav-tabs">
+  				<li class="active">
+    				<a href="#posts" data-toggle="tab">Posts</a>
+  		</li>
+ 	 	<li><a href="#favourites" data-toggle="tab">Favourites</a></li>
+  		<li><a href="#events" data-toggle="tab">Events</a></li>
+  		<li><a href="#followers" data-toggle="tab">Followers</a></li>
+  		<li><a href="#following" data-toggle="tab">Following</a></li>
+		</ul>
+		<div class="tab-content">
+		<div class="tab-pane active" id="posts">Heheh</div>
+		<div class="tab-pane" id="favourites">oheheh</div>
+		<div class="tab-pane" id="events">ooheheh</div>
+		<div class="tab-pane" id="followers">oooheheh</div>
+		<div class="tab-pane" id="following">oooheheh</div>
+		</div>
+		</div>
+		
+  		</div>
+  		
+	</div>
+	<hr>
+
+{% endblock %}

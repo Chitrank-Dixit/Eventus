@@ -1,0 +1,40 @@
+
+
+
+		<fieldset>
+                {{ form.hidden_tag() }}
+                <div class="control-group">
+                    <div class="control-label">{{ form.example_name.label }}</div>
+                    <div class="controls">
+                        {{ form.example_name|safe }}
+                        {% if form.example_name.errors %}
+                        <ul class="errors">
+                            {% for error in form.example_name.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">{{ form.example_description.label }}</div>
+                    <div class="controls">
+                        {{ form.example_description|safe }}
+                        {% if form.example_description.errors %}
+                        <ul class="errors">
+                            {% for error in form.example_description.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <input class="btn btn-primary" type="submit" value="Add Example"/>
+                        <button class="btn" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+				</fieldset>
+
+				
