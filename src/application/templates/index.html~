@@ -1,10 +1,16 @@
 <title>Eventus | Events Never been so Interesting</title>
 {% extends "base.html" %}
-{% block title_bar %}
-<title>Eventus | Events Never been so Interesting</title>
-{% endblock %}
 
 {% block content %}	    
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+		<div class="flashes alert alert-success">
+		{% for message in messages %}
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<strong>!!!</strong> {{message}} <strong>!!!</strong>
+		{% endfor %}
+		</div>
+		{% endif %}
 		
 		<div class="jumbotron">
         <h1>Uscore - Events never been so Interesting</h1>
@@ -20,7 +26,10 @@
 		<!-- Add any content here like intro video , testimonials , how to use Help doc links, Support , who is using ETC -->		
 		      
       </div>
+      
+      
+{% endwith %}
+
 {% endblock %}	
     
-
 

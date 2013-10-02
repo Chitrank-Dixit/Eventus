@@ -7,18 +7,73 @@
 {% block content %}
 	<div class="container theme-showcase">
 	<div class="row">
-	
-		
+	  {% for message in get_flashed_messages() %}
+    <div class=flash>{{ message }}</div>
+    {% endfor %}
+      		
 			<h3><center>Sign in Uscore</center></h3><br><br>
+			
 		<div class="col-sm-6">
+			
   			<form name="signin" class="navbar-form form-inline" action="/signin/" method="post" >
-  				<input type="text" name="username" value="" placeholder="your username" class="form-control" /><br><br>
+  				{{ form.csrf_token }}
+				<fieldset>
+  				{{ form.hidden_tag() }}
+            {% from "macro/_formhelpers.html" import render_field %}
+            <div class="control-group">
+                   
+                    <div class="controls">
+                        {{ render_field(form.email, class="form-control", placeholder="Enter Username") }}
+                        {% if form.email.errors %}
+                        <ul class="errors">
+                            {% for error in form.email.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    <!-- <div class="control-label">{{ form.password.label }}</div> -->
+                    <div class="controls">
+                        {{ render_field(form.password, class="form-control", placeholder="Enter password") }}
+                        {% if form.password.errors %}
+                        <ul class="errors">
+                            {% for error in form.password.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    <!-- <div class="control-label">{{ form.password.label }}</div> -->
+                    <div class="controls">
+                        {{ render_field(form.recaptcha, class="form-control") }}
+                        {% if form.recaptcha.errors %}
+                        <ul class="errors">
+                            {% for error in form.recaptcha.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            
+            <div class="control-group">
+                    <div class="controls">
+                        <a href="" class="pull-right">forgot password</a><br><br><br> 
+  								<input type="submit" name="signin_submit" value"Signin" class="btn btn-success" /><br><br>
+  									<center>Already a Member<a href="" > Sign in </a> </center> 
+                    </div>
+            </div>
+  				<!-- <input type="text" name="username" value="" placeholder="your username" class="form-control" /><br><br>
   				<input type="text" name="password" value="" placeholder="your password" class="form-control" /><br><br><br>
   				<input type="checkbox" name="remember" value="" class="form-control" style="width: 15px; height: 12px;"/> Remember me
   				<a href="" class="pull-right">forgot password</a><br><br><br>
-  				<input type="submit" name="signin_submit" value"Sign In" class="btn btn-success" />
+  				<input type="submit" name="signin_submit" value"Sign In" class="btn btn-success" /> -->
   				
-  			
+  				</fieldset>
   			</form>
 				Not Registered<a href="" > Please sign up </a>
     			

@@ -7,19 +7,24 @@
 {% block content %}
 	<div class="container theme-showcase">
 	<div class="row">
-	
+	  {% for message in get_flashed_messages() %}
+    <div class=flash>{{ message }}</div>
+    {% endfor %}
+
 		
-			<h3><center>Sign Up Uscore</center></h3><br><br>
+			
+      
+      <h3><center>Sign Up Uscore</center></h3><br><br>
 		<div class="col-sm-6">
   			<form name="signup" class="navbar-form form-inline" action="{{ url_for('Signup') }}" method="post" accept-charset="utf-8">
 				{{ form.csrf_token }}
-				<fieldset>
+				<fieldset> <!-- In future in this form a check should be made where if username and email of a user already exists the error message will be shown with the page redirect to signup -->
                 {{ form.hidden_tag() }}
                 {% from "macro/_formhelpers.html" import render_field %}
                 <div class="control-group">
-                    <div class="control-label">{{ form.name.label }}</div>
+                    <!-- <div class="control-label">{{ form.name.label }}</div> -->
                     <div class="controls">
-                        {{ form.name|safe }}
+                        {{ render_field(form.name, class="form-control", placeholder="Enter your Name") }}
                         {% if form.name.errors %}
                         <ul class="errors">
                             {% for error in form.name.errors %}
@@ -29,23 +34,11 @@
                         {% endif %}
                     </div>
                 </div>
+                
                 <div class="control-group">
-                    <div class="control-label">{{ form.username.label }}</div>
+                    <!--<div class="control-label">{{ form.email.label }}</div> -->
                     <div class="controls">
-                        {{ form.username|safe }}
-                        {% if form.username.errors %}
-                        <ul class="errors">
-                            {% for error in form.username.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">{{ form.email.label }}</div>
-                    <div class="controls">
-                        {{ form.email|safe }}
+                        {{ render_field(form.email, class="form-control", placeholder="Enter your Email") }}
                         {% if form.email.errors %}
                         <ul class="errors">
                             {% for error in form.email.errors %}
@@ -56,9 +49,9 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <div class="control-label">{{ form.password.label }}</div>
+                    <!-- <div class="control-label">{{ form.password.label }}</div> -->
                     <div class="controls">
-                        {{ form.password|safe }}
+                        {{ render_field(form.password, class="form-control", placeholder="Enter password") }}
                         {% if form.password.errors %}
                         <ul class="errors">
                             {% for error in form.password.errors %}
@@ -69,9 +62,9 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <div class="control-label">{{ form.confirm.label }}</div>
+                    <!-- <div class="control-label">{{ form.confirm.label }}</div> -->
                     <div class="controls">
-                        {{ form.confirm|safe }}
+                        {{ render_field(form.confirm,class="form-control", placeholder="Reapeat Password to Confirm") }}
                         {% if form.confirm.errors %}
                         <ul class="errors">
                             {% for error in form.confirm.errors %}

@@ -7,6 +7,7 @@ from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 from gae_mini_profiler import profiler, templatetags
 from werkzeug.debug import DebuggedApplication
+#from flaskext.mail import Mail
 import jinja2
 #from flaskext.flask_googlelogin import GoogleLogin
 
@@ -23,6 +24,7 @@ app.config.update(
     GOOGLE_LOGIN_REDIRECT_URI='http://localhost:8080/registered/')
     
 
+#mail = Mail()
 
                        
                                                                      

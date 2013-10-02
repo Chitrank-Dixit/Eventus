@@ -22,6 +22,19 @@ DEBUG = DEVELOPMENT
 
 DEFAULT_DB_LIMIT = 64
 
+# email server
+MAIL_SERVER = 'smtp.googlemail.com'
+MAIL_PORT = 465
+MAIL_USE_TLS = False
+MAIL_USE_SSL = True
+MAIL_USERNAME = 'chitrankdixit@iips.edu.in'
+MAIL_PASSWORD = 'capirossi65'
+
+# administrator list
+ADMINS = ['chitrankdixit@iips.edu.in']
+
+
+
 ################################################################################
 # Client modules, also used by the run.py script.
 ################################################################################

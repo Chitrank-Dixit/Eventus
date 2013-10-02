@@ -14,16 +14,16 @@ See: http://flask.pocoo.org/docs/patterns/wtforms/
 from flaskext import wtf
 from flaskext.wtf import validators
 # from wtforms import TextField , BooleanField
-from wtforms.ext.appengine.ndb import model_form
+#from wtforms.ext.appengine.wtf import model_form
 
-from model import User
+from model import User, Event
 
 '''
 class ClassicExampleForm(wtf.Form):
     example_name = wtf.TextField('Name', validators=[validators.Required()])
     example_description = wtf.TextAreaField('Description', validators=[validators.Required()])
 
-# App Engine ndb model form example
+# App Engine wtf model form example
 ExampleForm = model_form(ExampleModel, wtf.Form, field_args={
     'example_name': dict(validators=[validators.Required()]),
     'example_description': dict(validators=[validators.Required()]),
@@ -31,14 +31,35 @@ ExampleForm = model_form(ExampleModel, wtf.Form, field_args={
 '''
 class SignupForm(wtf.Form):
     name = wtf.TextField('name', validators=[validators.Required()])
-    username = wtf.TextField('username', validators=[validators.Required()])
+    #username = wtf.TextField('username', validators=[validators.Required()])
     email= wtf.TextField('email', validators=[validators.Required()])
     password = wtf.PasswordField('password', validators=[validators.Required(), validators.EqualTo('confirm', message='Passwords must match')])
     confirm = wtf.PasswordField('Repeat Password')
     remember_me = wtf.BooleanField('remember_me', default = False)
  
  
- 
+class SigninForm(wtf.Form):
+    email = wtf.TextField('email',validators=[validators.Required()])
+    password = wtf.PasswordField('password',validators=[validators.Required()])
+    recaptcha = wtf.RecaptchaField()
+
+
+class CreateEventForm(wtf.Form):
+    name = wtf.TextField('name', validators=[validators.Required()])
+    #logo = wtf.FileField('logo', )
+    creator = wtf.TextField('creator', validators=[validators.Required()])
+    manager = wtf.TextField('manager', default='')
+    url = wtf.TextField('url', default='')
+    description = wtf.TextAreaField('description',default='')
+    venue = wtf.TextField('venue', default='')
+    phone = wtf.IntegerField('phone', default= 0000000000)
+    googleplus_page = wtf.TextField('googleplus_page', default='')
+    facebook_page = wtf.TextField('facebook_page', default='')
+    twitter_id = wtf.TextField('twitter_id', default='')
+    active = wtf.BooleanField('active',default=True)
+    public = wtf.BooleanField('public',default=True)
+    private= wtf.BooleanField('private',default=False)
+
 '''     
 No need to make a model that is already made
 

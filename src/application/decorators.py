@@ -35,17 +35,18 @@ def admin_required(f):
       return flask.redirect(flask.url_for('signin', next=flask.request.url))
     return flask.abort(403)
   return decorated_function
-
-
-
-
 '''
+
+
+
+
+
 def login_required(func):
     """Requires standard login credentials"""
     @wraps(func)
     def decorated_view(*args, **kwargs):
         if not users.get_current_user():
-            return redirect(users.create_login_url(request.url))
+            return flask.redirect(flask.url_for('signin', next=flask.request.url))
         return func(*args, **kwargs)
     return decorated_view
 
@@ -58,5 +59,5 @@ def admin_required(func):
             if not users.is_current_user_admin():
                 abort(401)  # Unauthorized
             return func(*args, **kwargs)
-        return redirect(users.create_login_url(request.url))
+        return flask.redirect(flask.url_for('signin', next=flask.request.url))
     return decorated_view

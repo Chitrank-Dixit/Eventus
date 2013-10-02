@@ -41,3 +41,22 @@ GOOGLE_API_CLIENT_SECRET = 'SFxHRvAvD_w9JzfUhI8EiJrS'
 GOOGLE_API_SCOPE = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
 GOOGLE_OAUTH2_URL = 'https://accounts.google.com/o/oauth2/'
 GOOGLE_API_URL = 'https://www.googleapis.com/oauth2/v1/'
+
+
+# recaptch made using Google 
+# https://www.google.com/recaptcha/admin/site?siteid=317209387
+RECAPTCHA_USE_SSL = True
+RECAPTCHA_PUBLIC_KEY = '6LcrO-gSAAAAAI1pdEGzxcinj_81QB4z2OOCR9b0'
+RECAPTCHA_PRIVATE_KEY = '6LcrO-gSAAAAAFtHfxDWsDSiSMaSVph1jaQrcMYe'
+# RECAPTCHA_OPTIONS = 
+
+# flask-mail settings
+# email server
+MAIL_DEBUG = True
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 465
+MAIL_USE_TLS = True
+MAIL_USE_SSL = True
+MAIL_USERNAME = 'chitrankdixit1@gmail.com'
+MAIL_PASSWORD = 'rossi46656915'
+MAIL_SUPPRESS_SEND = False

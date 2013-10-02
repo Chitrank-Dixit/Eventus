@@ -2,6 +2,7 @@
 models.py
 
 App Engine datastore models
+Documentation: https://developers.google.com/appengine/docs/python/ndb/entities
 
 """
 

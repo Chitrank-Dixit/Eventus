@@ -2,7 +2,10 @@
 {% extends "base.html" %}
 
 {% block content %}	    
-		
+		{% for message in get_flashed_messages() %}
+		<div class=flash>{{ message }}</div>
+		{% endfor %}
+
 		<div class="jumbotron">
         <h1>Uscore - Events never been so Interesting</h1>
         <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
@@ -18,16 +21,8 @@
 		      
       </div>
       
-      {% with messages = get_flashed_messages() %}
-		{% if messages %}
-		<div class="flashes alert alert-success">
-		{% for message in messages %}
-			<button type="button" class="close" data-dismiss="alert">&times;</button>
-			<strong>!!!</strong> {{message}} <strong>!!!</strong>
-		{% endfor %}
-		</div>
-		{% endif %}
-{% endwith %}
+      
+
 
 {% endblock %}	
     

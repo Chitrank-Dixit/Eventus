@@ -14,6 +14,195 @@
 {% block content %}
 	
 	<div class="container theme-showcase">
+		{% for message in get_flashed_messages() %}
+		<div class=flash>{{ message }}</div>
+		{% endfor %}
+
+		<form name="create_event" class="navbar-form form-inline" method="post" action="/create_event/">
+		{{ form.csrf_token }}
+				<fieldset>
+  				{{ form.hidden_tag() }}
+            {% from "macro/_formhelpers.html" import render_field %}
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.name, class="form-control", placeholder="Event Name") }}
+                        {% if form.name.errors %}
+                        <ul class="errors">
+                            {% for error in form.name.errors %}
+                            <li class="flashes alert-warning">{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.creator, class="form-control", placeholder="Creators name") }}
+                        {% if form.creator.errors %}
+                        <ul class="errors">
+                            {% for error in form.creator.errors %}
+                            <li class="alert-warning">{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.manager, class="form-control", placeholder="Manager name") }}
+                        {% if form.manager.errors %}
+                        <ul class="errors">
+                            {% for error in form.manager.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.url, class="form-control", placeholder="Creators name") }}
+                        {% if form.url.errors %}
+                        <ul class="errors">
+                            {% for error in form.url.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.description, class="form-control", placeholder="Creators name") }}
+                        {% if form.description.errors %}
+                        <ul class="errors">
+                            {% for error in form.description.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.venue, class="form-control", placeholder="Creators name") }}
+                        {% if form.venue.errors %}
+                        <ul class="errors">
+                            {% for error in form.venue.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.phone, class="form-control", placeholder="Creators name") }}
+                        {% if form.phone.errors %}
+                        <ul class="errors">
+                            {% for error in form.phone.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.googleplus_page, class="form-control", placeholder="Creators name") }}
+                        {% if form.googleplus_page.errors %}
+                        <ul class="errors">
+                            {% for error in form.googleplus_page.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.facebook_page, class="form-control", placeholder="Creators name") }}
+                        {% if form.facebook_page.errors %}
+                        <ul class="errors">
+                            {% for error in form.facebook_page.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.twitter_id, class="form-control", placeholder="Creators name") }}
+                        {% if form.twitter_id.errors %}
+                        <ul class="errors">
+                            {% for error in form.twitter_id.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.active, class="form-control", placeholder="Creators name") }}
+                        {% if form.active.errors %}
+                        <ul class="errors">
+                            {% for error in form.active.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.public, class="form-control", placeholder="Creators name") }}
+                        {% if form.public.errors %}
+                        <ul class="errors">
+                            {% for error in form.public.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.private, class="form-control", placeholder="Creators name") }}
+                        {% if form.private.errors %}
+                        <ul class="errors">
+                            {% for error in form.private.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    <div class="controls">
+                        <a href="" class="pull-right">forgot password</a><br><br><br> 
+  								<input type="submit" name="create_event" value"create_event" class="btn btn-success" /><br><br>
+  									<center>Already a Member<a href="" > Sign in </a> </center> 
+                    </div>
+            </div>
+
+
+		</form>
+
 	<div class="row">
 	
 		

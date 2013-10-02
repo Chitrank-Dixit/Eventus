@@ -4,8 +4,8 @@ urls.py
 URL dispatch route mappings and error handlers
 
 """
-from flask import render_template
-from views import  Signin , Signout 
+from flask import render_template,views, url_for
+from views import  signin, Signup
 from application import app
 from application import views
 
@@ -40,7 +40,7 @@ from application import views
 # app.add_url_rule('/',view_func=views.Index.as_view('main'),methods=['GET','POST'])
 
 # Sign in view or Social Login
-app.add_url_rule('/signin/',view_func=views.Signin.as_view('signin_page'),methods=['GET','POST'])
+#app.add_url_rule('/signin/',view_func=views.Signin.as_view('signin_page'),methods=['GET','POST'])
 
 # Sign up for new users or Social Login
 #app.add_url_rule('/signup/',view_func=views.Signup.as_view('signup_page'),methods=['GET','POST'])
@@ -50,7 +50,7 @@ app.add_url_rule('/signin/',view_func=views.Signin.as_view('signin_page'),method
 
 
 # Sign out from Uscore
-app.add_url_rule('/signout/',view_func=views.Signout.as_view('signout_page'),methods=['GET','POST'])
+#app.add_url_rule('/signout/',view_func=views.Signout.as_view('signout_page'),methods=['GET','POST'])
 
 # This is login user url
 # app.add_url_rule('/login/',view_func=views.Login.as_view('login_user'),methods= ['GET','POST'])
@@ -58,10 +58,10 @@ app.add_url_rule('/signout/',view_func=views.Signout.as_view('signout_page'),met
 # app.add_url_rule('/login/',view_func=views.Login.as_view('login_user'),methods= ['GET','POST'])
 
 # sign up for the users
-#app.add_url_rule('/signup/',view_func=views.View.as_view('signup_user').methods=['GET','POST'])
+#app.add_url_rule('/signup/',view_func=url_for('Signup'),methods=['GET','POST'])
 
 # Sign in for the users
-#app.add_url_rule('/signin/',view_func=views.View.as_view('signin_user').methods=['GET','POST'])
+#app.add_url_rule('/signin/',view_func=url_for('signin'),methods=['GET','POST'])
 
 # Sign out the users
 #app.add_url_rule('/signout/',view_func=views.View.as_view('signout_user').methods=['GET','POST'])

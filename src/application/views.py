@@ -11,6 +11,22 @@ only 1 page for sending the user and db data
 so no need to make one page for signup page view and other for signup data save that 
 was creating problem with form name undefined
 
+Todo
+1) send flash to pages and recognie the category sucess or danger 
+http://flask.pocoo.org/docs/patterns/flashing/
+
+2) Recaptch for simple sign in (added)
+
+3) Flask-mail is not working need to make it work better.
+
+4) template design for creating , editing and event profile as well.
+
+5) fit the current_user.name in the event creator 
+
+6) fix the redundancy issue in the database
+
+
+
 """
 
 from google.appengine.runtime.apiproxy_errors import CapabilityDisabledError
@@ -23,9 +39,10 @@ from flask import make_response, request, render_template, flash, url_for, redir
 # from flask.ext import 
 import flask,flask.views
 from flask_cache import Cache
-
+# from flaskext.mail.message import Message
+# Flask-mail documentation http://pythonhosted.org/flask-mail/
 #from models import FlaskUser
-from application import app  
+from application import app #, mail  
 from decorators import login_required, admin_required
 #from forms import ExampleForm
 from models import *
@@ -43,7 +60,7 @@ from flaskext import oauth
 import util
 import model
 import config
-from forms import SignupForm
+from forms import SignupForm, SigninForm, CreateEventForm
 # Google API python Oauth 2.0
 import httplib2
 from oauth2client.client import AccessTokenRefreshError
@@ -55,6 +72,10 @@ from flaskext.kvsession import KVSessionExtension
 
 # Flask-Cache (configured to use App Engine Memcache API)
 cache = Cache(app)
+
+# initialize the flask mail
+#mail.init_app(app)
+
 '''
 def home():
     return redirect(url_for('list_examples'))
@@ -143,14 +164,30 @@ def index():
 	return flask.render_template('index.html')
 	
 	
-
-class Signin(flask.views.MethodView):
-    def get(self):
-        # check if the user is logged in or not
-        #if not current_user.is_authenticated():
-        #    return app.login_manager.unauthorized()
-        return flask.render_template('signin.html')
-                
+@app.route('/signin/',methods=['POST','GET'])
+def signin():
+    form=SigninForm(request.form)
+    if form.validate_on_submit() and request.method == 'POST':
+        # model.User.retrieve_one_by('username', form.username.data) && model.User.retrieve_one_by('password', form.password.data) is not None:
+        user_db = model.User.retrieve_one_by('password',form.password.data)
+        print user_db
+        signin_user_db_eventus(user_db)
+        #return redirect(url_for('index'))
+    return flask.render_template('signin.html', form=form)
+ 
+def signin_user_db_eventus(user_db):
+  if not user_db:
+    flash('Please check the username or password')
+    return flask.redirect(flask.url_for('signin'))
+  flask_user_db = FlaskUser(user_db)
+  if login.login_user(flask_user_db):
+    flask.flash('Hello %s, welcome to %s' % (
+        user_db.name, config.CONFIG_DB.brand_name,
+      ), category='success')
+    return flask.redirect(flask.url_for('index'))
+  else:
+    flask.flash('Sorry, but you could not sign in.', category='danger')
+    return flask.redirect(flask.url_for('signin'))                
 
 '''
 class Signup(flask.views.MethodView):
@@ -166,23 +203,33 @@ def Signup():
     #signups = User.query()
     form = SignupForm(request.form)
     #next = request.args.get('next')
-    if form.validate_on_submit():
+    if form.validate_on_submit() or request.method=='POST':
         signup = model.User(
              name = form.name.data,
-             username = form.username.data,
+             username = form.name.data,
              email = form.email.data,
              password = form.password.data,
              
         )
         #session['remember_me']=form.remeber_me.data
-        print form.name.data
+        passwd = model.User.retrieve_one_by('password',form.password.data)
+        user = model.User.retrieve_one_by('email', form.email.data)
+
+        if user != None and passwd != None:
+            flash(u'User already registered with this %s email ' % form.email.data,category='error')
+            return redirect(url_for('Signup'))
+        
         try:
             signup.put()
             #signup_id = .key.id()
-            flash(u'User %s successfully Registered Please check your mail for more details.' % form.username.data, 'success')
+            #msg = Message("You have been Registered to Eventus ",sender=config.ADMINS[0],recipients=[form.email.data])
+            #msg.body="Welcome to Eventus You have successfully registered to Eventus, Please note down your credentials Username:"+form.name.data+" Password: "+form.password.data          
+            flash(u'User %s successfully Registered Please check your mail for more details.' % form.name.data, category='success')
+            #with app.app_context():
+              #mail.send(msg)
             return redirect(url_for('index'))
         except CapabilityDisabledError:
-            flash(u'App Engine Datastore is currently in read-only mode.', 'info')
+            flash(u'App Engine Datastore is currently in read-only mode.', category='info')
             return redirect(url_for('index'))
     return flask.render_template('signup.html',form=form)
 
@@ -221,12 +268,12 @@ class Signin_action(flask.views.MethodView):
 class Signout(flask.views.MethodView):
     def get(self):
         login.logout_user()
-        flask.flash(u'You have been signed out.')
+        flask.flash(u'You have been signed out.','success')
         return redirect(url_for('index'))
     
     def post(self):
         login.logout_user()
-        flask.flash(u'You have been signed out.')
+        flask.flash(u'You have been signed out.','success')
         return redirect(url_for('index'))
         
         
@@ -298,7 +345,7 @@ def connect():
     # Upgrade the authorization code into a credentials object
     oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
     oauth_flow.redirect_uri = 'postmessage'
-    credentials = oauth_flow.step2_exchange(code)
+    credentials = your-gmail-username@gmail.comoauth_flow.step2_exchange(code)
   except FlowExchangeError:
     response = make_response(
         json.dumps('Failed to upgrade the authorization code.'), 401)
@@ -855,3 +902,37 @@ class OpenIDLogin(flask.views.MethodView):
     else:
       self.error(400)
 """
+
+# Creating user events in Eventus 
+
+@app.route('/create_event/',methods= ['POST','GET'])
+@login_required
+def create_event():
+  form= CreateEventForm(request.form)
+  if form.validate_on_submit() and request.method=='POST':
+    event = model.Event(
+        name = form.name.data,
+        creator = form.creator.data,
+        manager = form.manager.data,
+        url = form.url.data,
+        description = form.description.data,
+        venue= form.venue.data,
+        phone = form.phone.data,
+        googleplus_page = form.googleplus_page.data,
+        facebook_page = form.facebook_page.data,
+        twitter_id = form.twitter_id.data,
+        active= form.active.data,
+        public = form.public.data,
+        private = form.private.data
+      )
+    try:
+      event.put()
+      #signup_id = .key.id()
+      #msg = Message("Welcome to Eventus <br><br> You have successfully registered to Eventus, Please note down your credentials <br><br> Username: %s <br> Password: %s"  % form.username.data % form.password.data,sender=config.ADMINS[0],recipients=[form.email.data])
+      flash(u'Event %s has been created.' % form.name.data, category='success')
+      #mail.send(msg)
+      return redirect(url_for('index'))
+    except CapabilityDisabledError:
+      flash(u'App Engine Datastore is currently in read-only mode.', category='info')
+      return redirect(url_for('index'))
+  return render_template('create_event.html',form=form)
