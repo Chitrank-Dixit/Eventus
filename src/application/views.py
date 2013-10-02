@@ -35,7 +35,7 @@ import json
 import random
 import string
 from apiclient.discovery import build
-from flask import make_response, request, render_template, flash, url_for, redirect, session
+from flask import make_response, request, render_template, flash, url_for, redirect, session,g
 # from flask.ext import 
 import flask,flask.views
 from flask_cache import Cache
@@ -43,8 +43,8 @@ from flask_cache import Cache
 # Flask-mail documentation http://pythonhosted.org/flask-mail/
 #from models import FlaskUser
 from application import app #, mail  
-from decorators import login_required, admin_required
-#from forms import ExampleForm
+# from decorators import login_required, admin_required
+# from forms import ExampleForm
 from models import *
 #from model import *
 import requests
@@ -54,7 +54,7 @@ from json import dumps, loads
 
 import flask
 from flaskext import login
-from flaskext.login import login_url
+from flaskext.login import login_url, logout_user , current_user, login_required
 from flaskext import oauth
 
 import util
@@ -72,6 +72,23 @@ from flaskext.kvsession import KVSessionExtension
 
 # Flask-Cache (configured to use App Engine Memcache API)
 cache = Cache(app)
+
+@login_manager.user_loader
+def load_user(key):
+  user_db = ndb.Key(urlsafe=key).get()
+  if user_db:
+    return FlaskUser(user_db)
+  return None
+
+@app.before_request
+def before_request():
+    g.user = current_user
+
+# load a logged in user
+#@lm.user_loader
+#def load_user(id):
+#    return User.query.get(int(id))
+
 
 # initialize the flask mail
 #mail.init_app(app)
@@ -166,28 +183,28 @@ def index():
 	
 @app.route('/signin/',methods=['POST','GET'])
 def signin():
+    if g.user is not None and g.user.is_authenticated():
+        return redirect(url_for('index'))
     form=SigninForm(request.form)
     if form.validate_on_submit() and request.method == 'POST':
+        session['remember_me'] = form.remember_me.data
         # model.User.retrieve_one_by('username', form.username.data) && model.User.retrieve_one_by('password', form.password.data) is not None:
         user_db = model.User.retrieve_one_by('password',form.password.data)
-        print user_db
-        signin_user_db_eventus(user_db)
-        #return redirect(url_for('index'))
+        if not user_db:
+          flash('Please check the username or password')
+          return flask.redirect(flask.url_for('signin'))
+        flask_user_db = FlaskUser(user_db)
+        if login.login_user(flask_user_db):
+          flask.flash('Hello %s, welcome to %s' % (
+            user_db.name, config.CONFIG_DB.brand_name,
+            ), category='success')
+          return flask.redirect(flask.url_for('index'))
+        else:
+          flask.flash('Sorry, but you could not sign in.', category='danger')
+          return flask.redirect(flask.url_for('signin'))
     return flask.render_template('signin.html', form=form)
  
-def signin_user_db_eventus(user_db):
-  if not user_db:
-    flash('Please check the username or password')
-    return flask.redirect(flask.url_for('signin'))
-  flask_user_db = FlaskUser(user_db)
-  if login.login_user(flask_user_db):
-    flask.flash('Hello %s, welcome to %s' % (
-        user_db.name, config.CONFIG_DB.brand_name,
-      ), category='success')
-    return flask.redirect(flask.url_for('index'))
-  else:
-    flask.flash('Sorry, but you could not sign in.', category='danger')
-    return flask.redirect(flask.url_for('signin'))                
+                
 
 '''
 class Signup(flask.views.MethodView):
@@ -201,6 +218,8 @@ class Signup(flask.views.MethodView):
 def Signup():
     #error = None
     #signups = User.query()
+    if g.user is not None and g.user.is_authenticated():
+        return redirect(url_for('index'))
     form = SignupForm(request.form)
     #next = request.args.get('next')
     if form.validate_on_submit() or request.method=='POST':
@@ -575,7 +594,7 @@ def retrieve_user_from_google(google_user):
   return create_user_db(
       #google_user.nickname().split('@')[0].replace('.', ' ').title(),
       google_user['given_name'],
-      google_user['email'],
+      google_user['given_name'],
       google_user['email'],
       googleplus_id=google_user['id'],
       admin=users.is_current_user_admin(),
@@ -905,7 +924,7 @@ class OpenIDLogin(flask.views.MethodView):
 
 # Creating user events in Eventus 
 
-@app.route('/create_event/',methods= ['POST','GET'])
+
 @login_required
 def create_event():
   form= CreateEventForm(request.form)

@@ -5,7 +5,7 @@ URL dispatch route mappings and error handlers
 
 """
 from flask import render_template,views, url_for
-from views import  signin, Signup
+#from views import  signin, Signup
 from application import app
 from application import views
 
@@ -50,7 +50,7 @@ from application import views
 
 
 # Sign out from Uscore
-#app.add_url_rule('/signout/',view_func=views.Signout.as_view('signout_page'),methods=['GET','POST'])
+app.add_url_rule('/signout/','signout_user',view_func=views.Signout.as_view('signout_page'),methods=['GET','POST'])
 
 # This is login user url
 # app.add_url_rule('/login/',view_func=views.Login.as_view('login_user'),methods= ['GET','POST'])
@@ -58,13 +58,19 @@ from application import views
 # app.add_url_rule('/login/',view_func=views.Login.as_view('login_user'),methods= ['GET','POST'])
 
 # sign up for the users
-#app.add_url_rule('/signup/',view_func=url_for('Signup'),methods=['GET','POST'])
+app.add_url_rule('/signup/','signup',view_func=views.Signup,methods=['GET','POST'])
 
 # Sign in for the users
-#app.add_url_rule('/signin/',view_func=url_for('signin'),methods=['GET','POST'])
+app.add_url_rule('/signin/','signin',view_func=views.signin,methods=['GET','POST'])
 
 # Sign out the users
 #app.add_url_rule('/signout/',view_func=views.View.as_view('signout_user').methods=['GET','POST'])
+
+
+# create new event
+app.add_url_rule('/create_event/','create_event',view_func=views.create_event,methods=['POST','GET'])
+
+
 
 ## Error handlers
 # Handle 404 errors

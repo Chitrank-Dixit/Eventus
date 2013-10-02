@@ -95,7 +95,6 @@ class Event(Base,modelx.EventX):
     googleplus_page = ndb.StringProperty(indexed=True, default='')
     facebook_page = ndb.StringProperty(indexed=True, default='')
     twitter_id = ndb.StringProperty(indexed=True, default='')
-    active = ndb.BooleanProperty(default=True)
     public = ndb.BooleanProperty(default=True)
     private= ndb.BooleanProperty(default=False)
     

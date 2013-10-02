@@ -14,7 +14,7 @@ See: http://flask.pocoo.org/docs/patterns/wtforms/
 from flaskext import wtf
 from flaskext.wtf import validators
 # from wtforms import TextField , BooleanField
-#from wtforms.ext.appengine.wtf import model_form
+#from wtforms.ext.appengine.ndb import model_form
 
 from model import User, Event
 
@@ -23,7 +23,7 @@ class ClassicExampleForm(wtf.Form):
     example_name = wtf.TextField('Name', validators=[validators.Required()])
     example_description = wtf.TextAreaField('Description', validators=[validators.Required()])
 
-# App Engine wtf model form example
+# App Engine ndb model form example
 ExampleForm = model_form(ExampleModel, wtf.Form, field_args={
     'example_name': dict(validators=[validators.Required()]),
     'example_description': dict(validators=[validators.Required()]),
@@ -35,12 +35,13 @@ class SignupForm(wtf.Form):
     email= wtf.TextField('email', validators=[validators.Required()])
     password = wtf.PasswordField('password', validators=[validators.Required(), validators.EqualTo('confirm', message='Passwords must match')])
     confirm = wtf.PasswordField('Repeat Password')
-    remember_me = wtf.BooleanField('remember_me', default = False)
+    
  
  
 class SigninForm(wtf.Form):
     email = wtf.TextField('email',validators=[validators.Required()])
     password = wtf.PasswordField('password',validators=[validators.Required()])
+    remember_me = wtf.BooleanField('remember_me', default = False)
     recaptcha = wtf.RecaptchaField()
 
 

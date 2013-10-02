@@ -19,9 +19,8 @@ from flaskext import oauth
 import util
 import model
 import config
-
 from application import app
-
+import urls
 # from application.metadata import Session, Base
 
 
@@ -75,6 +74,7 @@ def load_user(key):
 
 
 login_manager.init_app(app)
+login_manager.login_view = 'signin'
 
 
 def current_user_id():

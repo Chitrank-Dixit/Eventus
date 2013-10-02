@@ -13,7 +13,11 @@
 {% endblock %}
 {% block content %}
 	
+    <h3><center>Create a New Event</center></h3><br><br>
 	<div class="container theme-showcase">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-8">
 		{% for message in get_flashed_messages() %}
 		<div class=flash>{{ message }}</div>
 		{% endfor %}
@@ -199,9 +203,11 @@
   									<center>Already a Member<a href="" > Sign in </a> </center> 
                     </div>
             </div>
+        </form>
+        </div>
+        <div class="col-sm-2">
+        </div>
 
-
-		</form>
 
 	<div class="row">
 	

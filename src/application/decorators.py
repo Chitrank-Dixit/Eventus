@@ -11,6 +11,40 @@ import functools
 from functools import wraps
 import flask
 import util
+from flask import g
+from flaskext import login
+from flaskext import oauth
+import model
+import config
+from application import app
+
+
+
+
+
+
+
+def login_required(func):
+    """Requires standard login credentials"""
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if not users.get_current_user():
+            return flask.url_for(flask.url_for('signin', next=flask.request.url))
+        return func(*args, **kwargs)
+    return decorated_view
+
+
+def admin_required(func):
+    """Requires App Engine admin credentials"""
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if users.is_authenticated():
+            if not users.is_current_user_admin():
+                abort(401)  # Unauthorized
+            return func(*args, **kwargs)
+        return flask.url_for(flask.url_for('signin', next=flask.request.url))
+    return decorated_view
+
 
 '''
 def login_required(f):
@@ -36,28 +70,3 @@ def admin_required(f):
     return flask.abort(403)
   return decorated_function
 '''
-
-
-
-
-
-def login_required(func):
-    """Requires standard login credentials"""
-    @wraps(func)
-    def decorated_view(*args, **kwargs):
-        if not users.get_current_user():
-            return flask.redirect(flask.url_for('signin', next=flask.request.url))
-        return func(*args, **kwargs)
-    return decorated_view
-
-
-def admin_required(func):
-    """Requires App Engine admin credentials"""
-    @wraps(func)
-    def decorated_view(*args, **kwargs):
-        if users.get_current_user():
-            if not users.is_current_user_admin():
-                abort(401)  # Unauthorized
-            return func(*args, **kwargs)
-        return flask.redirect(flask.url_for('signin', next=flask.request.url))
-    return decorated_view
