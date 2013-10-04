@@ -12,9 +12,12 @@
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}" rel="stylesheet" />
     <!-- Bootstrap theme -->
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-theme.min.css') }}" rel="stylesheet">
+    
+    <link rel="stylesheet" src="{{ url_for('static', filename='bootstrap/css/sticky-footer.css') }}"></script>
 
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='bootstrap/css/theme.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
     <style> body { padding-top: 90px; } </style> <!-- Bootstrap -->
      <!-- <link href="/static/css/main.css" rel="stylesheet" /> --> 
     <link rel="shortcut icon" href="/static/img/favicon.ico" />
@@ -23,6 +26,7 @@
     {% block head_script %}{# defer-incapable JS block #}{% endblock %} 
 </head>
 <body>
+<div id="wrap">
     <div id="header">
         {% include 'addables/header.html' %} {# pull in navbar #}
     </div>
@@ -32,16 +36,19 @@
             {% block content %}{# main content area #}{% endblock %}
         </div>
     </div><!-- /container -->
+    </div>
     <div id="footer" class="container">
-            {% block footer %}Ankit Kulkarni and Chitrank Dixit{% endblock %}
+        {% include 'addables/footer.html' %}
     </div><!-- /footer -->
     
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/{{ jquery_version }}/jquery.min.js"></script> -->
     <script src="{{ url_for('static', filename='bootstrap/js/jquery.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    
     <script src="{{ url_for('static', filename='bootstrap/js/holder.js') }}"></script>
     <!-- <script src="/static/js/main.js"></script> -->
     {% block tail_script %}{# defer-capable JS block #}{% endblock %}
     {{ profiler_includes|safe }}
+
 </body>
 </html>

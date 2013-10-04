@@ -15,25 +15,12 @@
 	
 	<div class="container theme-showcase">
 	<div class="row">
-	
-		
-		
+			
 		<div class="col-sm-3 background" >
-  			
-  				user settings <br>
-  				<img src="# " class="img-rounded" width="150px" height="100px"> <button class="btn btn-default" data-toggle="tooltip" title="Edit Account Settings">Edit</button> <br>
-  				+ status (ol offline)
-  			
-    			
-    				
-      	
-            connect to the user<br>
-            G+ <br>
-            FB <br>
-            Twitter <br>				      	
-      	
-    			
-    			
+  		
+  				<img src="{{current_user.avatar(128)}}">
+  				<button class="btn btn-default" data-toggle="tooltip" title="Edit Account Settings">Edit</button> <br>
+  		  			
   			
 		</div>
 		<div class="col-sm-9">
@@ -49,7 +36,18 @@
 		<div class="tab-content">
 		<div class="tab-pane active" id="posts">Heheh</div>
 		<div class="tab-pane" id="favourites">oheheh</div>
-		<div class="tab-pane" id="events">ooheheh</div>
+		<div class="tab-pane" id="events">
+			<p>You have created some Events</p>
+			
+			{% for event_list in results %}
+			    <p> Neuer </p>
+				<p>{{ event_list.name }}</p>
+				<p>{{ event_list.description }}</p>
+			{% endfor %}
+			
+
+
+		</div>
 		<div class="tab-pane" id="followers">oooheheh</div>
 		<div class="tab-pane" id="following">oooheheh</div>
 		</div>

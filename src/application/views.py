@@ -17,7 +17,9 @@ http://flask.pocoo.org/docs/patterns/flashing/
 
 2) Recaptch for simple sign in (added)
 
-3) Flask-mail is not working need to make it work better.
+3) using Google App engine inbuilt mail feature
+https://developers.google.com/appengine/docs/python/mail/sendingmail
+https://developers.google.com/appengine/docs/python/mail/
 
 4) template design for creating , editing and event profile as well.
 
@@ -30,6 +32,7 @@ http://flask.pocoo.org/docs/patterns/flashing/
 """
 
 from google.appengine.runtime.apiproxy_errors import CapabilityDisabledError
+from google.appengine.api import mail
 import logging
 import json
 import random
@@ -205,17 +208,36 @@ def signin():
     return flask.render_template('signin.html', form=form)
  
                 
-
 '''
-class Signup(flask.views.MethodView):
-    def get(self):
-        return flask.render_template('signup.html')
-'''    
-
+@oid.after_login
+def after_login(resp):
+    if resp.email is None or resp.email == "":
+        flash('Invalid login. Please try again.')
+        return redirect(url_for('login'))
+    user = User.query.filter_by(email = resp.email).first()
+    if user is None:
+        nickname = resp.nickname
+        if nickname is None or nickname == "":
+            nickname = resp.email.split('@')[0]
+        nickname = User.make_unique_nickname(nickname)
+        user = User(nickname = nickname, email = resp.email, role = ROLE_USER)
+        db.session.add(user)
+        db.session.commit()
+        # make the user follow him/herself
+        db.session.add(user.follow(user))
+        db.session.commit()
+        
+    remember_me = False
+    if 'remember_me' in session:
+        remember_me = session['remember_me']
+        session.pop('remember_me', None)
+    login_user(user, remember = remember_me)
+    return redirect(request.args.get('next') or url_for('index'))
+'''
 
 
 @app.route('/signup/',methods = ['POST','GET'])
-def Signup():
+def signup():
     #error = None
     #signups = User.query()
     if g.user is not None and g.user.is_authenticated():
@@ -236,11 +258,16 @@ def Signup():
 
         if user != None and passwd != None:
             flash(u'User already registered with this %s email ' % form.email.data,category='error')
-            return redirect(url_for('Signup'))
+            return redirect(url_for('signup'))
         
         try:
             signup.put()
             #signup_id = .key.id()
+            message = mail.EmailMessage(sender='chitrankdixit1@gmail.com',subject="Welcome to Eventus")
+            message.to=form.email.data
+            message.body="Congratulations You have been registered to Eventus"
+            message.send()
+
             #msg = Message("You have been Registered to Eventus ",sender=config.ADMINS[0],recipients=[form.email.data])
             #msg.body="Welcome to Eventus You have successfully registered to Eventus, Please note down your credentials Username:"+form.name.data+" Password: "+form.password.data          
             flash(u'User %s successfully Registered Please check your mail for more details.' % form.name.data, category='success')
@@ -252,13 +279,27 @@ def Signup():
             return redirect(url_for('index'))
     return flask.render_template('signup.html',form=form)
 
-@app.route('/profile/')
-def profile():
-    return flask.render_template('profile.html')
 
-@app.route('/signup_form/')
-def signup_form():
-    return flask.render_template('signup_form.html')
+# This is user profile
+
+@app.route('/user/<name>/<int:uid>')
+@login_required
+def user_profile(name,uid):
+    user = model.User.retrieve_one_by('name' ,name)
+    uid = model.User.retrieve_one_by('id' ,uid)
+    if user == None and uid == None:
+        flash('User ' + name + ' not found.')
+        return redirect(url_for('index'))
+    userid = current_user.id
+    event_st = model.Event.query()
+    event_db = event_st.filter(model.Event.creator_id == userid)
+    results = event_db.fetch()
+    print event_db
+    if not event_db:
+      flash('You have not created any Event..')
+    return flask.render_template('profile.html',results= results)
+
+
 '''        
 class Signin_action(flask.views.MethodView):
     def get(self):
@@ -284,16 +325,11 @@ class Signin_action(flask.views.MethodView):
         return flask.render_template('index.html',login=True, next=next, error=error)
 '''
 
-class Signout(flask.views.MethodView):
-    def get(self):
-        login.logout_user()
-        flask.flash(u'You have been signed out.','success')
-        return redirect(url_for('index'))
-    
-    def post(self):
-        login.logout_user()
-        flask.flash(u'You have been signed out.','success')
-        return redirect(url_for('index'))
+@app.route('/signout',methods=['POST','GET'])
+def signout():
+  login.logout_user()
+  flash(u'You have been signed out.','success')
+  return redirect(url_for('index'))
         
         
         
@@ -931,18 +967,13 @@ def create_event():
   if form.validate_on_submit() and request.method=='POST':
     event = model.Event(
         name = form.name.data,
-        creator = form.creator.data,
-        manager = form.manager.data,
+        creator = current_user.name,
         url = form.url.data,
+        creator_id = current_user.id,
         description = form.description.data,
         venue= form.venue.data,
-        phone = form.phone.data,
-        googleplus_page = form.googleplus_page.data,
-        facebook_page = form.facebook_page.data,
-        twitter_id = form.twitter_id.data,
-        active= form.active.data,
-        public = form.public.data,
-        private = form.private.data
+        
+        
       )
     try:
       event.put()
@@ -955,3 +986,6 @@ def create_event():
       flash(u'App Engine Datastore is currently in read-only mode.', category='info')
       return redirect(url_for('index'))
   return render_template('create_event.html',form=form)
+
+  
+  

@@ -30,36 +30,37 @@ ExampleForm = model_form(ExampleModel, wtf.Form, field_args={
 })
 '''
 class SignupForm(wtf.Form):
-    name = wtf.TextField('name', validators=[validators.Required()])
+    name = wtf.TextField('Name', validators=[validators.Required()])
     #username = wtf.TextField('username', validators=[validators.Required()])
-    email= wtf.TextField('email', validators=[validators.Required()])
-    password = wtf.PasswordField('password', validators=[validators.Required(), validators.EqualTo('confirm', message='Passwords must match')])
+    email= wtf.TextField('Email', validators=[validators.Required()])
+    password = wtf.PasswordField('Password', validators=[validators.Required(), validators.EqualTo('confirm', message='Passwords must match')])
     confirm = wtf.PasswordField('Repeat Password')
     
  
  
 class SigninForm(wtf.Form):
-    email = wtf.TextField('email',validators=[validators.Required()])
-    password = wtf.PasswordField('password',validators=[validators.Required()])
+    email = wtf.TextField('Email',validators=[validators.Required()])
+    password = wtf.PasswordField('Password',validators=[validators.Required()])
     remember_me = wtf.BooleanField('remember_me', default = False)
     recaptcha = wtf.RecaptchaField()
 
 
 class CreateEventForm(wtf.Form):
     name = wtf.TextField('name', validators=[validators.Required()])
-    #logo = wtf.FileField('logo', )
-    creator = wtf.TextField('creator', validators=[validators.Required()])
-    manager = wtf.TextField('manager', default='')
+    # logo = wtf.FileField('logo', )
+    # creator = wtf.TextField('creator', validators=[validators.Required()])
+    # manager = wtf.TextField('manager', default='')
     url = wtf.TextField('url', default='')
     description = wtf.TextAreaField('description',default='')
-    venue = wtf.TextField('venue', default='')
-    phone = wtf.IntegerField('phone', default= 0000000000)
-    googleplus_page = wtf.TextField('googleplus_page', default='')
-    facebook_page = wtf.TextField('facebook_page', default='')
-    twitter_id = wtf.TextField('twitter_id', default='')
-    active = wtf.BooleanField('active',default=True)
-    public = wtf.BooleanField('public',default=True)
-    private= wtf.BooleanField('private',default=False)
+    venue = wtf.TextField('Where ', default='')
+    
+    # phone = wtf.IntegerField('phone', default= 0000000000)
+    #googleplus_page = wtf.TextField('googleplus_page', default='')
+    #facebook_page = wtf.TextField('facebook_page', default='')
+    #twitter_id = wtf.TextField('twitter_id', default='')
+    #active = wtf.BooleanField('active',default=True)
+    #public = wtf.BooleanField('public',default=True)
+    #private= wtf.BooleanField('private',default=False)
 
 '''     
 No need to make a model that is already made

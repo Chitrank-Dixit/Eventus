@@ -12,6 +12,11 @@
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}" rel="stylesheet" />
     <!-- Bootstrap theme -->
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-theme.min.css') }}" rel="stylesheet">
+    
+    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
+   
+    <link href="{{ url_for('static', filename='bootstrap/css/sticky-footer-navbar.css') }}" rel="stylesheet"> 
 
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='bootstrap/css/theme.css') }}" rel="stylesheet">
@@ -24,6 +29,7 @@
     {% block head_script %}{# defer-incapable JS block #}{% endblock %} 
 </head>
 <body>
+<div id="wrap">
     <div id="header">
         {% include 'addables/header.html' %} {# pull in navbar #}
     </div>
@@ -33,16 +39,19 @@
             {% block content %}{# main content area #}{% endblock %}
         </div>
     </div><!-- /container -->
-    <div id="footer" class="container">
+    </div>
+    <div id="footer">
         {% include 'addables/footer.html' %}
     </div><!-- /footer -->
     
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/{{ jquery_version }}/jquery.min.js"></script> -->
     <script src="{{ url_for('static', filename='bootstrap/js/jquery.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    
     <script src="{{ url_for('static', filename='bootstrap/js/holder.js') }}"></script>
     <!-- <script src="/static/js/main.js"></script> -->
     {% block tail_script %}{# defer-capable JS block #}{% endblock %}
     {{ profiler_includes|safe }}
+
 </body>
 </html>

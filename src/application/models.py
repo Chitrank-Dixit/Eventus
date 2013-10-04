@@ -15,7 +15,7 @@ import functools
 import flask
 from flaskext import login
 from flaskext import oauth
-
+from hashlib import md5
 import util
 import model
 import config
@@ -47,6 +47,7 @@ class FlaskUser(AnonymousUser):
     self.user_db = user_db
     self.id = user_db.key.id()
     self.name = user_db.name
+    self.email = user_db.email
     self.admin = user_db.admin
 
   def key(self):
@@ -63,6 +64,9 @@ class FlaskUser(AnonymousUser):
 
   def is_anonymous(self):
     return False
+
+  def avatar(self, size):
+    return 'http://www.gravatar.com/avatar/' + md5(self.email).hexdigest() + '?d=mm&s=' + str(size)
 
 
 @login_manager.user_loader
@@ -92,3 +96,15 @@ def current_user_db():
 def is_logged_in():
   return login.current_user.id != 0
 
+
+
+
+
+class EventData(model.Event):
+  def __init__(self, event_db):
+    self.user_db = event_db
+    self.id = event_db.key.id()
+    self.name = event_db.name
+    self.email = event_db.email
+    
+  

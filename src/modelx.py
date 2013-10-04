@@ -20,7 +20,12 @@ class ConfigX(object):
     return cls.get_or_insert('master')
 
 class UserX(object):
+  @classmethod
   @property
+
+  def get_master_db(cls):
+    return cls.get_or_insert('master')
+    
   def avatar_url(self):
     return 'http://www.gravatar.com/avatar/%s?d=identicon&r=x' % (
         md5.new(self.email or self.name).hexdigest().lower()

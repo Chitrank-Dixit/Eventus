@@ -1,5 +1,17 @@
 # -*- coding: utf-8 -*-
+'''
+Google App engine
+Datastore Attribute Property reference
+https://developers.google.com/appengine/docs/python/datastore/typesandpropertyclasses
+Enabled admin mode to Datastore for backup and restore data
 
+For saving large files like images, videos try blobstore
+https://developers.google.com/appengine/docs/python/blobstore/
+
+NDB Cheetsheet (MOST IMP)
+https://docs.google.com/document/d/1AefylbadN456_Z7BZOpZEXDq8cR8LYu7QgI7bt5V0Iw/mobilebasic
+
+'''
 from google.appengine.ext import ndb
 from uuid import uuid4
 import os
@@ -61,6 +73,7 @@ class User(Base, modelx.UserX):
   id = ndb.IntegerProperty(indexed= True)
   name = ndb.StringProperty(indexed=True, required=True)
   username = ndb.StringProperty(indexed=True, required=True)
+  #email = ndb.EmailProperty(indexed=True, default='')
   email = ndb.StringProperty(indexed=True, default='')
   password = ndb.StringProperty(indexed=True , default='')
   confirm = ndb.StringProperty(indexed=True , default='')
@@ -84,14 +97,21 @@ class User(Base, modelx.UserX):
     ]))
 
 class Event(Base,modelx.EventX):
+    '''
+    Refering Google + and Facebook Event model , also 
+    customizing to generate team based events performance reports and visualizations 
+    '''
     name = ndb.StringProperty(indexed=True, required=True)
-    #logo = nbb.FileProperty(indexed=True)
+    #logo = ndb.FileProperty(indexed=True)
     creator = ndb.StringProperty(indexed=True, required=True)
+    creator_id = ndb.IntegerProperty(indexed=True , required=True)
     manager = ndb.StringProperty(indexed=True)
     url = ndb.StringProperty(indexed=True, default='')
     description=ndb.StringProperty(indexed=True, default='')
     phone = ndb.IntegerProperty(indexed=True,default=0000000000)
     venue = ndb.StringProperty(indexed=True, required='')
+    start_date = ndb.DateTimeProperty(indexed= True)
+    end_date = ndb.DateTimeProperty(indexed=True)
     googleplus_page = ndb.StringProperty(indexed=True, default='')
     facebook_page = ndb.StringProperty(indexed=True, default='')
     twitter_id = ndb.StringProperty(indexed=True, default='')
