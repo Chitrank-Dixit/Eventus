@@ -46,8 +46,8 @@ GOOGLE_API_URL = 'https://www.googleapis.com/oauth2/v1/'
 # recaptch made using Google 
 # https://www.google.com/recaptcha/admin/site?siteid=317209387
 RECAPTCHA_USE_SSL = True
-RECAPTCHA_PUBLIC_KEY = '6LcrO-gSAAAAAI1pdEGzxcinj_81QB4z2OOCR9b0'
-RECAPTCHA_PRIVATE_KEY = '6LcrO-gSAAAAAFtHfxDWsDSiSMaSVph1jaQrcMYe'
+RECAPTCHA_PUBLIC_KEY = '6Ld5ZOgSAAAAACeDZoMNS707cmaraBEVJd2PFMTj'
+RECAPTCHA_PRIVATE_KEY = '6Ld5ZOgSAAAAAFLTuAJSwMOCJ5aZ_IpoMrGvTRXG'
 # RECAPTCHA_OPTIONS = 
 
 # flask-mail settings
