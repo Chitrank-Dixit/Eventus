@@ -7,13 +7,7 @@
 {% block content %}
 	<div class="container theme-showcase">
 	<div class="row">
-	  {% for message in get_flashed_messages() %}
-    <div class=flash>{{ message }}</div>
-    {% endfor %}
-
-		
-			
-      
+	       
       <h3><center>Sign Up Eventus</center></h3><br><br>
 		<div class="col-sm-6">
   			<form name="signup" class="navbar-form form-inline" action="{{ url_for('signup') }}" method="post" accept-charset="utf-8">

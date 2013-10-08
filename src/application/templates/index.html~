@@ -2,22 +2,13 @@
 {% extends "base.html" %}
 
 {% block content %}	    
-		{% with messages = get_flashed_messages() %}
-		{% if messages %}
-		<div class="flashes alert alert-success">
-		{% for message in messages %}
-			<button type="button" class="close" data-dismiss="alert">&times;</button>
-			<strong>!!!</strong> {{message}} <strong>!!!</strong>
-		{% endfor %}
-		</div>
-		{% endif %}
 		
 		<div class="jumbotron">
-        <h1>Uscore - Events never been so Interesting</h1>
+        <h1>Eventus - Events never been so Interesting</h1>
         <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
 			<center>
 			      
-        <p><a href="#" class="btn btn-default btn-lg" role="button">Learn more &raquo;</a> <a href="#" class="btn btn-success btn-lg" role="button">Sign in &raquo;</a></p>
+        <p><a href="#" class="btn btn-default btn-lg" role="button">Learn more &raquo;</a> <a href="{{ url_for('signin') }}" class="btn btn-success btn-lg" role="button">Sign in &raquo;</a></p>
         
         <center>
       </div>
@@ -26,9 +17,9 @@
 		<!-- Add any content here like intro video , testimonials , how to use Help doc links, Support , who is using ETC -->		
 		      
       </div>
+
       
-      
-{% endwith %}
+
 
 {% endblock %}	
     

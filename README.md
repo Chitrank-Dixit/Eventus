@@ -120,6 +120,31 @@ Google Cloud
 - Access Google Cloud Datastore from here( https://cloud.google.com/console#/project/apps~uscore-test/datastore/query)
 - https://docs.google.com/document/d/1AefylbadN456_Z7BZOpZEXDq8cR8LYu7QgI7bt5V0Iw/mobilebasic
 - https://developers.google.com/appengine/docs/python/ndb
+
+Backbone.js Tutorials
+------------------------------------------------
+- http://backbonejs.org/
+- http://addyosmani.github.io/backbone-fundamentals/
+- http://backbonetutorials.com/
+- 
+
+
+Making an API ( RESTful API ) for user with backbone.js
+--------------------------------------------------------
+- http://stackoverflow.com/questions/10182372/flask-with-backbone-js-rest-api
+- http://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
+- http://blog.miguelgrinberg.com/post/designing-a-restful-api-using-flask-restful
+- http://blog.miguelgrinberg.com/post/writing-a-javascript-rest-client (javascript rest client)
+
+- http://flask.pocoo.org/docs/views/#method-based-dispatching
+
+- http://blog.luisrei.com/
+
+- http://blog.luisrei.com/articles/flaskrest.html
+
+- http://blog.luisrei.com/articles/rest.html
+
+
 _______________________________________________________________________________________
 
 
@@ -140,7 +165,7 @@ Tech Stack
 - Python Flask
 - Google APIs
 - Bootstrap 2
-- Angular.js
+- Backbone.js (and its dependencies) or Knockoutjs or Angularjs
 - Google App Engine
 - Google Cloud Datastore (NoSQL DB)
 - Font Awesome, bootstrap-social-buttons

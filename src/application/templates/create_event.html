@@ -18,10 +18,7 @@
         <div class="col-sm-2">
         </div>
         <div class="col-sm-8">
-		{% for message in get_flashed_messages() %}
-		<div class=flash>{{ message }}</div>
-		{% endfor %}
-
+		
 		<form name="create_event" class="navbar-form form-inline" method="post" action="/create_event/">
 		{{ form.csrf_token }}
 				<fieldset>
@@ -96,5 +93,20 @@
   		
 	</div>
 	<hr>
+
+{% block tail_script %}
+         <script type="text/javascript">
+            Events = Backbone.Model.extend({
+                initialize : function() {
+                    console.log('Hello World Work hard')
+                }
+
+            });
+
+            var create_event = new Events();
+            console.log();
+         </script>
+
+{% endblock tail_script %}
 
 {% endblock %}

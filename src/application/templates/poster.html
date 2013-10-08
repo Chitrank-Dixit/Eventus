@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %} Post Something | Eventus {% endblock %}
+{% block style_block %}
+  <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
+  <style type="text/css">
+    .background {
+       background-color: #F3F3F3;
+      }
+  
+  </style>
+{% endblock %}
+{% block content %}
+  
+    <form name="post_it" class="navbar-form form-inline" method="post" action="/poster/">
+    {{ form.csrf_token }}
+        <fieldset>
+          {{ form.hidden_tag() }}
+            {% from "macro/_formhelpers.html" import render_field %}
+            <div class="control-group">
+                    
+                    <div class="controls">
+                        {{ render_field(form.body, name="body" class="form-control", size="5", placeholder="Post Anything") }}
+                        {% if form.body.errors %}
+                        <ul class="errors">
+                            {% for error in form.body.errors %}
+                            <li class="flashes alert-warning">{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                    <div class="controls">
+                        <br><input type="submit" name="postit" value"poster" class="btn btn-primary" /><br><br>
+                    
+                    </div>
+            </div>
+{% block tail_script %}
+<script type="text/javascript">
+  Post = Backbone.Model.extend({
+            urlRoot: '/poster'
+
+        });
+  var post = new Post();
+  console.log(person.toJSON());
+  console.log(person.attributes);
+
+  var View = Backbone.View.extend({
+        initialise: function(){
+          this.model = new Post();
+          this.model.on("change", this.render, this);
+          this.model.fetch();
+    }
+        });
+        // var views = new View({ blankOption: "empty string"});
+        var view = new View({ model: model });
+  var UsersCollection = Backbone.Collection.extend({
+    model: User,
+    url: '/users' // note this difference: use url for collections, not urlRoot.
+  })
+</script>
+
+{% endblock %}
+
+
+{% endblock %}

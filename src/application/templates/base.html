@@ -9,18 +9,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
     <title>{% block title%}Flask on App Engine{% endblock %}</title>
-    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" />
     <!-- Bootstrap theme -->
-    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-theme.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-responsive.min.css') }}" rel="stylesheet">
     
     <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
-   
-    <link href="{{ url_for('static', filename='bootstrap/css/sticky-footer-navbar.css') }}" rel="stylesheet"> 
+    
+    <!-- <link href="{{ url_for('static', filename='bootstrap/css/sticky-footer-navbar.css') }}" rel="stylesheet"> -->
 
     <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='bootstrap/css/theme.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
+    <!-- <link href="{{ url_for('static', filename='bootstrap/css/theme.css') }}" rel="stylesheet"> -->
+    <!-- <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet"> -->
     <style> body { padding-top: 90px; } </style> <!-- Bootstrap -->
      <!-- <link href="/static/css/main.css" rel="stylesheet" /> --> 
     <link rel="shortcut icon" href="/static/img/favicon.ico" />
@@ -34,7 +34,7 @@
         {% include 'addables/header.html' %} {# pull in navbar #}
     </div>
     <div class="container" id="maincontent">
-        <!-- {% include 'includes/flash_message.html' %} {# page-level feedback notices #} -->
+        {% include 'addables/flash_message.html' %} {# page-level feedback notices #}
         <div id="body_content">
             {% block content %}{# main content area #}{% endblock %}
         </div>
@@ -46,9 +46,17 @@
     
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/{{ jquery_version }}/jquery.min.js"></script> -->
     <script src="{{ url_for('static', filename='bootstrap/js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/json2.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
     
     <script src="{{ url_for('static', filename='bootstrap/js/holder.js') }}"></script>
+
+    <script src="{{ url_for('.static', filename = 'bootstrap/js/moment.min.js') }}"></script>
+    
+    <script src="{{ url_for('static', filename='bootstrap/js/underscore.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/backbone-min.js') }}"></script>
+
+
     <!-- <script src="/static/js/main.js"></script> -->
     {% block tail_script %}{# defer-capable JS block #}{% endblock %}
     {{ profiler_includes|safe }}

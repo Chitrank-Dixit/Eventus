@@ -12,10 +12,6 @@ so no need to make one page for signup page view and other for signup data save 
 was creating problem with form name undefined
 
 Todo
-1) send flash to pages and recognie the category sucess or danger 
-http://flask.pocoo.org/docs/patterns/flashing/
-
-2) Recaptch for simple sign in (added)
 
 3) using Google App engine inbuilt mail feature
 https://developers.google.com/appengine/docs/python/mail/sendingmail
@@ -38,7 +34,7 @@ import json
 import random
 import string
 from apiclient.discovery import build
-from flask import make_response, request, render_template, flash, url_for, redirect, session,g
+from flask import make_response, request, render_template, flash, url_for, redirect, session,g, jsonify
 # from flask.ext import 
 import flask,flask.views
 from flask_cache import Cache
@@ -63,7 +59,7 @@ from flaskext import oauth
 import util
 import model
 import config
-from forms import SignupForm, SigninForm, CreateEventForm
+from forms import SignupForm, SigninForm, CreateEventForm , CreatePost
 # Google API python Oauth 2.0
 import httplib2
 from oauth2client.client import AccessTokenRefreshError
@@ -75,6 +71,9 @@ from flaskext.kvsession import KVSessionExtension
 
 # Flask-Cache (configured to use App Engine Memcache API)
 cache = Cache(app)
+
+# Mail settings specified
+# message = mail.InboundEmailMessage(request.body)
 
 @login_manager.user_loader
 def load_user(key):
@@ -297,7 +296,7 @@ def user_profile(name,uid):
     print event_db
     if not event_db:
       flash('You have not created any Event..')
-    return flask.render_template('profile.html',results= results)
+    return flask.render_template('profile.html',results= results, user = user)
 
 
 '''        
@@ -336,7 +335,7 @@ def signout():
 class admin(flask.views.MethodView):
   """This function renders the view to admin after singin."""
   def get(self):
-    return flask.render_template('uscore-admin.html')
+    return flask.render_template('eventus-admin.html')
     
 ################################################################################
 # Google + Signin
@@ -988,4 +987,18 @@ def create_event():
   return render_template('create_event.html',form=form)
 
   
-  
+@app.route('/poster/',methods=['POST','GET'])
+def post_it():
+  form = CreatePost(request.form)
+  if form.validate_on_submit() and request.method=='POST':
+    poster = model.Post(
+        body = form.body.data
+      )
+    try:
+      poster.put()
+      flash("Poster has been populated")
+      return (redirect(url_for('post_it')))
+    except CapabilityDisabledError:
+      flash('Error Occured while posting')
+      return redirect(url_for('post_it'))
+  return render_template('poster.html', form=form)

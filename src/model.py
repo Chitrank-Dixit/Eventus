@@ -118,5 +118,6 @@ class Event(Base,modelx.EventX):
     public = ndb.BooleanProperty(default=True)
     private= ndb.BooleanProperty(default=False)
     
-
+class Post(Base, modelx.EventX):
+    body = ndb.StringProperty(indexed= True, required=True)
     

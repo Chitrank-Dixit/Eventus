@@ -20,6 +20,7 @@ libraries:
 
 inbound_services:
 - warmup
+- mail
 
 handlers:
 - url: /favicon.ico
@@ -41,3 +42,7 @@ handlers:
 
 - url: .*
   script: run.application.app
+
+- url: /_ah/mail/.+
+  script: handle_incoming_email.app
+  login: admin

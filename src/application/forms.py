@@ -16,7 +16,7 @@ from flaskext.wtf import validators
 # from wtforms import TextField , BooleanField
 #from wtforms.ext.appengine.ndb import model_form
 
-from model import User, Event
+from model import User, Event , Post
 
 '''
 class ClassicExampleForm(wtf.Form):
@@ -61,6 +61,11 @@ class CreateEventForm(wtf.Form):
     #active = wtf.BooleanField('active',default=True)
     #public = wtf.BooleanField('public',default=True)
     #private= wtf.BooleanField('private',default=False)
+
+
+class CreatePost(wtf.Form):
+    body = wtf.TextField('Post', validators=[validators.Required()])
+
 
 '''     
 No need to make a model that is already made
