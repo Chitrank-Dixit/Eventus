@@ -71,7 +71,8 @@ app.add_url_rule('/create_event/','create_event',view_func=views.create_event,me
 
 # create new event modal
 
-
+# url for organizer event details page
+#app.add_url_rule('/create_event/','create_event',view_func=views.create_event,methods=['POST','GET'])
 
 ## Error handlers
 # Handle 404 errors

@@ -984,7 +984,7 @@ def create_event():
     except CapabilityDisabledError:
       flash(u'App Engine Datastore is currently in read-only mode.', category='info')
       return redirect(url_for('index'))
-  return render_template('create_event.html',form=form)
+  return render_template('organizer_event_details.html',form=form)
 
   
 @app.route('/poster/',methods=['POST','GET'])

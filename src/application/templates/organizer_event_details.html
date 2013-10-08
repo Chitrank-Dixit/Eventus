@@ -1,0 +1,230 @@
+
+
+{% extends 'base_core.html' %}
+{% block title %}Event Details| Eventus {% endblock %}
+{% block style_block %}
+
+
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}" rel="stylesheet" />
+
+
+
+    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
+
+     <script src="{{ url_for('static', filename='bootstrap/js/jquery.js') }}"></script>
+     
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+
+
+  <style type="text/css">
+    .background {
+       background-color: #F3F3F3;
+      }
+      .nav1 {
+          line-height:auto;
+          cursor: pointer;
+      }
+  
+  </style>
+{% endblock %}
+
+{% block content %}
+<h3><center>Create a New Event</center></h3><br><br>
+
+
+    <div class="span12 theme-showcase" style="background-color:">
+        <!-- left column -->
+        <div class="span2 nav1"  style="background-color:#EFEFEF">
+            <!-- list of options -->
+
+            <ul style="padding:45px 0px 10px 5px">
+
+                <!-- modals for this page -->
+
+                <!-- admin modal for the page -->
+
+                <div id="addMg" class="modal hide fade" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h3 >Add the Managers</h3>
+                  </div>
+                  <div class="modal-body">
+                    <label>Enter the name of the managers</label>
+                    <textarea type="text" name ="toBeManagers" style="width:400px;"  ></textarea><BR>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+
+                
+
+                <a href="#addMg" role="link" data-toggle="modal">Add Manager</a><br>
+                 
+
+                <!-- see request option -->
+
+                <a href=""> See request</a><br>
+
+
+
+
+
+
+
+                <!-- Add Team Leader for the page -->
+                
+                <div id="addCaptain" class="modal hide fade" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h3 >Add the Captain</h3>
+                  </div>
+                  <div class="modal-body">
+                    <label>Add the names of captain</label>
+                    <textarea type="text" name ="toBeCaptains" style="width:400px;"  ></textarea><BR>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+
+                <a href="#addCaptain" role="link" data-toggle="modal">Add Captain</a><br>
+
+
+
+                <!-- Add members directly -->
+                <div id="addDirect" class="modal hide fade" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h3 >Add Direct</h3>
+                  </div>
+                  <div class="modal-body">
+                    <label>Add the names of the attendes</label>
+
+                    <textarea type="text" name ="toBeManagers" style="width:400px;"  ></textarea><BR>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+
+                <a href="#addDirect" role="link" data-toggle="modal">Add Direct</a><br>
+
+
+
+                <!-- Ban the following managers -->
+               
+                <div id="banMg" class="modal hide fade" tabindex="2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h3 >Ban Managers</h3>
+                  </div>
+                  <div class="modal-body">
+                    <label>Ban these manager</label>
+
+                    <textarea type="text" name ="banManagers" style="width:400px;"  ></textarea><BR>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+                <a href="#banMg" role="link" data-toggle="modal">Ban Manager</a><br>
+
+
+
+            </ul>
+
+        </div>
+
+        <!-- center area -->
+        
+        <div class="span10 nav1" style="background-color:">
+            <form name="create_event" class="navbar-form form-inline" method="post" action="/create_event/">
+              {{ form.csrf_token }}
+                <fieldset>{{ form.hidden_tag() }}
+                  {% from "macro/_formhelpers.html" import render_field %}
+
+                <div class="control-group">
+
+                  <div class="controls">
+                      {{ render_field(form.name, class="form-control", size="5", placeholder="Event Name") }}
+                      {% if form.name.errors %}
+                      <ul class="errors">
+                          {% for error in form.name.errors %}
+                          <li class="flashes alert-warning">{{ error }}</li>
+                          {% endfor %}
+                      </ul>
+                      {% endif %}
+                  </div>
+                  <div class="controls">
+                      {{ render_field(form.url, class="form-control pull-right", placeholder="Website/Blog/URL") }}
+                      {% if form.url.errors %}
+                      <ul class="errors">
+                          {% for error in form.url.errors %}
+                          <li>{{ error }}</li>
+                          {% endfor %}
+                      </ul>
+                      {% endif %}
+                  </div>
+
+                </div>
+
+                <div class="controls">
+                    {{ render_field(form.description, class="form-control", placeholder="Describe your event") }}
+                    {% if form.description.errors %}
+                    <ul class="errors">
+                        {% for error in form.description.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <div class="controls">
+                    {{ render_field(form.venue, class="form-control", placeholder="Where ") }}
+                    {% if form.venue.errors %}
+                    <ul class="errors">
+                        {% for error in form.venue.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+
+
+
+                <label>Event Name</label> 
+                <input type="text" name="eventName"placeholder="Enter the name of event"/><br/><br/>
+
+                <label>Your Event url</label> 
+                <input type="url" name="eventName"placeholder="Enter g+ url of event"/><br/><br/>
+
+                <label>Event Description</label> 
+                <textarea  name="eventName"placeholder="Enter the event Description"></textarea><br><br>
+
+                <label>Enter the date</label> 
+                <input type="date" name="eventName"placeholder="choose the start date for event"/> to <input type="date" name="eventName"placeholder="Choose the end date for the event"/><br/><br/>
+
+                <label>Location of Event </label> 
+                <input type="text" name="eventName"placeholder="Enter the location for the event"/><br/><br/>
+
+
+                <div class="control-group" align="center">
+                  <center> <button class="btn btn-success" name="create_event" value"create_event"> Submit</button><br><br> </center>
+                  
+              
+                </div>
+
+
+            </form>
+
+            
+        </div>
+
+    </div>
+{% endblock %}
