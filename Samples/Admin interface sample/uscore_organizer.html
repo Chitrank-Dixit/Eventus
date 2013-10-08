@@ -4,10 +4,10 @@
 
 <head>
     <title> Uscore</title>
-    <link rel = "stylesheet" href = "static/bootstrap.css" type = "text/css">
-    <script src="static/angular.js"></script>
-    <script src="static/bootstrap-ui.js"></script>
-    <script src="adminmodal.js"></script>
+    <link rel = "stylesheet" href = "./bootstrap.css" >
+    <script src="./jquery.js"></script>
+    <script src="./bootstrap.js"></script>
+    
     
    
     <style>
@@ -35,100 +35,98 @@
 
                 <!-- admin modal for the page -->
 
-                <div ng-controller="addManagerModal">
-                    <script type="text/ng-template" id="addManager.html">
-                        <div class="modal-header">
-                            <h3>I'm a modal!'</h3>
-                        </div>
-                        <div class="modal-body"  >
-                            <label>Enter the name of the managers</label>
-                            
-                            <textarea type="text" name ="toBeManagers" style="width:400px;"  ></textarea><BR>
-                            <button class="btn btn-primary"><i class="plus">Add</button>
-
-                        </div>
-                        <div class="modal-footer" >
-                            <button class="btn btn-primary" ng-click="ok()">Save</button>
-                            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-                        </div>
-                    </script>
-
-                    <a ng-click="open()">Add Manager</a>
+                <div id="addMg" class="modal hide fade" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h3 >Add the Managers</h3>
+                  </div>
+                  <div class="modal-body">
+                    <label>Enter the name of the managers</label>
+                    <textarea type="text" name ="toBeManagers" style="width:400px;"  ></textarea><BR>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button class="btn btn-primary">Save changes</button>
+                  </div>
                 </div>
+
+                
+
+                <a href="#addMg" role="link" data-toggle="modal">Add Manager</a><br>
+                 
 
                 <!-- see request option -->
 
-                <a href=""> See request</a>
+                <a href=""> See request</a><br>
+
+
 
 
 
 
 
                 <!-- Add Team Leader for the page -->
-                <div ng-controller="addCaptainModal">
-                    <script type="text/ng-template" id="addCaptain.html">
-                        <div class="modal-header">
-                            <h3>Add Captain</h3>
-                        </div>
-                        <div class="modal-body">
-                            <label>Add the names of captain</label>
-                            <textarea type="text" name ="toBeCaptains" style="width:400px;"  ></textarea><BR>
-                            <button class="btn btn-primary"><i class="plus">Add</button>
-
-
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-primary" ng-click="ok()">Save</button>
-                            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-                        </div>
-                    </script>
-
-                    <a ng-click="open()">Add Captain</a>
+                
+                <div id="addCaptain" class="modal hide fade" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h3 >Add the Captain</h3>
+                  </div>
+                  <div class="modal-body">
+                    <label>Add the names of captain</label>
+                    <textarea type="text" name ="toBeCaptains" style="width:400px;"  ></textarea><BR>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button class="btn btn-primary">Save changes</button>
+                  </div>
                 </div>
+
+                <a href="#addCaptain" role="link" data-toggle="modal">Add Captain</a><br>
+
 
 
                 <!-- Add members directly -->
-                <div ng-controller="addDirectModal">
-                    <script type="text/ng-template" id="addDirect.html">
-                        <div class="modal-header">
-                        <h3>Add members Direct </h3>
-                        </div>
-                        <div class="modal-body">
-                        <label>Add the names of the attendes</label>
+                <div id="addDirect" class="modal hide fade" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h3 >Add Direct</h3>
+                  </div>
+                  <div class="modal-body">
+                    <label>Add the names of the attendes</label>
 
-                        <textarea type="text" name ="toBeManagers" style="width:400px;"  ></textarea><BR>
-                        <button class="btn btn-primary"><i class="plus">Add</button>
-
-
-                        </div>
-                        <div class="modal-footer">
-                        <button class="btn btn-primary" ng-click="ok()">Save</button>
-                        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-                        </div>
-                    </script>
-
-                    <a ng-click="open()">Add direct</a>
+                    <textarea type="text" name ="toBeManagers" style="width:400px;"  ></textarea><BR>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button class="btn btn-primary">Save changes</button>
+                  </div>
                 </div>
+
+                <a href="#addDirect" role="link" data-toggle="modal">Add Direct</a><br>
+
+
 
                 <!-- Ban the following managers -->
-                <div ng-controller="banManagerModal">
-                    <script type="text/ng-template" id="banManager.html">
-                        <div class="modal-header">
-                        <h3>I'm a modal!'</h3>
-                        </div>
-                        <div class="modal-body">
-                        <label>Ban these managers !</label>
+               
+                <div id="banMg" class="modal hide fade" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h3 >Ban Managers</h3>
+                  </div>
+                  <div class="modal-body">
+                    <label>Ban these manager</label>
 
-
-                        </div>
-                        <div class="modal-footer">
-                        <button class="btn btn-primary" ng-click="ok()">OK</button>
-                        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-                        </div>
-                    </script>
-
-                    <a ng-click="open()">Ban Manager</a>
+                    <textarea type="text" name ="banManagers" style="width:400px;"  ></textarea><BR>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button class="btn btn-primary">Save changes</button>
+                  </div>
                 </div>
+                <a href="#banMg" role="link" data-toggle="modal">Ban Manager</a><br>
+
+
 
             </ul>
 
