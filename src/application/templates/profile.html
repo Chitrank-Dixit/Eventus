@@ -12,11 +12,14 @@
 			
 		<div class="col-sm-3 background" >
   		
-  			<img src="{{current_user.avatar(128)}}">
+  			<img src="{{user.avatar(128)}}">
   			<button class="btn btn-default" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Edit Profile</button> <br><br>
   		  	<button class="btn btn-success" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Follow</button> <br><br>
   		  	<button class="btn btn-danger" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Unfollow</button> <br>
-  			
+        <p>{{user.name}}</p>
+        <p>{{user.manager}}</p>
+        <p>{{user.username}}</p>
+        
 		</div>
 		<div class="col-sm-9">
 		<ul class="nav nav-tabs">

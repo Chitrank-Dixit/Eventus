@@ -22,7 +22,7 @@
     </div>
     <div class="panel-body">
         {{ event_list.description }}
-        <ul class="pull-right">{{ event_list.creator }}</ul>
+        <ul class="pull-right"><a href="/user/{{ event_list.creator }}/{{ event_list.creator_id }}/">{{ event_list.creator }}</a></ul>
     </div>
 </div>                
 

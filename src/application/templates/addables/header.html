@@ -75,6 +75,7 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{current_user.avatar(25)}}">  {{current_user.name}}<b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="{{ url_for('user_profile' , name = g.user.name, uid=g.user.id )}}"><i class="icon-edit"></i> Profile</a></li>
+                <li><a href="{{ url_for('user_profile_settings', name=g.user.name, uid=g.user.id ) }}"><i class="icon-gear"></i> Settings</a></li>
                 <li><a href="{{ url_for('signout') }}"><i class="icon-signout"></i> Sign out</a></li>
                 
                 

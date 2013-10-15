@@ -284,10 +284,10 @@ def signup():
 
 
 # This is user profile
-
-@app.route('/user/<name>/<int:uid>')
+#@app.route('/user/<name>/')
+@app.route('/user/<name>/<int:uid>/', methods=['GET']) # /
 @login_required
-def user_profile(name,uid):
+def user_profile(name,uid):  #
     user = model.User.retrieve_one_by('name' ,name)
     uid = model.User.retrieve_one_by('id' ,uid)
     if user == None and uid == None:
@@ -298,9 +298,12 @@ def user_profile(name,uid):
     event_db = event_st.filter(model.Event.creator_id == userid)
     results = event_db.fetch()
     print event_db
-    if not event_db:
-      flash('You have not created any Event..')
     return flask.render_template('profile.html',results= results, user = user)
+
+@app.route('/<name>/edit_profile/<int:uid>', methods=['GET','POST'])
+@login_required
+def user_profile_settings(name,uid):
+  return render_template('edit_profile.html')
 
 
 '''        

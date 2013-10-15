@@ -16,6 +16,7 @@ from google.appengine.ext import ndb
 from uuid import uuid4
 import os
 import modelx
+from hashlib import md5
 
 
 # The timestamp of the currently deployed version
@@ -74,6 +75,7 @@ class User(Base, modelx.UserX):
   name = ndb.StringProperty(indexed=True, required=True)
   username = ndb.StringProperty(indexed=True, required=True)
   #email = ndb.EmailProperty(indexed=True, default='')
+  about_me = ndb.StringProperty(indexed=True)
   email = ndb.StringProperty(indexed=True, default='')
   password = ndb.StringProperty(indexed=True , default='')
   confirm = ndb.StringProperty(indexed=True , default='')
@@ -95,6 +97,9 @@ class User(Base, modelx.UserX):
       'username',
       'avatar_url',
     ]))
+
+  def avatar(self, size):
+    return 'http://www.gravatar.com/avatar/' + md5(self.email).hexdigest() + '?d=mm&s=' + str(size)
 
 class Event(Base,modelx.EventX):
     '''
