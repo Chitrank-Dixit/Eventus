@@ -4,11 +4,11 @@
   {% endfor %} 
 {% endmacro %} 
 
-{% macro field_description(field) %}
-  {% if field.description %}
+{% macro field_description(field)
+  {% if field.description
     <p class="help-block">{{field.description}}</p>
-  {% endif %}
-{% endmacro %}
+  {% endif
+{% endmacro
 
 {% macro errors_and_description(field) %}
   {{field_errors(field)}}
@@ -18,7 +18,7 @@
 {% macro input_field(field, type='text', placeholder='', autocomplete=True) %}
   <div class="form-group {{'has-error' if field.errors else ''}}">
     {{field.label(class='control-label')}}
-    {{field(class='form-control', type=type, autocomplete='on' if autocomplete else 'off', placeholder=placeholder, **{'data-bind': 'value: bodyte'} )}}
+    {{field(class='form-control', type=type, autocomplete='on' if autocomplete else 'off', placeholder=placeholder)}}
     {{errors_and_description(field)}}
   </div>
 {% endmacro %}
@@ -86,7 +86,3 @@
     {{field_errors(field)}}
   </div>
 {% endmacro %}
-
-{% block tail_script %}
-<script src="{ url_for('static',filename='bootstrap/js/knockout-2.3.0.js') }"></script>
-{% endblock %}

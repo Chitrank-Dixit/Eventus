@@ -106,12 +106,12 @@ class Event(Base,modelx.EventX):
     creator = ndb.StringProperty(indexed=True, required=True)
     creator_id = ndb.IntegerProperty(indexed=True , required=True)
     manager = ndb.StringProperty(indexed=True)
-    url = ndb.StringProperty(indexed=True, default='')
+    event_url = ndb.StringProperty(indexed=True)
     description=ndb.StringProperty(indexed=True, default='')
     phone = ndb.IntegerProperty(indexed=True,default=0000000000)
-    venue = ndb.StringProperty(indexed=True, required='')
-    start_date = ndb.DateTimeProperty(indexed= True)
-    end_date = ndb.DateTimeProperty(indexed=True)
+    venue = ndb.StringProperty(indexed=True, required=True)
+    sdate = ndb.DateProperty(indexed= True)
+    edate = ndb.DateProperty(indexed= True)
     googleplus_page = ndb.StringProperty(indexed=True, default='')
     facebook_page = ndb.StringProperty(indexed=True, default='')
     twitter_id = ndb.StringProperty(indexed=True, default='')
@@ -119,5 +119,8 @@ class Event(Base,modelx.EventX):
     private= ndb.BooleanProperty(default=False)
     
 class Post(Base, modelx.EventX):
-    body = ndb.StringProperty(indexed= True, required=True)
-    
+    poster = ndb.StringProperty(indexed= True, required=True)
+    postbody = ndb.StringProperty(indexed=True, required=True)
+    posturl = ndb.StringProperty(indexed=True, required=True)
+    sdate = ndb.DateProperty(indexed= True, required= True)
+    edate = ndb.DateProperty(indexed= True, required= True)

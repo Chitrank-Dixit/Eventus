@@ -2,14 +2,8 @@
 {% extends 'base.html' %}
 {% block title %}{{current_user.name}} Profile | Eventus {% endblock %}
 {% block style_block %}
-	<link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
-	<link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
-	<style type="text/css">
-		.background {
-			 background-color: #F3F3F3;
-			}
 	
-	</style>
+	
 {% endblock %}
 {% block content %}
 	
@@ -38,15 +32,26 @@
 		<div class="tab-pane active" id="posts">Heheh</div>
 		<div class="tab-pane" id="favourites">oheheh</div>
 		<div class="tab-pane" id="events">
-			<p>You have created some Events</p>
+			{% if not results %}
+				<div class="alert alert-info">
+        		<strong>{{current_user.name}}</strong> You Have not Created any Events Yet.
+      			</div>
+      			<p> Start by Creating your first event <a class="btn btn-primary" href="{{ url_for('create_event') }}" role="button">Create an Event</a> </p> 
+			
+			{% else %}
 			
 			{% for event_list in results %}
-			    <p> Neuer </p>
-				<p>{{ event_list.name }}</p>
-				<p>{{ event_list.description }}</p>
+			    <div class="panel panel-default">
+    			<div class="panel-heading">
+     			<h3 class="panel-title">{{ event_list.name }}</h3>
+    			</div>
+    			<div class="panel-body">
+        			{{ event_list.description }}
+    			</div>
+				</div>       
 			{% endfor %}
 			
-
+			{% endif %}
 
 		</div>
 		<div class="tab-pane" id="followers">

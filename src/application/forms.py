@@ -32,9 +32,9 @@ ExampleForm = model_form(ExampleModel, wtf.Form, field_args={
 class SignupForm(wtf.Form):
     name = wtf.TextField('Name', validators=[validators.Required()])
     #username = wtf.TextField('username', validators=[validators.Required()])
-    email= wtf.TextField('Email', validators=[validators.Required()])
+    email= wtf.html5.EmailField('Email', validators=[validators.Required()])
     password = wtf.PasswordField('Password', validators=[validators.Required(), validators.EqualTo('confirm', message='Passwords must match')])
-    confirm = wtf.PasswordField('Repeat Password')
+    confirm = wtf.PasswordField('Repeat Password', validators=[validators.Required(), validators.EqualTo('password', message='Passwords must match')])
     
  
  
@@ -48,13 +48,15 @@ class SigninForm(wtf.Form):
 class CreateEventForm(wtf.Form):
     name = wtf.TextField('name', validators=[validators.Required()])
     # logo = wtf.FileField('logo', )
-    # creator = wtf.TextField('creator', validators=[validators.Required()])
+    #creator = wtf.TextField('creator', validators=[validators.Required()])
     # manager = wtf.TextField('manager', default='')
-    url = wtf.TextField('url', default='')
+    event_url = wtf.html5.URLField('url')
     description = wtf.TextAreaField('description',default='')
-    venue = wtf.TextField('Where ', default='')
+    venue = wtf.TextField('Where', validators=[validators.Required()])
+    sdate= wtf.html5.DateField('From')
+    edate= wtf.html5.DateField('To')
     
-    # phone = wtf.IntegerField('phone', default= 0000000000)
+    #phone = wtf.IntegerField('phone', default= 0000000000)
     #googleplus_page = wtf.TextField('googleplus_page', default='')
     #facebook_page = wtf.TextField('facebook_page', default='')
     #twitter_id = wtf.TextField('twitter_id', default='')
@@ -64,7 +66,11 @@ class CreateEventForm(wtf.Form):
 
 
 class CreatePost(wtf.Form):
-    body = wtf.TextField('Post', validators=[validators.Required()])
+    poster = wtf.TextField('Post', validators=[validators.Required()])
+    postbody= wtf.TextAreaField('postbody', validators=[validators.Required()])
+    posturl = wtf.html5.URLField('post url', validators=[validators.Required()])
+    sdate= wtf.html5.DateField('Date' , validators=[validators.Required()] )
+    edate= wtf.html5.DateField('Date' , validators=[validators.Required()] )
 
 
 '''     

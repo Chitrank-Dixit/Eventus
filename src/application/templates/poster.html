@@ -1,64 +1,182 @@
 {% extends 'base.html' %}
+{% import 'macro/error.html' as forms %}
 {% block title %} Post Something | Eventus {% endblock %}
 {% block style_block %}
-  <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
-  <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet" />
   <style type="text/css">
     .background {
        background-color: #F3F3F3;
       }
-  
+    p.error {
+        color: red;
+    }
   </style>
 {% endblock %}
 {% block content %}
   
-    <form name="post_it" class="navbar-form form-inline" method="post" action="/poster/">
+    <form action="{{ url_for('post_it') }}" class="navbar-form form-inline" method="post" id="new_postform">
     {{ form.csrf_token }}
         <fieldset>
           {{ form.hidden_tag() }}
+            
+
             {% from "macro/_formhelpers.html" import render_field %}
             <div class="control-group">
-                    
-                    <div class="controls">
-                        {{ render_field(form.body, name="body" class="form-control", size="5", placeholder="Post Anything") }}
-                        {% if form.body.errors %}
+                <p>{{ form.poster.label }}</p>
+                  <div class="controls">
+                                                
+                        <p>
+                        {{ form.poster(id='post',class='form-control required ',placeholder="My Post", autocomplete=True , size=3,**{'data-bind': 'value: bodyte'})}}</p>
+                        {% if form.poster.errors %}
                         <ul class="errors">
-                            {% for error in form.body.errors %}
-                            <li class="flashes alert-warning">{{ error }}</li>
+                            {% for error in form.poster.errors %}
+                            <li>{{ error }}</li>
                             {% endfor %}
                         </ul>
                         {% endif %}
                     </div>
+
+                    
             </div>
             <div class="control-group">
+                <p>{{ form.postbody.label }}<p>
+                  <div class="controls">
+                                                
+                        
+                        <p>{{ form.postbody(id='postbody',class='form-control required ',placeholder="Post Description", autocomplete=True , size=3,)}}</p>
+                        
+                    </div>
+
+                    
+            </div>
+            <div class="control-group">
+                <p>{{ form.posturl.label }}</p>
+                  <div class="controls">
+                                                
+                        <p>
+                        {{ form.posturl(id='post',class='form-control required ',placeholder="My Post", autocomplete=True , size=3)}}</p>
+                        {% if form.posturl.errors %}
+                        <ul class="errors">
+                            {% for error in form.posturl.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+            </div>
+            <div class="control-group">
+            <div class="controls">
+                        {{ form.sdate.label }}
+                        {{ form.sdate(id="est", class="required", formatString="MM/DD/YYYY") }}
+                        {% if form.sdate.errors %}
+                        <ul class="errors">
+                            {% for error in form.sdate.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+            </div>
+            <div class="control-group">
+            <div class="controls">
+                        {{ form.edate.label }}
+                        {{ form.edate(id="est", class="required", formatString="MM/DD/YYYY") }}
+                        {% if form.edate.errors %}
+                        <ul class="errors">
+                            {% for error in form.edate.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+            </div>
+        </div>
+            <div class="control-group">
                     <div class="controls">
-                        <br><input type="submit" name="postit" value"poster" class="btn btn-primary" /><br><br>
+                        <br><input type="submit" id="postit"  name="postit" value"poster" class="btn btn-primary" /><br><br>
                     
                     </div>
             </div>
+          </fieldset>
+    </form>
+    <div class="controls">
+ <!-- <p>Post: <input data-bind="value: bodyte" class="form-control" name="posts" /></p> -->
+                    </div>
+                    <p>BodyText: <strong data-bind="text: bodytext" /></strong></p>
+
+
 {% block tail_script %}
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
 <script type="text/javascript">
-  Post = Backbone.Model.extend({
-            urlRoot: '/poster'
+ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+ // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+function AppViewModel() {
+    this.bodyte = ko.observable();
+    this.bodytext = ko.computed(function(){
+        return this.bodyte();
 
+    }, this);
+    
+}
+
+// Activates knockout.js
+ko.applyBindings(new AppViewModel());
+
+/*
+var FormHelpers = {
+            validate: function (form, evt) {
+                // Form validation for modal dialog
+                var postbody = form.find('#body').val();
+                
+                if (!(postbody)) {
+                    evt.preventDefault();
+                    Utils.renderFieldErrorTooltip('#body', 'Name is required', 'right');
+                }
+                
+            },
+            init: function () {
+                var self = this;
+                var example_form = $('#new_postform');
+                example_form.on('submit', function (evt) {
+                    self.validate(example_form, evt)
+                });
+            }
+        };
+        $(document).ready(function() {
+            FormHelpers.init();
         });
-  var post = new Post();
-  console.log(person.toJSON());
-  console.log(person.attributes);
 
-  var View = Backbone.View.extend({
-        initialise: function(){
-          this.model = new Post();
-          this.model.on("change", this.render, this);
-          this.model.fetch();
+
+
+*/
+
+$(document).ready(function () {
+
+
+
+$('#new_postform').validate({
+    rules: {
+        post: {
+            minlength: 2,
+            required: true
+        }
+        
+    },
+    highlight: function (element) {
+        $(element).parent().css('border-color','red');
+        $(element).text('Please type some post').closest('.control-group').removeClass('success').addClass('error');
+        
+    },
+    success: function (element) {
+        element.text('OK!').addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
     }
-        });
-        // var views = new View({ blankOption: "empty string"});
-        var view = new View({ model: model });
-  var UsersCollection = Backbone.Collection.extend({
-    model: User,
-    url: '/users' // note this difference: use url for collections, not urlRoot.
-  })
+});
+});
+
+
 </script>
 
 {% endblock %}

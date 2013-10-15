@@ -1,53 +1,69 @@
-
 {% extends 'base.html' %}
-{% block title %} Create an Event | Eventus {% endblock %}
+{% import 'macro/error.html' as forms %}
+{% block title %} Post Something | Eventus {% endblock %}
 {% block style_block %}
-	<link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
-	<link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
-	<style type="text/css">
-		.background {
-			 background-color: #F3F3F3;
-			}
-	
-	</style>
+  <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet" />
+  <style type="text/css">
+    .background {
+       background-color: #F3F3F3;
+      }
+    p.error {
+        color: red;
+    }
+  </style>
 {% endblock %}
 {% block content %}
-	
-    <h3><center>Create a New Event</center></h3><br><br>
-	<div class="container theme-showcase">
-        <div class="col-sm-2">
-        </div>
-        <div class="col-sm-8">
-		
-		<form name="create_event" class="navbar-form form-inline" method="post" action="/create_event/">
-		{{ form.csrf_token }}
-				<fieldset>
-  				{{ form.hidden_tag() }}
+  
+    <form action="{{ url_for('create_event') }}" class="navbar-form form-inline" method="post" id="create_eventform">
+    {{ form.csrf_token }}
+        <fieldset>
+          {{ form.hidden_tag() }}
+            
+
             {% from "macro/_formhelpers.html" import render_field %}
             <div class="control-group">
-                    
-                    <div class="controls">
-                        {{ render_field(form.name, class="form-control", size="5", placeholder="Event Name") }}
+                <p>{{ form.name.label }}</p>
+                  <div class="controls">
+                                                
+                        <p>
+                        {{ form.name(id='ename',class='form-control required ',placeholder="Event Name", autocomplete=True )}}</p>
                         {% if form.name.errors %}
                         <ul class="errors">
                             {% for error in form.name.errors %}
-                            <li class="flashes alert-warning">{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </div>
-                    <div class="controls">
-                        {{ render_field(form.url, class="form-control pull-right", placeholder="Website/Blog/URL") }}
-                        {% if form.url.errors %}
-                        <ul class="errors">
-                            {% for error in form.url.errors %}
                             <li>{{ error }}</li>
                             {% endfor %}
                         </ul>
                         {% endif %}
                     </div>
-                    <div class="controls">
-                        {{ render_field(form.description, class="form-control", placeholder="Describe your event") }}
+
+                    
+            </div>
+
+            <div class="control-group">
+                <p>{{ form.event_url.label }}</p>
+                  <div class="controls">
+                                                
+                        <p>
+                        {{ form.event_url(id='eurl',class='form-control required ',placeholder="URL/Blog/Website", autocomplete=True )}}</p>
+                        {% if form.event_url.errors %}
+                        <ul class="errors">
+                            {% for error in form.event_url.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+            </div>
+            
+            <div class="control-group">
+                <p>{{ form.description.label }}</p>
+                  <div class="controls">
+                                                
+                        <p>
+                        {{ form.description(id='edescription',class='form-control required ',placeholder="Describe your Event", autocomplete=True )}}</p>
                         {% if form.description.errors %}
                         <ul class="errors">
                             {% for error in form.description.errors %}
@@ -56,8 +72,16 @@
                         </ul>
                         {% endif %}
                     </div>
-                    <div class="controls">
-                        {{ render_field(form.venue, class="form-control", placeholder="Where ") }}
+
+                    
+            </div>
+
+             <div class="control-group">
+                <p>{{ form.venue.label }}</p>
+                  <div class="controls">
+                                                
+                        <p>
+                        {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}</p>
                         {% if form.venue.errors %}
                         <ul class="errors">
                             {% for error in form.venue.errors %}
@@ -66,47 +90,132 @@
                         </ul>
                         {% endif %}
                     </div>
+
+                    
             </div>
-            
-                       
-            
-            
-            
-            
+
+            <div class="control-group">
+                <p>{{ form.sdate.label }}</p>
+                  <div class="controls">
+                                                
+                        <p>
+                        {{ form.sdate(id='start_date',class='required ',autocomplete=True )}}</p>
+                        {% if form.sdate.errors %}
+                        <ul class="errors">
+                            {% for error in form.sdate.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+            </div>
+
+            <div class="control-group">
+                <p>{{ form.edate.label }}</p>
+                  <div class="controls">
+                                                
+                        <p>
+                        {{ form.edate(id='end_date',class='required', autocomplete=True )}}</p>
+                        {% if form.edate.errors %}
+                        <ul class="errors">
+                            {% for error in form.edate.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+            </div>
+
+
             <div class="control-group">
                     <div class="controls">
-                        <br><input type="submit" name="create_event" value"create_event" class="btn btn-success" /><br><br>
-  									
+                        <br><input type="submit" id="create_event"  value"create_event" class="btn btn-primary" /><br><br>
+                    
                     </div>
             </div>
-        </form>
-        </div>
-        <div class="col-sm-2">
-    </div>
+          </fieldset>
+    </form>
+    <div class="controls">
+ <!-- <p>Post: <input data-bind="value: bodyte" class="form-control" name="posts" /></p> -->
+                    </div>
+                    <p>BodyText: <strong data-bind="text: bodytext" /></strong></p>
 
-
-	<div class="row">
-	
-		
-		
-		
-  		
-	</div>
-	<hr>
 
 {% block tail_script %}
-         <script type="text/javascript">
-            Events = Backbone.Model.extend({
-                initialize : function() {
-                    console.log('Hello World Work hard')
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
+<script type="text/javascript">
+ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+ // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+function AppViewModel() {
+    this.bodyte = ko.observable();
+    this.bodytext = ko.computed(function(){
+        return this.bodyte();
+
+    }, this);
+    
+}
+
+// Activates knockout.js
+ko.applyBindings(new AppViewModel());
+
+/*
+var FormHelpers = {
+            validate: function (form, evt) {
+                // Form validation for modal dialog
+                var postbody = form.find('#body').val();
+                
+                if (!(postbody)) {
+                    evt.preventDefault();
+                    Utils.renderFieldErrorTooltip('#body', 'Name is required', 'right');
                 }
+                
+            },
+            init: function () {
+                var self = this;
+                var example_form = $('#new_postform');
+                example_form.on('submit', function (evt) {
+                    self.validate(example_form, evt)
+                });
+            }
+        };
+        $(document).ready(function() {
+            FormHelpers.init();
+        });
 
-            });
 
-            var create_event = new Events();
-            console.log();
-         </script>
 
-{% endblock tail_script %}
+*/
+
+$(document).ready(function () {
+
+
+
+$('#create_eventform').validate({
+    rules: {
+        
+        
+    },
+    highlight: function (element) {
+        $(element).parent().css('border-color','red');
+        $(element).text('Please type some post').closest('.control-group').removeClass('success').addClass('error');
+        
+    },
+    success: function (element) {
+        element.text('OK!').addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
+    }
+});
+});
+
+
+</script>
+
+{% endblock %}
+
 
 {% endblock %}

@@ -48,6 +48,7 @@ from models import *
 #from model import *
 import requests
 
+from datetime import datetime
 from google.appengine.api import users
 from json import dumps, loads
 
@@ -55,6 +56,9 @@ import flask
 from flaskext import login
 from flaskext.login import login_url, logout_user , current_user, login_required
 from flaskext import oauth
+
+
+
 
 import util
 import model
@@ -959,21 +963,24 @@ class OpenIDLogin(flask.views.MethodView):
 
 # Creating user events in Eventus 
 
-
+@app.route('/create_event/', methods=['POST','GET'])
 @login_required
 def create_event():
   form= CreateEventForm(request.form)
+  print current_user.name, current_user.id
   if form.validate_on_submit() and request.method=='POST':
     event = model.Event(
         name = form.name.data,
         creator = current_user.name,
-        url = form.url.data,
         creator_id = current_user.id,
+        event_url = form.event_url.data,
         description = form.description.data,
         venue= form.venue.data,
-        
+        sdate= form.sdate.data,
+        edate= form.edate.data, 
         
       )
+    print current_user.name
     try:
       event.put()
       #signup_id = .key.id()
@@ -984,21 +991,30 @@ def create_event():
     except CapabilityDisabledError:
       flash(u'App Engine Datastore is currently in read-only mode.', category='info')
       return redirect(url_for('index'))
-  return render_template('organizer_event_details.html',form=form)
+  return render_template('create_event.html',form=form)
 
   
 @app.route('/poster/',methods=['POST','GET'])
 def post_it():
   form = CreatePost(request.form)
   if form.validate_on_submit() and request.method=='POST':
-    poster = model.Post(
-        body = form.body.data
+    posting = model.Post(
+        poster = form.poster.data,
+        postbody = form.postbody.data,
+        posturl = form.posturl.data,
+        sdate= form.sdate.data,
+        edate= form.edate.data,
       )
     try:
-      poster.put()
-      flash("Poster has been populated")
+      posting.put()
+      flash("Poster has been populated", category='info')
       return (redirect(url_for('post_it')))
     except CapabilityDisabledError:
       flash('Error Occured while posting')
       return redirect(url_for('post_it'))
   return render_template('poster.html', form=form)
+
+@app.route('/trending_events', methods=['POST','GET'])
+def trending_events():
+  events= model.Event.query()
+  return render_template('trending_events.html', events=events)

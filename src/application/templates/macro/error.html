@@ -1,0 +1,16 @@
+{% macro field_errors(field) %}
+  {% for error in field.errors %} 
+    <p class="help-block">{{error}}</p>
+  {% endfor %} 
+{% endmacro %} 
+
+{% macro field_description(field) %}
+  {% if field.description %}
+    <p class="help-block">{{field.description}}</p>
+  {% endif %}
+{% endmacro %}
+
+{% macro errors_and_description(field) %}
+  {{field_errors(field)}}
+  {{field_description(field)}}
+{% endmacro %}

@@ -48,8 +48,8 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <!-- <li class="active"><a href="">Default</a></li> -->
-            <li><a href="/publicevents/">Trending Events</a></li>
-            <li><a href="/create_event/">Create an Event</a></li>
+            <li><a href="{{ url_for('trending_events') }}">Trending Events</a></li>
+            <li><a href="{{ url_for('create_event') }}">Create an Event</a></li>
             
 
             
@@ -82,8 +82,8 @@
             </li>
 			 
 			 {% else %}
-			 <li><a href="/signup/">Sign up</a></li>
-			 <li><a href="/signin/">Sign in</a></li>
+			 <li><a href="{{ url_for('signup') }}">Sign up</a></li>
+			 <li><a href="{{ url_for('signin') }}">Sign in</a></li>
 			 {% endif %} 
           </ul>
         </div><!--/.nav-collapse -->

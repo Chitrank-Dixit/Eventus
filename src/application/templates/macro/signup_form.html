@@ -27,7 +27,7 @@
   {{input_field(field, placeholder=placeholder, autocomplete=autocomplete)}}
 {% endmacro %}
 
-{% macro password_field(field) %}
+{% macro password_field(field, placeholder='') %}
   {{input_field(field, type='password', autocomplete=False)}}
 {% endmacro %}
 

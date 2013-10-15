@@ -121,13 +121,30 @@ Google Cloud
 - https://docs.google.com/document/d/1AefylbadN456_Z7BZOpZEXDq8cR8LYu7QgI7bt5V0Iw/mobilebasic
 - https://developers.google.com/appengine/docs/python/ndb
 
+
+List_of_JavaScript Libraries
+------------------------------------------------
+- http://en.wikipedia.org/wiki/List_of_JavaScript_libraries
+
 Backbone.js Tutorials
 ------------------------------------------------
 - http://backbonejs.org/
 - http://addyosmani.github.io/backbone-fundamentals/
 - http://backbonetutorials.com/
-- 
+- interactive tutorials: http://chooseyourownapplication.com/chapters/intro
+- http://arturadib.com/hello-backbonejs/docs/1.html
 
+ 
+Knockout.js Tutorials
+--------------------------------------------------
+- http://learn.knockoutjs.com/#/?tutorial=intro
+- interactive tutorials: http://chooseyourownapplication.com/chapters/intro
+
+Jquery Validation:
+----------------------------------------------
+- http://jqueryvalidation.org/
+- http://reactiveraven.github.io/jqBootstrapValidation/
+- http://jsfiddle.net/5WMff/
 
 Making an API ( RESTful API ) for user with backbone.js
 --------------------------------------------------------
@@ -149,15 +166,15 @@ ________________________________________________________________________________
 
 
 HTML5 References
-=========================
+--------------------------
 - Character references:http://dev.w3.org/html5/html-author/charref
 
 Font Awesome (Icon package for bootstrap)
+-----------------------------------------
 
-Less 
-
-Angular Js (for straight forward models and dynamic update)
-- http://angularjs.org/#
+JavaScript , JSON , AJAX, Jquery
+-----------------------------------------
+- refer w3schools.com and thenewboston videos at youtube
 
 
 Tech Stack
@@ -165,7 +182,7 @@ Tech Stack
 - Python Flask
 - Google APIs
 - Bootstrap 2
-- Backbone.js (and its dependencies) or Knockoutjs or Angularjs
+- Backbone.js (and its dependencies) or Knockoutjs 
 - Google App Engine
 - Google Cloud Datastore (NoSQL DB)
 - Font Awesome, bootstrap-social-buttons

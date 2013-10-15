@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import 'macro/error.html' as forms %}
 {% block title %} Sign up | Eventus {% endblock %}
 {% block style_block %}
 	<link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet"> 
@@ -10,7 +11,7 @@
 	       
       <h3><center>Sign Up Eventus</center></h3><br><br>
 		<div class="col-sm-6">
-  			<form name="signup" class="navbar-form form-inline" action="{{ url_for('signup') }}" method="post" accept-charset="utf-8">
+  			<form name="signup" id="signup_form" class="navbar-form form-inline" action="{{ url_for('signup') }}" method="post" accept-charset="utf-8">
 				{{ form.csrf_token }}
 				<fieldset> <!-- In future in this form a check should be made where if username and email of a user already exists the error message will be shown with the page redirect to signup -->
                 {{ form.hidden_tag() }}
@@ -18,11 +19,13 @@
                 <div class="control-group">
                     <!-- <div class="control-label">{{ form.name.label }}</div> -->
                     <div class="controls">
-                        {{ render_field(form.name, class="form-control", placeholder="Enter your Name") }}
+                        {{ form.name.label }}
+                        {{ form.name(id='name',class='form-control required',placeholder="Enter your Name") }}
+                        
                         {% if form.name.errors %}
                         <ul class="errors">
                             {% for error in form.name.errors %}
-                            <li>{{ error }}</li>
+                            <li class="flashes">{{ error }}</li>
                             {% endfor %}
                         </ul>
                         {% endif %}
@@ -32,11 +35,12 @@
                 <div class="control-group">
                     <!--<div class="control-label">{{ form.email.label }}</div> -->
                     <div class="controls">
-                        {{ render_field(form.email, class="form-control", placeholder="Enter your Email") }}
+                        {{ form.email.label }}
+                        {{ form.email(id='email',class='form-control required',placeholder="Enter your Email") }}
                         {% if form.email.errors %}
                         <ul class="errors">
                             {% for error in form.email.errors %}
-                            <li>{{ error }}</li>
+                            <li class="flashes">{{ error }}</li>
                             {% endfor %}
                         </ul>
                         {% endif %}
@@ -45,11 +49,12 @@
                 <div class="control-group">
                     <!-- <div class="control-label">{{ form.password.label }}</div> -->
                     <div class="controls">
-                        {{ render_field(form.password, class="form-control", placeholder="Enter password") }}
+                        {{ form.password.label }}
+                        {{ form.password(id='password',class='form-control required',placeholder="Enter Password") }}
                         {% if form.password.errors %}
                         <ul class="errors">
                             {% for error in form.password.errors %}
-                            <li>{{ error }}</li>
+                            <li class="flashes">{{ error }}</li>
                             {% endfor %}
                         </ul>
                         {% endif %}
@@ -58,11 +63,12 @@
                 <div class="control-group">
                     <!-- <div class="control-label">{{ form.confirm.label }}</div> -->
                     <div class="controls">
-                        {{ render_field(form.confirm,class="form-control", placeholder="Reapeat Password to Confirm") }}
+                        {{ form.confirm.label }}
+                        {{ form.confirm(id='confirm',class='form-control required',placeholder="Repeat Password") }}
                         {% if form.confirm.errors %}
                         <ul class="errors">
                             {% for error in form.confirm.errors %}
-                            <li>{{ error }}</li>
+                            <li class="flashes">{{ error }}</li>
                             {% endfor %}
                         </ul>
                         {% endif %}
@@ -126,7 +132,33 @@
 		
   		
   	</div>
-  		
+  
+{% block tail_script %}		
+
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
+<script type="text/javascript">
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+$(document).ready(function () {
+
+$('#signup_form').validate({
+    rules: {
+        
+        
+    },
+    
+    highlight: function (element) {
+        $(element).closest('control-group').removeClass('success').addClass('error');
+    },
+    success: function (element) {
+        element.text('OK!').addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
+    }
+});
+});
+
+</script>
+{% endblock %}
 	
 {% endblock %}
 

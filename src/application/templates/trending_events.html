@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %} Trending Events | Eventus {% endblock %}
+{% block style_block %}
+  
+  <style type="text/css">
+    .background {
+       background-color: #F3F3F3;
+      }
+  
+  </style>
+{% endblock %}
+{% block content %}
+  
+    
+
+
+{% for event_list in events %}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+     <h3 class="panel-title">{{ event_list.name }}</h3>
+    </div>
+    <div class="panel-body">
+        {{ event_list.description }}
+        <ul class="pull-right">{{ event_list.creator }}</ul>
+    </div>
+</div>                
+
+{% endfor %}
+            
+
+
+{% endblock %}

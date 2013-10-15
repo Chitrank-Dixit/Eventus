@@ -67,7 +67,7 @@ app.add_url_rule('/signout/','signout',view_func=views.signout,methods=['GET','P
 
 
 # create new event
-app.add_url_rule('/create_event/','create_event',view_func=views.create_event,methods=['POST','GET'])
+#app.add_url_rule('/create_event/','create_event',view_func=views.create_event,methods=['GET','POST'])
 
 # create new event modal
 
