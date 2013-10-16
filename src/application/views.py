@@ -288,6 +288,7 @@ def signup():
 @app.route('/user/<name>/<int:uid>/', methods=['GET']) # /
 @login_required
 def user_profile(name,uid):  #
+    euid= uid
     user = model.User.retrieve_one_by('name' ,name)
     uid = model.User.retrieve_one_by('id' ,uid)
     if user == None and uid == None:
@@ -295,10 +296,10 @@ def user_profile(name,uid):  #
         return redirect(url_for('index'))
     userid = current_user.id
     event_st = model.Event.query()
-    event_db = event_st.filter(model.Event.creator_id == userid)
+    event_db = event_st.filter(model.Event.creator_id == euid)
     results = event_db.fetch()
     print event_db
-    return flask.render_template('profile.html',results= results, user = user)
+    return flask.render_template('profile.html',results= results, user = user, euid= euid)
 
 @app.route('/<name>/edit_profile/<int:uid>', methods=['GET','POST'])
 @login_required

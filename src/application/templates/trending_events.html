@@ -21,8 +21,12 @@
      <h3 class="panel-title">{{ event_list.name }}</h3>
     </div>
     <div class="panel-body">
-        {{ event_list.description }}
-        <ul class="pull-right"><a href="/user/{{ event_list.creator }}/{{ event_list.creator_id }}/">{{ event_list.creator }}</a></ul>
+        <p>{{ event_list.description }}</p><br>
+        <ul class="pull-right">
+          
+          <a href="/user/{{ event_list.creator }}/{{ event_list.creator_id }}/">{{ event_list.creator }}</a><br><br>
+
+        </ul>
     </div>
 </div>                
 

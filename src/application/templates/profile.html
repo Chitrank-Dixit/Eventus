@@ -1,6 +1,6 @@
 
 {% extends 'base.html' %}
-{% block title %}{{current_user.name}} Profile | Eventus {% endblock %}
+{% block title %}{{user.name}} Profile | Eventus {% endblock %}
 {% block style_block %}
 	
 	
@@ -13,10 +13,14 @@
 		<div class="col-sm-3 background" >
   		
   			<img src="{{user.avatar(128)}}">
+        <p>{{user.name}}</p>
+        {% if g.user.id == euid %}
   			<button class="btn btn-default" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Edit Profile</button> <br><br>
+        {% else %}
   		  	<button class="btn btn-success" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Follow</button> <br><br>
   		  	<button class="btn btn-danger" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Unfollow</button> <br>
-        <p>{{user.name}}</p>
+        {% endif %}
+        
         <p>{{user.manager}}</p>
         <p>{{user.username}}</p>
         
@@ -37,7 +41,7 @@
 		<div class="tab-pane" id="events">
 			{% if not results %}
 				<div class="alert alert-info">
-        		<strong>{{current_user.name}}</strong> You Have not Created any Events Yet.
+        		<strong>{{user.name}}</strong> You Have not Created any Events Yet.
       			</div>
       			<p> Start by Creating your first event <a class="btn btn-primary" href="{{ url_for('create_event') }}" role="button">Create an Event</a> </p> 
 			
