@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% block title %} Sign in | Eventus {% endblock %}
 {% block style_block %}
-	<link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
-	<link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
+	
 {% endblock %}
 {% block content %}
 	<div class="container theme-showcase">
@@ -20,7 +19,7 @@
             <div class="control-group">
                    {{ form.email.label }}
                     <div class="controls">
-                        {{ form.email(id='email',class_='form-control required',placeholder="Enter Mail") }}
+                        {{ form.email(id='email',class_='form-control required', placeholder="Enter Mail") }}
                         {% if form.email.errors %}
                         <ul class="errors">
                             {% for error in form.email.errors %}
@@ -29,7 +28,7 @@
                         </ul>
                         {% endif %}
                         
-                    </div>
+                    </div> 
             </div>
             <div class="control-group">
                     {{ form.password.label }}
@@ -77,30 +76,31 @@
   			</form>
         <br><br>
 				
-    			
-  			
+    				
 		</div>
 		<div class="col-sm-1">
 		</div>
 		<div class="col-sm-5">
-			<center>
+			<div class="row">
+			<div class="col-lg-7">
         <a class="btn btn-block btn-lg btn-google-plus" href="/signin/google/">
-        		<i class="icon icon-google-plus"></i>
+        		<i class="icon-large icon-google-plus"></i> 
         			Sign in with Google
       	</a>	
       	<a class="btn btn-block btn-lg btn-google-plus" href="/signin/googleoauth/">
-        		<i class="icon icon-google-plus"></i>
+        		<i class="icon-large icon-google-plus"></i> 
         			Sign in with Google plus
       	</a>	
 			<a class="btn btn-block btn-lg btn-facebook" href="/signin/facebook/">
-        		<i class="icon icon-facebook"></i>
+        		<i class="icon-large icon-facebook"></i>
         			Sign in with Facebook
       	</a>	
       	<a class="btn btn-block btn-lg btn-twitter" href="/signin/twitter/">
-        		<i class="icon icon-twitter"></i>
+        		<i class="icon-large icon-twitter"></i> 
         			Sign in with Twitter
       	</a>	
-			</center>
+			</div>
+			</div>
 		</div>
 		
 		
