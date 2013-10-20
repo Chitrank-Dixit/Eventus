@@ -35,6 +35,7 @@ class SignupForm(wtf.Form):
     email= wtf.html5.EmailField('Email', validators=[validators.Required()])
     password = wtf.PasswordField('Password', validators=[validators.Required(), validators.EqualTo('confirm', message='Passwords must match')])
     confirm = wtf.PasswordField('Repeat Password', validators=[validators.Required(), validators.EqualTo('password', message='Passwords must match')])
+    recaptcha = wtf.RecaptchaField()
     
  
  

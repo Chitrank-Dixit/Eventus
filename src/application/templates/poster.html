@@ -2,8 +2,7 @@
 {% import 'macro/error.html' as forms %}
 {% block title %} Post Something | Eventus {% endblock %}
 {% block style_block %}
-  <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet" />
-  <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet" />
+  
   <style type="text/css">
     .background {
        background-color: #F3F3F3;
@@ -14,7 +13,9 @@
   </style>
 {% endblock %}
 {% block content %}
-  
+    
+        <p>{{ use_db }}</p>
+    
     <form action="{{ url_for('post_it') }}" class="navbar-form form-inline" method="post" id="new_postform">
     {{ form.csrf_token }}
         <fieldset>
@@ -104,7 +105,7 @@
  <!-- <p>Post: <input data-bind="value: bodyte" class="form-control" name="posts" /></p> -->
                     </div>
                     <p>BodyText: <strong data-bind="text: bodytext" /></strong></p>
-
+                <p>{{ current_user }}</p>
 
 {% block tail_script %}
 <script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>

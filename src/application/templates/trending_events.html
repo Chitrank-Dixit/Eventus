@@ -23,15 +23,23 @@
     <div class="panel-body">
         <p>{{ event_list.description }}</p><br>
         <ul class="pull-right">
+
+          <a href="/user/{{ event_list.creator.string_id() }}/{{ event_list.creator_id }}/">{{ event_list.creator.string_id() }}</a><br><br>
+
           
-          <a href="/user/{{ event_list.creator }}/{{ event_list.creator_id }}/">{{ event_list.creator }}</a><br><br>
+
 
         </ul>
     </div>
 </div>                
 
+
+
 {% endfor %}
             
-
+{% for e in db_entry %}
+     <p>{{e.name.string_id()}}</p>
+     <p>{{e.poster}}</p>
+{% endfor %}
 
 {% endblock %}

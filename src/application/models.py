@@ -48,7 +48,11 @@ class FlaskUser(AnonymousUser):
     self.id = user_db.key.id()
     self.name = user_db.name
     self.email = user_db.email
+    self.followed = user_db.followed
     self.admin = user_db.admin
+
+  def get_name(self):
+    return self.user_db.name
 
   def key(self):
     return self.user_db.key.urlsafe()
@@ -70,7 +74,7 @@ class FlaskUser(AnonymousUser):
 
   def follow(self, user):
     if not self.is_following(user):
-      self.followed.append(user)
+      self.followed.put(user)
       return self
             
   def unfollow(self, user):

@@ -10,7 +10,7 @@ https://developers.google.com/appengine/docs/python/blobstore/
 
 NDB Cheetsheet (MOST IMP)
 https://docs.google.com/document/d/1AefylbadN456_Z7BZOpZEXDq8cR8LYu7QgI7bt5V0Iw/mobilebasic
-
+https://code.google.com/p/google-app-engine-samples/
 '''
 from google.appengine.ext import ndb
 from uuid import uuid4
@@ -91,6 +91,9 @@ class User(Base, modelx.UserX):
   googleplus_id = ndb.StringProperty(indexed=True, default='')
   linkedin_id = ndb.StringProperty(indexed=True, default='')
   twitter_id = ndb.StringProperty(indexed=True, default='')
+  # follows = ndb.KeyProperty(kind='Follow', repeated=True)
+  # followers = ndb.KeyProperty(kind='User', repeated=True)
+  followed = ndb.KeyProperty(kind='User')
 
   _PROPERTIES = Base._PROPERTIES.union(set([
       'name',
@@ -98,8 +101,18 @@ class User(Base, modelx.UserX):
       'avatar_url',
     ]))
 
+
   def avatar(self, size):
     return 'http://www.gravatar.com/avatar/' + md5(self.email).hexdigest() + '?d=mm&s=' + str(size)
+
+  def ent_key(self):
+    return self.user_db.key.urlsafe()
+
+class Followers(Base,modelx.FollowersX):
+  follower_id = ndb.KeyProperty(kind='User')
+  followed_id = ndb.KeyProperty(kind='User')
+
+
 
 class Event(Base,modelx.EventX):
     '''
@@ -108,8 +121,10 @@ class Event(Base,modelx.EventX):
     '''
     name = ndb.StringProperty(indexed=True, required=True)
     #logo = ndb.FileProperty(indexed=True)
-    creator = ndb.StringProperty(indexed=True, required=True)
+    #creator = ndb.StringProperty(indexed=True, required=True)
+    creator = ndb.KeyProperty(kind="User", required=True)
     creator_id = ndb.IntegerProperty(indexed=True , required=True)
+    #creator_id = ndb.KeyProperty(kind='User', required=True)
     manager = ndb.StringProperty(indexed=True)
     event_url = ndb.StringProperty(indexed=True)
     description=ndb.StringProperty(indexed=True, default='')
@@ -124,8 +139,19 @@ class Event(Base,modelx.EventX):
     private= ndb.BooleanProperty(default=False)
     
 class Post(Base, modelx.EventX):
+    name = ndb.KeyProperty(kind="User", required=True)
     poster = ndb.StringProperty(indexed= True, required=True)
     postbody = ndb.StringProperty(indexed=True, required=True)
     posturl = ndb.StringProperty(indexed=True, required=True)
     sdate = ndb.DateProperty(indexed= True, required= True)
     edate = ndb.DateProperty(indexed= True, required= True)
+
+'''
+
+poster_obj = ndb.get(post_key)
+name = post.user.name
+
+author = db.get(author_key)
+stories_by_author = author.story_set.get()
+
+'''

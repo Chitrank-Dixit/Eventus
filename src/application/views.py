@@ -193,7 +193,7 @@ def signin():
         return redirect(url_for('index'))
     form=SigninForm(request.form)
     if form.validate_on_submit() and request.method == 'POST':
-        session['remember_me'] = form.remember_me.data
+        
         # model.User.retrieve_one_by('username', form.username.data) && model.User.retrieve_one_by('password', form.password.data) is not None:
         user_db = model.User.retrieve_one_by('password',form.password.data)
         if not user_db:
@@ -204,11 +204,12 @@ def signin():
           flask.flash('Hello %s, welcome to %s' % (
             user_db.name, config.CONFIG_DB.brand_name,
             ), category='success')
+          session['remember_me'] = form.remember_me.data
           return flask.redirect(flask.url_for('index'))
         else:
           flask.flash('Sorry, but you could not sign in.', category='danger')
           return flask.redirect(flask.url_for('signin'))
-    return flask.render_template('signin.html', form=form)
+    return flask.render_template('signin.html', form=form, session=session)
  
                 
 '''
@@ -249,6 +250,7 @@ def signup():
     #next = request.args.get('next')
     if form.validate_on_submit() or request.method=='POST':
         signup = model.User(
+
              name = form.name.data,
              username = form.name.data,
              email = form.email.data,
@@ -273,7 +275,7 @@ def signup():
 
             #msg = Message("You have been Registered to Eventus ",sender=config.ADMINS[0],recipients=[form.email.data])
             #msg.body="Welcome to Eventus You have successfully registered to Eventus, Please note down your credentials Username:"+form.name.data+" Password: "+form.password.data          
-            flash(u'User %s successfully Registered Please check your mail for more details.' % form.name.data, category='success')
+            flash(u'User %s successfully Registered to %s, Please check your mail for more details.' % (form.name.data,config.CONFIG_DB.brand_name)  , category='success')
             #with app.app_context():
               #mail.send(msg)
             return redirect(url_for('index'))
@@ -284,7 +286,7 @@ def signup():
 
 
 # This is user profile
-#@app.route('/user/<name>/')
+# @app.route('/user/<name>/')
 @app.route('/user/<name>/<int:uid>/', methods=['GET']) # /
 @login_required
 def user_profile(name,uid):  #
@@ -298,8 +300,51 @@ def user_profile(name,uid):  #
     event_st = model.Event.query()
     event_db = event_st.filter(model.Event.creator_id == euid)
     results = event_db.fetch()
-    print event_db
-    return flask.render_template('profile.html',results= results, user = user, euid= euid)
+    
+
+    return flask.render_template('profile.html',results= results,
+     user = user, euid= euid,
+     )
+
+@app.route('/follow/<name>/<int:uid>/')
+@login_required
+def follow_user(name,uid):
+  n=name; ui=uid
+  user = model.User.retrieve_one_by('name' ,name)
+  uid = model.User.retrieve_one_by('id' ,uid)
+  if user == None and uid == None:
+    return redirect(url_for('index'))
+
+  if user == g.user:
+    flash('You can not Follow Yourself',category='warning')
+  follower_db = ndb.Key(model.User, current_user.name)
+  followed_db = ndb.Key(model.User, user.name)
+
+  follow = model.Followers(
+      follower_id = follower_db,
+      followed_id = followed_db,
+    )
+  try:
+    follow.put()
+    flash('%s you are now following %s' %(current_user.name,user.name), category='info')
+  except CapabilityDisabledError:
+    flash('Ahh Something Went wrong with the server',category = 'danger')
+
+  return redirect(url_for('user_profile',name = n, uid= ui))
+
+@app.route('/unfollow/<name>/<int:uid>')
+@login_required
+def unfollow_user(name,uid):
+  n=name; ui=uid
+  user = model.User.retrieve_one_by('name' ,name)
+  uid = model.User.retrieve_one_by('id' ,uid)
+  if user == None and uid == None:
+    return redirect(url_for('index'))
+
+  if user == g.user:
+    flash('You can not Follow Yourself',category='warning')
+
+  return redirect(url_for('user_profile',name = n, uid= ui))
 
 @app.route('/<name>/edit_profile/<int:uid>', methods=['GET','POST'])
 @login_required
@@ -971,11 +1016,14 @@ class OpenIDLogin(flask.views.MethodView):
 @login_required
 def create_event():
   form= CreateEventForm(request.form)
-  print current_user.name, current_user.id
+  #use_db = ndb.Key(urlsafe=current_user.get_id())
+  use_db = ndb.Key(model.User, current_user.name)
+  #id_db = ndb.Key(model.User, current_user.id)
+
   if form.validate_on_submit() and request.method=='POST':
     event = model.Event(
         name = form.name.data,
-        creator = current_user.name,
+        creator = use_db ,
         creator_id = current_user.id,
         event_url = form.event_url.data,
         description = form.description.data,
@@ -1001,8 +1049,14 @@ def create_event():
 @app.route('/poster/',methods=['POST','GET'])
 def post_it():
   form = CreatePost(request.form)
+  # = ndb.Key(model.User, current_user.id)
+  #user_db = model.User.retrieve_one_by('id',current_user.id)
+  #flaks_user =  FlaskUser(user_db)
+  #use_db = ndb.Key(urlsafe=current_user.get_id())
+  use_db = ndb.Key(model.User, current_user.name)
   if form.validate_on_submit() and request.method=='POST':
     posting = model.Post(
+        name = use_db,
         poster = form.poster.data,
         postbody = form.postbody.data,
         posturl = form.posturl.data,
@@ -1016,9 +1070,11 @@ def post_it():
     except CapabilityDisabledError:
       flash('Error Occured while posting')
       return redirect(url_for('post_it'))
-  return render_template('poster.html', form=form)
+  return render_template('poster.html', form=form, use_db = use_db)
 
 @app.route('/trending_events', methods=['POST','GET'])
 def trending_events():
   events= model.Event.query()
-  return render_template('trending_events.html', events=events)
+  db_entry = model.Post.query()
+  return render_template('trending_events.html', events=events, db_entry=db_entry)
+

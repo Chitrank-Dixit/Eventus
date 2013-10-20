@@ -31,7 +31,17 @@ class UserX(object):
         md5.new(self.email or self.name).hexdigest().lower()
       )
 
+class FollowersX(object):
+  @classmethod
+  @property
+
+  def get_master_db(cls):
+    return cls.get_or_insert('master')
+
+  
+
 class EventX(object):
   @classmethod
   def get_master_db(cls):
       return cls.get_or_insert('master')
+

@@ -11,18 +11,17 @@
 	<div class="row">
 			
 		<div class="col-sm-3 background" >
-  		
-  			<img src="{{user.avatar(128)}}">
-        <p>{{user.name}}</p>
+  		  
+
+  			<img src="{{user.avatar(128)}}" class="img-rounded" />
         {% if g.user.id == euid %}
-  			<button class="btn btn-default" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Edit Profile</button> <br><br>
+  			   <a class="btn btn-default" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Edit Profile</a> <br><br>
         {% else %}
-  		  	<button class="btn btn-success" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Follow</button> <br><br>
-  		  	<button class="btn btn-danger" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Unfollow</button> <br>
+  		  	<a href="{{ url_for('follow_user', name=user.name, uid=euid) }}" class="btn btn-success" data-toggle="Edit Your Profile Data"  title="Follow this User">Follow</a> <br><br>
+  		  	<a href="{{ url_for('unfollow_user', name=user.name, uid=euid) }}" role="button" class="btn btn-danger" data-toggle="Edit Your Profile Data"  title="Unfollow this User">Unfollow</a> <br>
         {% endif %}
+        <h3>{{user.name}}</h3>
         
-        <p>{{user.manager}}</p>
-        <p>{{user.username}}</p>
         
 		</div>
 		<div class="col-sm-9">

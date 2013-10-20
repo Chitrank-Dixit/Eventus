@@ -2,8 +2,7 @@
 {% import 'macro/error.html' as forms %}
 {% block title %} Sign up | Eventus {% endblock %}
 {% block style_block %}
-	<link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet"> 
-	<link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">  
+	
 {% endblock %}
 {% block content %}
 	<div class="container theme-showcase">
@@ -75,29 +74,25 @@
                     </div>
                 </div>
                
+               <div class="control-group">
+                    <div class="controls">
+                        {{ render_field(form.recaptcha, class="form-control") }}
+                        
+                    </div>
+              </div>
+
                 <div class="control-group">
                     <div class="controls">
                         <br><br> 
+
+                  <ul class="pull-right">Already a Member<a href="{{ url_for('signin') }}" > Sign in </a></ul>
+
   								<button type="submit" name="signup_submit" value"SignUp" class="btn btn-success">Sign up</button><br><br>
-  									<ul class="pull-right">Already a Member<a href="{{ url_for('signin') }}" > Sign in </a></ul>  
-                    </div>
+  								  
+                  </div>
                 </div>
             </fieldset>
-            <!-- 
-				<label for="username">Name</label>
-				<input type="text" name="name" value="{{ form.name }}" placeholder="your username" class="form-control"></input><br><br>			
-				<label for="username">Username</label>
-				<input type="text" name="username" value="{{ form.username }}" placeholder="your username" class="form-control"></input><br><br>
-				<label for="email">Email </label>  				
-  				<input type="text" name="email" value="{{ form.email }}" placeholder="your email" class="form-control"></input><br><br>
-				<label for="password">Password </label>  				
-  				<input type="password" name="password" value="{{ form.password }}" placeholder="your password" class="form-control"> </input><br><br>
- 				<label for="confirm">Confirm Password </label>				  				
-  				<input type="password" name="confirm" value="{{ form.confirm }}" placeholder="retype password" class="form-control"> </input><br><br><br>
-  				<input type="checkbox" name="remember" value="{{ form.remember_me }}" class="form-control" style="width: 15px; height: 12px;"> </input>Remember me
-  				<a href="" class="pull-right">forgot password</a><br><br><br> 
-  				<input type="submit" name="signup_submit" value"Sign Up" class="btn btn-success" />
-  				Already a Member<a href="" > Sign in </a> --> 
+           
   			
   			</form>
     			
