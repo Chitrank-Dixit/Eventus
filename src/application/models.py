@@ -14,6 +14,7 @@ import functools
 
 import flask
 from flaskext import login
+from flaskext.login import current_user
 from flaskext import oauth
 from hashlib import md5
 import util
@@ -83,7 +84,12 @@ class FlaskUser(AnonymousUser):
       return self
             
   def is_following(self, user):
-    return self.followed.filter(followers.c.followed_id == user.id).count() > 0
+    model_ex = model.Followers.query()
+    for entry in model_ex:
+      if entry.follower_id.string_id() == current_user.name and entry.followed_id.string_id() == user.name:
+        return True
+    #return (cur_user.string_id() == current_user.name and to_follow.string_id() == user.name)
+    
 
   def followed_posts(self):
     return Post.query.join(followers, (followers.c.followed_id == Post.user_id)).filter(followers.c.follower_id == self.id).order_by(Post.timestamp.desc())

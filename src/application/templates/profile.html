@@ -18,6 +18,7 @@
   			   <a class="btn btn-default" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Edit Profile</a> <br><br>
         {% else %}
   		  	<a href="{{ url_for('follow_user', name=user.name, uid=euid) }}" class="btn btn-success" data-toggle="Edit Your Profile Data"  title="Follow this User">Follow</a> <br><br>
+        
   		  	<a href="{{ url_for('unfollow_user', name=user.name, uid=euid) }}" role="button" class="btn btn-danger" data-toggle="Edit Your Profile Data"  title="Unfollow this User">Unfollow</a> <br>
         {% endif %}
         <h3>{{user.name}}</h3>
@@ -62,7 +63,11 @@
 		</div>
 		<div class="tab-pane" id="followers">
 			<div class="row">
-  				<div class="span1">F1</div>
+          {% for follower in followers %}
+            {% if follower.followed_id.string_id() == user.name %}
+            	<div class="span1">{{ follower.follower_id.string_id() }}</div>
+            {% endif %}
+          {% endfor %}
   				<div class="span1">F2</div>
   				<div class="span1">F3</div>
   				<div class="span1">F1</div>
@@ -76,7 +81,11 @@
 		</div>
 		<div class="tab-pane" id="following">
 			<div class="row">
-  				<div class="span1">F1</div>
+          {% for follower in followers %}
+            {% if follower.follower_id.string_id() == user.name %}
+  				    <div class="span1">{{ follower.followed_id.string_id() }}</div>
+            {% endif %}
+          {% endfor %}
   				<div class="span1">F2</div>
   				<div class="span1">F3</div>
   				<div class="span1">F1</div>

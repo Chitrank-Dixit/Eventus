@@ -93,6 +93,7 @@ class User(Base, modelx.UserX):
   twitter_id = ndb.StringProperty(indexed=True, default='')
   # follows = ndb.KeyProperty(kind='Follow', repeated=True)
   # followers = ndb.KeyProperty(kind='User', repeated=True)
+  followers = ndb.KeyProperty(kind='User')
   followed = ndb.KeyProperty(kind='User')
 
   _PROPERTIES = Base._PROPERTIES.union(set([

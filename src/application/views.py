@@ -291,59 +291,99 @@ def signup():
 @login_required
 def user_profile(name,uid):  #
     euid= uid
-    user = model.User.retrieve_one_by('name' ,name)
-    uid = model.User.retrieve_one_by('id' ,uid)
-    if user == None and uid == None:
+    user_is = model.User.query(model.User.name == name , model.User.id == uid)
+    if user_is == None:
         flash('User ' + name + ' not found.')
         return redirect(url_for('index'))
     userid = current_user.id
+    user = model.User.retrieve_one_by('name', name)
     event_st = model.Event.query()
     event_db = event_st.filter(model.Event.creator_id == euid)
     results = event_db.fetch()
-    
+    followers = model.Followers.query()
 
+    #followers_current = followers.filter(model.Followers.follower_id == user.name)
+
+    
     return flask.render_template('profile.html',results= results,
-     user = user, euid= euid,
+     user = user, euid= euid, followers = followers
      )
+
+
 
 @app.route('/follow/<name>/<int:uid>/')
 @login_required
 def follow_user(name,uid):
   n=name; ui=uid
+  user_is = model.User.query(model.User.name == name , model.User.id == uid)
+  if user_is==None:
+    return redirect(url_for('index'))
   user = model.User.retrieve_one_by('name' ,name)
   uid = model.User.retrieve_one_by('id' ,uid)
-  if user == None and uid == None:
-    return redirect(url_for('index'))
-
+  # print '-----------Here it is',user_is
+  
   if user == g.user:
-    flash('You can not Follow Yourself',category='warning')
+    flash('You can not Unfollow Yourself',category='warning')
+
+
+  # cur_user = model.Followers.follower_id.id('follower_id', current_user.get_id())
+  # to_follow = model.Followers.followed_id.id('followed_id', n.get_id())
+  # cur_user = 
+  #site_en = model.Followers.query(model.Followers.follower_id == current_user.get_id() , model.Followers.followed_id == n.get_id())
+  #site_en.key.id()
+  # followornot = model.Followers.get_multi([current_user.name, user.name])
+  #site_en = model.Followers.query(model.Followers.follower_id == current_user.get_id() , model.Followers.followed_id == n.get_id())
+  cur_user = ndb.Key(model.Followers, current_user.name)
+  to_follow = ndb.Key(model.Followers, user.name)
+  model_ex = model.Followers.query()
+  #site_en =  model.Followers.query(model.Followers.follower_id == (ndb.Key(model.Followers, current_user.name)), model.followed_id == ndb.Key(model.Followers, user.name)).fetch()
+  #site_en = model_ex.filter(model.Followers.follower_id == cur_user, model.Followers.followed_id == to_follow)
+  print model_ex
+
+  for entry in model_ex:
+    if entry.follower_id.string_id() == current_user.name and entry.followed_id.string_id() == user.name:
+      flash('You are Already Following %s'%(user.name), category='warning')
+      return redirect(url_for('user_profile',name = n, uid= ui))
+
+
+  #cur_user = ndb.Key(model.Followers, current_user.name)
+  #to_follow = ndb.Key(model.Followers, user.name)
+  print cur_user.id() , to_follow.id()
+  print "-----------He it oc------------",cur_user.string_id(), to_follow
   follower_db = ndb.Key(model.User, current_user.name)
   followed_db = ndb.Key(model.User, user.name)
-
-  follow = model.Followers(
-      follower_id = follower_db,
-      followed_id = followed_db,
-    )
+  follow = model.Followers(follower_id = follower_db,followed_id = followed_db)
   try:
     follow.put()
     flash('%s you are now following %s' %(current_user.name,user.name), category='info')
   except CapabilityDisabledError:
-    flash('Ahh Something Went wrong with the server',category = 'danger')
-
+    flash('Ahh Something Went wrong with the server',category = 'danger')  
   return redirect(url_for('user_profile',name = n, uid= ui))
 
 @app.route('/unfollow/<name>/<int:uid>')
 @login_required
 def unfollow_user(name,uid):
   n=name; ui=uid
+  user_is = model.User.query(model.User.name == name , model.User.id == uid)
+  if user_is==None:
+    return redirect(url_for('index'))
   user = model.User.retrieve_one_by('name' ,name)
   uid = model.User.retrieve_one_by('id' ,uid)
-  if user == None and uid == None:
-    return redirect(url_for('index'))
-
+  
   if user == g.user:
-    flash('You can not Follow Yourself',category='warning')
+    flash('You can not Unfollow Yourself',category='warning')
 
+  cur_user = ndb.Key(model.Followers, current_user.name)
+  to_follow = ndb.Key(model.Followers, user.name)
+
+  model_ex = model.Followers.query()
+  for entry in model_ex:
+    if entry.follower_id.string_id() == current_user.name and entry.followed_id.string_id() == user.name:
+      try:
+        entry.key.delete()
+        flash('You are not Following %s'%(user.name), category='info')
+      except CapabilityDisabledError:
+        flash(u'App Engine Datastore is currently in read-only mode.', category='danger')
   return redirect(url_for('user_profile',name = n, uid= ui))
 
 @app.route('/<name>/edit_profile/<int:uid>', methods=['GET','POST'])
