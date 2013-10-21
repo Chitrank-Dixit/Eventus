@@ -66,12 +66,24 @@ class CreateEventForm(wtf.Form):
     #private= wtf.BooleanField('private',default=False)
 
 
+class SettingsForm(wtf.Form):
+    location = wtf.TextField('Location')
+    about = wtf.TextAreaField('About')
+    google_plus = wtf.TextField('Google +')
+    facebook = wtf.TextField('Facebook')
+    twitter = wtf.TextField('Twitter')
+
+
+
 class CreatePost(wtf.Form):
     poster = wtf.TextField('Post', validators=[validators.Required()])
     postbody= wtf.TextAreaField('postbody', validators=[validators.Required()])
     posturl = wtf.html5.URLField('post url', validators=[validators.Required()])
     sdate= wtf.html5.DateField('Date' , validators=[validators.Required()] )
     edate= wtf.html5.DateField('Date' , validators=[validators.Required()] )
+
+
+
 
 
 '''     

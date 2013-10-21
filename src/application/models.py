@@ -86,8 +86,9 @@ class FlaskUser(AnonymousUser):
   def is_following(self, user):
     model_ex = model.Followers.query()
     for entry in model_ex:
-      if entry.follower_id.string_id() == current_user.name and entry.followed_id.string_id() == user.name:
+      if entry.follower_name.string_id() == current_user.name and entry.followed_name.string_id() == user.name:
         return True
+    return False
     #return (cur_user.string_id() == current_user.name and to_follow.string_id() == user.name)
     
 
@@ -96,6 +97,9 @@ class FlaskUser(AnonymousUser):
 
   def __repr__(self): # pragma: no cover
     return '<User %r>' % (self.name)    
+
+
+
 
 @login_manager.user_loader
 def load_user(key):

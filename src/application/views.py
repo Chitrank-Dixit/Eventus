@@ -295,11 +295,17 @@ def user_profile(name,uid):  #
     if user_is == None:
         flash('User ' + name + ' not found.')
         return redirect(url_for('index'))
+
+    # specific user profile
     userid = current_user.id
     user = model.User.retrieve_one_by('name', name)
+
+    # Events created by the user
     event_st = model.Event.query()
     event_db = event_st.filter(model.Event.creator_id == euid)
     results = event_db.fetch()
+
+    # followers ( user following to and user's followers )
     followers = model.Followers.query()
 
     #followers_current = followers.filter(model.Followers.follower_id == user.name)
@@ -341,7 +347,7 @@ def follow_user(name,uid):
   print model_ex
 
   for entry in model_ex:
-    if entry.follower_id.string_id() == current_user.name and entry.followed_id.string_id() == user.name:
+    if entry.follower_name.string_id() == current_user.id and entry.followed_name.string_id() == user.id:
       flash('You are Already Following %s'%(user.name), category='warning')
       return redirect(url_for('user_profile',name = n, uid= ui))
 
@@ -349,10 +355,20 @@ def follow_user(name,uid):
   #cur_user = ndb.Key(model.Followers, current_user.name)
   #to_follow = ndb.Key(model.Followers, user.name)
   print cur_user.id() , to_follow.id()
-  print "-----------He it oc------------",cur_user.string_id(), to_follow
-  follower_db = ndb.Key(model.User, current_user.name)
-  followed_db = ndb.Key(model.User, user.name)
-  follow = model.Followers(follower_id = follower_db,followed_id = followed_db)
+  print ui
+  #print "-----------He it oc------------",cur_user.string_id(), to_follow
+  follower_name = ndb.Key(model.User, current_user.name)
+  followed_name = ndb.Key(model.User, user.name)
+  follower_avatar = ndb.Key(model.User, current_user.avatar(80))
+  followed_avatar = ndb.Key(model.User, user.avatar(90))
+  follow = model.Followers(
+    follower_name = follower_name,
+    follower_id = current_user.id, 
+    followed_name = followed_name,
+    followed_id = ui,
+    follower_avatar = follower_avatar,
+    followed_avatar = followed_avatar,
+    )
   try:
     follow.put()
     flash('%s you are now following %s' %(current_user.name,user.name), category='info')

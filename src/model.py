@@ -76,6 +76,7 @@ class User(Base, modelx.UserX):
   username = ndb.StringProperty(indexed=True, required=True)
   #email = ndb.EmailProperty(indexed=True, default='')
   about_me = ndb.StringProperty(indexed=True)
+  location = ndb.StringProperty(indexed=True)
   email = ndb.StringProperty(indexed=True, default='')
   password = ndb.StringProperty(indexed=True , default='')
   confirm = ndb.StringProperty(indexed=True , default='')
@@ -110,8 +111,14 @@ class User(Base, modelx.UserX):
     return self.user_db.key.urlsafe()
 
 class Followers(Base,modelx.FollowersX):
-  follower_id = ndb.KeyProperty(kind='User')
-  followed_id = ndb.KeyProperty(kind='User')
+  follower_name = ndb.KeyProperty(kind='User')
+  follower_id = ndb.IntegerProperty(indexed=True , required=True)
+  followed_name = ndb.KeyProperty(kind='User')
+  followed_id = ndb.IntegerProperty(indexed=True , required=True)
+  follower_avatar = ndb.KeyProperty(kind='User')
+  followed_avatar = ndb.KeyProperty(kind='User')
+
+  
 
 
 
