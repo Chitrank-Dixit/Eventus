@@ -63,7 +63,7 @@ from flaskext import oauth
 import util
 import model
 import config
-from forms import SignupForm, SigninForm, CreateEventForm , CreatePost
+from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm
 # Google API python Oauth 2.0
 import httplib2
 from oauth2client.client import AccessTokenRefreshError
@@ -248,7 +248,7 @@ def signup():
         return redirect(url_for('index'))
     form = SignupForm(request.form)
     #next = request.args.get('next')
-    if form.validate_on_submit() or request.method=='POST':
+    if form.validate_on_submit() and request.method=='POST':
         signup = model.User(
 
              name = form.name.data,
@@ -287,7 +287,7 @@ def signup():
 
 # This is user profile
 # @app.route('/user/<name>/')
-@app.route('/user/<name>/<int:uid>/', methods=['GET']) # /
+@app.route('/user/<name>/<int:uid>/', methods=['GET','POST']) # /
 @login_required
 def user_profile(name,uid):  #
     euid= uid
@@ -310,9 +310,29 @@ def user_profile(name,uid):  #
 
     #followers_current = followers.filter(model.Followers.follower_id == user.name)
 
+    # send message to a particular User
+    form= MessageForm(request.form)
+    # Sending a Message to a user
+    sent_from = ndb.Key(model.User, current_user.name)
+    sent_to = ndb.Key(model.User, name)
+    if form.validate_on_submit() and request.method=='POST':
+      message = model.SendMessage(
+        message_title =  form.message_title.data,
+        message_body = form.message_body.data,
+        sent_from = sent_from,
+        sent_to =  sent_to,
+      )
+      try:
+        message.put()
+        flash('Message Sent to %s'%(name), category='info')
+      except CapabilityDisabledError:
+        flash('Something went wrong Message not delievered', category='danger')
     
+    # retreive all Messages
+    inbox = model.SendMessage.query()
+
     return flask.render_template('profile.html',results= results,
-     user = user, euid= euid, followers = followers
+     user = user, euid= euid, followers = followers, form=form, inbox=inbox
      )
 
 
@@ -374,7 +394,7 @@ def follow_user(name,uid):
     flash('%s you are now following %s' %(current_user.name,user.name), category='info')
   except CapabilityDisabledError:
     flash('Ahh Something Went wrong with the server',category = 'danger')  
-  return redirect(url_for('user_profile',name = n, uid= ui))
+  return redirect(url_for('user_profile',name = n, uid= ui, m=False))
 
 @app.route('/unfollow/<name>/<int:uid>')
 @login_required
@@ -390,22 +410,18 @@ def unfollow_user(name,uid):
     flash('You can not Unfollow Yourself',category='warning')
 
   cur_user = ndb.Key(model.Followers, current_user.name)
-  to_follow = ndb.Key(model.Followers, user.name)
+  to_follow = ndb.Key(model.Followers, name)
 
   model_ex = model.Followers.query()
   for entry in model_ex:
-    if entry.follower_name.string_id() == current_user.name and entry.followed_name.string_id() == user.name:
+    if entry.follower_name.string_id() == current_user.name and entry.followed_name.string_id() == name:
       try:
         entry.key.delete()
-        flash('You are not Following %s'%(user.name), category='info')
+        flash('You are not Following %s'%(name), category='info')
       except CapabilityDisabledError:
         flash(u'App Engine Datastore is currently in read-only mode.', category='danger')
   return redirect(url_for('user_profile',name = n, uid= ui))
 
-@app.route('/message/<name>/<int:uid>')
-@login_required
-def send_message(name,uid):
-  return redirect('send_message.html')
 
 
 

@@ -124,9 +124,10 @@ class Inbox(Base, modelx.InboxX):
   message_body = ndb.StringProperty(indexed=True, required=True)
   sent_from = ndb.KeyProperty(kind='User')
 
-class SentMessage(Base, modelx.SentX):
+class SendMessage(Base, modelx.SentX):
   message_title = ndb.StringProperty(indexed=True , required= True)
   message_body = ndb.StringProperty(indexed=True, required=True)
+  sent_from = ndb.KeyProperty(kind='User')
   sent_to = ndb.KeyProperty(kind='User')
 
 

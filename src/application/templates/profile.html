@@ -1,5 +1,6 @@
 
 {% extends 'base.html' %}
+
 {% block title %}{{user.name}} Profile | Eventus {% endblock %}
 {% block style_block %}
 	
@@ -9,7 +10,7 @@
 	
 	<div class="container theme-showcase">
 	<div class="row">
-			
+		{% include 'send_message.html' %}	
 		<div class="span3 background" >
   		  
 
@@ -24,9 +25,8 @@
         <h3>{{user.name}}</h3>
         <h5>{{user.email}}</h5>
         {% if g.user.id != euid %}
-        <a href="#" class="btn btn-info btn-lg" data-target="#send-message-modal">Send Message</a>
-
-        {% include 'send_message.html' %}
+        <a href="#send-message-modal" class="btn btn-info btn-lg" data-toggle="modal">Send Message</a>
+        
         {% endif %}
         
 
@@ -77,7 +77,18 @@
 
 		</div>
     {% if g.user.id == euid %}
-    <div class="tab-pane" id="inbox">oheheh</div>
+    <div class="tab-pane" id="inbox">
+      <div class="row">
+        {% for message in inbox %}
+          {{ message.message_title }}
+          {{ message.message_body }}
+          {{ message.sent_from.string_id() }}
+
+        {% endfor %}
+
+      </div>
+
+    </div>
     {% endif %}
 		<div class="tab-pane" id="followers">
 			<div class="row">
@@ -115,5 +126,32 @@
   		
 	</div>
 	<hr>
+
+{% block tail_script %}   
+
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
+<script type="text/javascript">
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+$(document).ready(function () {
+
+$('#send_message').validate({
+    rules: {
+        
+        
+    },
+    
+    highlight: function (element) {
+        $(element).closest('control-group').removeClass('success').addClass('error');
+    },
+    success: function (element) {
+        element.text('OK!').addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
+    }
+});
+});
+
+</script>
+{% endblock %}
 
 {% endblock %}

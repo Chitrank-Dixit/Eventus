@@ -40,19 +40,19 @@ class SignupForm(wtf.Form):
  
  
 class SigninForm(wtf.Form):
-    email = wtf.TextField('Email',validators=[validators.Required()])
+    email = wtf.html5.EmailField('Email',validators=[validators.Required()])
     password = wtf.PasswordField('Password',validators=[validators.Required()])
     remember_me = wtf.BooleanField('remember_me', default = False)
-    recaptcha = wtf.RecaptchaField()
+    
 
 
 class CreateEventForm(wtf.Form):
-    name = wtf.TextField('name', validators=[validators.Required()])
+    name = wtf.TextField('Name', validators=[validators.Required()])
     # logo = wtf.FileField('logo', )
     #creator = wtf.TextField('creator', validators=[validators.Required()])
     # manager = wtf.TextField('manager', default='')
-    event_url = wtf.html5.URLField('url')
-    description = wtf.TextAreaField('description',default='')
+    event_url = wtf.html5.URLField('URL')
+    description = wtf.TextAreaField('Description',default='')
     venue = wtf.TextField('Where', validators=[validators.Required()])
     sdate= wtf.html5.DateField('From')
     edate= wtf.html5.DateField('To')
@@ -82,7 +82,9 @@ class CreatePost(wtf.Form):
     sdate= wtf.html5.DateField('Date' , validators=[validators.Required()] )
     edate= wtf.html5.DateField('Date' , validators=[validators.Required()] )
 
-
+class MessageForm(wtf.Form):
+    message_title = wtf.TextField('', validators=[validators.Required()])
+    message_body =  wtf.TextAreaField('', validators=[validators.Required()])
 
 
 

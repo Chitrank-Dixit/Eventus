@@ -6,17 +6,27 @@
     .background {
        background-color: #F3F3F3;
       }
+
+    .outer {
+       border-color: red;
+    }
   
   </style>
 {% endblock %}
 {% block content %}
   
-    
+<div class="row pull-right">
+<form class="form-search">
+  <input type="text" class="input-medium search-query">
+  <button type="submit" class="btn">Search</button>
+</form>
+</div>
+<br>
 
 
 {% for event_list in events %}
 
-<div class="panel panel-default">
+<div class="panel panel-default outer">
     <div class="panel-heading">
      <h3 class="panel-title">{{ event_list.name }}</h3>
     </div>
@@ -41,5 +51,6 @@
      <p>{{e.name.string_id()}}</p>
      
 {% endfor %}
+
 
 {% endblock %}
