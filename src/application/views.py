@@ -298,7 +298,12 @@ def user_profile(name,uid):  #
 
     # specific user profile
     userid = current_user.id
-    user = model.User.retrieve_one_by('name', name)
+    user = model.User.retrieve_one_by('name' , name)
+    #userid_db = ndb.Key(model.User, user.id)
+    print "-----------",user.key.id() , 
+    if user.key.id() != euid:
+      flash('Invalid User', category='danger')
+      return redirect(url_for('index'))
 
     # Events created by the user
     event_st = model.Event.query()

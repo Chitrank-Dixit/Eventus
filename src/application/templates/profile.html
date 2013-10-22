@@ -16,11 +16,16 @@
 
   			<img src="{{user.avatar(128)}}" class="img-rounded" />
         {% if g.user.id == euid %}
+
   			   <a class="btn btn-default" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Edit Profile</a> <br><br>
+           
+
         {% elif current_user.is_following(user) %}
-  		  	<a href="{{ url_for('unfollow_user', name=user.name, uid=euid) }}" role="button" class="btn btn-danger" data-toggle="Edit Your Profile Data"  title="Unfollow this User">Unfollow</a> 
+  		  	<a href="{{ url_for('unfollow_user', name=user.name, uid=euid) }}" role="button" class="btn btn-danger" data-toggle="Edit Your Profile Data"  title="Unfollow this User">Unfollow</a> <br><br>
+            
         {% else %}
   		  	<a href="{{ url_for('follow_user', name=user.name, uid=euid) }}" class="btn btn-success" data-toggle="Edit Your Profile Data"  title="Follow this User">Follow</a> <br><br><br>
+            
         {% endif %}
         <h3>{{user.name}}</h3>
         <h5>{{user.email}}</h5>
@@ -53,11 +58,18 @@
 		<div class="tab-pane" id="favourites">oheheh</div>
 		<div class="tab-pane" id="events">
 			{% if not results %}
-				<div class="alert alert-info">
+				
+            {% if g.user.id == euid %}
+            <div class="alert alert-info">
         		<strong>{{user.name}}</strong> You Have not Created any Events Yet.
       			</div>
       			<p> Start by Creating your first event <a class="btn btn-primary" href="{{ url_for('create_event') }}" role="button">Create an Event</a> </p> 
-			
+            {% else %}
+            <div class="alert alert-info">
+            </div>
+            {% endif %}
+			      
+
 			{% else %}
 			
 			{% for event_list in results %}
