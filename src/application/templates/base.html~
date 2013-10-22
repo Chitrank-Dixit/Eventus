@@ -9,14 +9,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
     <title>{% block title%}Flask on App Engine{% endblock %}</title>
-    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap2.3.2.css') }}" rel="stylesheet" />
     <!-- Bootstrap theme -->
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-responsive.min.css') }}" rel="stylesheet">
     
     <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
-    <!-- <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet"> -->
+    <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
     
-    <!-- <link href="{{ url_for('static', filename='bootstrap/css/sticky-footer-navbar.css') }}" rel="stylesheet"> -->
+    <link href="{{ url_for('static', filename='bootstrap/css/fixed-footer.css') }}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <!-- <link href="{{ url_for('static', filename='bootstrap/css/theme.css') }}" rel="stylesheet"> -->

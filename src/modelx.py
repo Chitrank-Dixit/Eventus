@@ -38,7 +38,20 @@ class FollowersX(object):
   def get_master_db(cls):
     return cls.get_or_insert('master')
 
-  
+class InboxX(object):
+  @classmethod
+  @property
+
+  def get_master_db(cls):
+    return cls.get_or_insert('master')
+
+class SentX(object):
+  @classmethod
+  @property
+
+  def get_master_db(cls):
+    return cls.get_or_insert('master')
+
 
 class EventX(object):
   @classmethod

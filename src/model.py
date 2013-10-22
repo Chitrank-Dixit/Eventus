@@ -119,6 +119,15 @@ class Followers(Base,modelx.FollowersX):
   followed_avatar = ndb.KeyProperty(kind='User')
 
   
+class Inbox(Base, modelx.InboxX):
+  message_title = ndb.StringProperty(indexed=True , required= True)
+  message_body = ndb.StringProperty(indexed=True, required=True)
+  sent_from = ndb.KeyProperty(kind='User')
+
+class SentMessage(Base, modelx.SentX):
+  message_title = ndb.StringProperty(indexed=True , required= True)
+  message_body = ndb.StringProperty(indexed=True, required=True)
+  sent_to = ndb.KeyProperty(kind='User')
 
 
 

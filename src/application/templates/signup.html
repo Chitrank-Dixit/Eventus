@@ -9,7 +9,7 @@
 	<div class="row">
 	       
       <h3><center>Sign Up Eventus</center></h3><br><br>
-		<div class="col-sm-6">
+		<div class="span6">
   			<form name="signup" id="signup_form" class="navbar-form form-inline" action="{{ url_for('signup') }}" method="post" accept-charset="utf-8">
 				{{ form.csrf_token }}
 				<fieldset> <!-- In future in this form a check should be made where if username and email of a user already exists the error message will be shown with the page redirect to signup -->
@@ -85,9 +85,9 @@
                     <div class="controls">
                         <br><br> 
 
-                  <ul class="pull-right">Already a Member<a href="{{ url_for('signin') }}" > Sign in </a></ul>
+                 <ul class="pull-right">Already a Member<a href="{{ url_for('signin') }}" > Sign in </a></ul>
 
-  								<button type="submit" name="signup_submit" value"SignUp" class="btn btn-success">Sign up</button><br><br>
+  				<button type="submit" name="signup_submit" value"SignUp" class="btn btn-success">Sign up</button><br><br>
   								  
                   </div>
                 </div>
@@ -99,9 +99,9 @@
     			
   			
 		</div>
-		<div class="col-sm-1">
+		<div class="span1">
 		</div>
-		<div class="col-sm-5">
+		<div class="span5">
 			<a class="btn btn-block btn-lg btn-google-plus" href="/signin/google/">
         		<i class="icon icon-google-plus"></i>
         			Sign in with Google

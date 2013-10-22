@@ -354,7 +354,7 @@ def follow_user(name,uid):
 
   #cur_user = ndb.Key(model.Followers, current_user.name)
   #to_follow = ndb.Key(model.Followers, user.name)
-  print cur_user.id() , to_follow.id()
+  #print cur_user.id() , to_follow.id()
   print ui
   #print "-----------He it oc------------",cur_user.string_id(), to_follow
   follower_name = ndb.Key(model.User, current_user.name)
@@ -394,7 +394,7 @@ def unfollow_user(name,uid):
 
   model_ex = model.Followers.query()
   for entry in model_ex:
-    if entry.follower_id.string_id() == current_user.name and entry.followed_id.string_id() == user.name:
+    if entry.follower_name.string_id() == current_user.name and entry.followed_name.string_id() == user.name:
       try:
         entry.key.delete()
         flash('You are not Following %s'%(user.name), category='info')
@@ -402,7 +402,14 @@ def unfollow_user(name,uid):
         flash(u'App Engine Datastore is currently in read-only mode.', category='danger')
   return redirect(url_for('user_profile',name = n, uid= ui))
 
-@app.route('/<name>/edit_profile/<int:uid>', methods=['GET','POST'])
+@app.route('/message/<name>/<int:uid>')
+@login_required
+def send_message(name,uid):
+  return redirect('send_message.html')
+
+
+
+@app.route('/edit_profile/<name>/<int:uid>', methods=['GET','POST'])
 @login_required
 def user_profile_settings(name,uid):
   return render_template('edit_profile.html')

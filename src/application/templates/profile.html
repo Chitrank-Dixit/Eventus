@@ -10,7 +10,7 @@
 	<div class="container theme-showcase">
 	<div class="row">
 			
-		<div class="col-sm-3 background" >
+		<div class="span3 background" >
   		  
 
   			<img src="{{user.avatar(128)}}" class="img-rounded" />
@@ -22,18 +22,31 @@
   		  	<a href="{{ url_for('follow_user', name=user.name, uid=euid) }}" class="btn btn-success" data-toggle="Edit Your Profile Data"  title="Follow this User">Follow</a> <br><br><br>
         {% endif %}
         <h3>{{user.name}}</h3>
+        <h5>{{user.email}}</h5>
+        {% if g.user.id != euid %}
+        <a href="#" class="btn btn-info btn-lg" data-target="#send-message-modal">Send Message</a>
+
+        {% include 'send_message.html' %}
+        {% endif %}
+        
+
+
         
         
 		</div>
-		<div class="col-sm-9">
+		<div class="span9">
 		<ul class="nav nav-tabs">
   				<li class="active">
     				<a href="#posts" data-toggle="tab">Posts</a>
   		</li>
  	 	<li><a href="#favourites" data-toggle="tab">Favourites</a></li>
   		<li><a href="#events" data-toggle="tab">Events</a></li>
+      {% if g.user.id == euid %}
+      <li><a href="#inbox" data-toggle="tab">Inbox</a></li>
+      {% endif %}
   		<li><a href="#followers" data-toggle="tab">Followers</a></li>
   		<li><a href="#following" data-toggle="tab">Following</a></li>
+
 		</ul>
 		<div class="tab-content">
 		<div class="tab-pane active" id="posts">Heheh</div>
@@ -48,6 +61,7 @@
 			{% else %}
 			
 			{% for event_list in results %}
+          <br>
 			    <div class="panel panel-default">
     			<div class="panel-heading">
      			<h3 class="panel-title">{{ event_list.name }}</h3>
@@ -55,12 +69,16 @@
     			<div class="panel-body">
         			{{ event_list.description }}
     			</div>
-				</div>       
+				</div>
+              
 			{% endfor %}
 			
 			{% endif %}
 
 		</div>
+    {% if g.user.id == euid %}
+    <div class="tab-pane" id="inbox">oheheh</div>
+    {% endif %}
 		<div class="tab-pane" id="followers">
 			<div class="row">
           {% for follower in followers %}

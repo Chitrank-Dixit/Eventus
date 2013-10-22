@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import 'macro/error.html' as forms %}
 {% block title %} Sign in | Eventus {% endblock %}
 {% block style_block %}
 	
@@ -9,52 +10,49 @@
 	 
 			<h3><center>Sign in Eventus</center></h3><br><br>
 			
-		<div class="col-sm-6">
+		<div class="span6">
 			
-  			<form name="signin" id="signin_form" class="navbar-form form-horizontal" action="/signin/" method="post" >
+  			<form name="signin" id="signin_form" class="navbar-form form-horizontal" action="/signin/" method="post" accept-charset="utf-8">
   				{{ form.csrf_token }}
 				<fieldset>
   				{{ form.hidden_tag() }}
             {% from "macro/_formhelpers.html" import render_field %}
             <div class="control-group">
-                   {{ form.email.label }}
-                    <div class="controls">
-                        {{ form.email(id='email',class_='form-control required', placeholder="Enter Mail") }}
-                        {% if form.email.errors %}
-                        <ul class="errors">
-                            {% for error in form.email.errors %}
-                            <li class="flashes alert-warning">{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                        
-                    </div> 
+              <div class="controls">
+                {{ form.email.label }}
+                {{ form.email(id='email',class_='form-control required', placeholder="Enter Mail") }}
+                {% if form.email.errors %}
+                <ul class="errors">
+                  {% for error in form.email.errors %}
+                  <li class="flashes alert-warning">{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div> 
             </div>
             <div class="control-group">
-                    {{ form.password.label }}
-                    <div class="controls">
-                        {{ form.password(id='password',class_='form-control required',placeholder="Enter Password") }}
-                        {% if form.password.errors %}
-                        <ul class="errors">
-                            {% for error in form.password.errors %}
-                            <li class="flashes alert-warning">{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </div>
+              <div class="controls">
+                {{ form.password.label }}
+                {{ form.password(id='password',class_='form-control required',placeholder="Enter Password") }}
+                {% if form.password.errors %}
+                <ul class="errors">
+                  {% for error in form.password.errors %}
+                  <li class="flashes alert-warning">{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
             </div><br>
             <p class="control-group">
               <a href="" class="pull-right">forgot password</a>
-              {{form.remember_me}} Remember Me <br><br>
+              {{form.remember_me}} Remember Me </ul><br><br>
               
             </p>
 
             <div class="control-group">
-                    <!-- <div class="control-label">{{ form.password.label }}</div> -->
-                    <div class="controls">
-                        {{ render_field(form.recaptcha, class="form-control") }}
-                        
-                    </div>
+              <div class="controls">
+                 {{ render_field(form.recaptcha, class="form-control") }}
+              </div>
             </div>
             
             <div class="control-group">
@@ -74,13 +72,14 @@
   				
   				</fieldset>
   			</form>
-        <br><br>
+        
 				
     				
 		</div>
-		<div class="col-sm-1">
-		</div>
-		<div class="col-sm-5">
+    
+		<div class="span1">
+    </div>
+		<div class="span5">
 			<div class="row">
 			
         <a class="btn btn-block btn-lg btn-google-plus" href="/signin/google/">
@@ -103,6 +102,7 @@
 			
 		</div>
 		
+    
 		
 	</div>
 		
@@ -112,11 +112,13 @@
 <script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
 <script type="text/javascript">
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 $(document).ready(function () {
 
 $('#signin_form').validate({
     rules: {
         
+
     },
     highlight: function (element) {
         

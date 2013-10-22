@@ -1,32 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="Chitrank" >
-    <link rel="shortcut icon" href="{{ url_for('static', filename='bootstrap/ico/favicon.png') }} ">
-
-    <title>Fixed Top Navbar Example for Bootstrap</title>
-		<link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">	
-	<!-- google sign in API
-	 https://developers.google.com/+/web/signin/server-side-flow
-	 -->
-	
-    <!-- Bootstrap core CSS -->
-    <!-- <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}" rel="stylesheet">-->
-
-    <!-- Custom styles for this template -->
-    <!-- <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">-->
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="../../assets/js/html5shiv.js"></script>
-      <script src="../../assets/js/respond.min.js"></script>
-    <![endif]-->
-    <!-- Google Sign in API -->
-    <!-- BEGIN Pre-requisites -->
-    <style type="text/css">
+{% block style %}
+  <style type="text/css">
 		.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
   		color: white; 
   		background-color: #3B83C0;
@@ -34,14 +7,10 @@
   		filter: none;
 		}
     </style>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
-	</script>
 	
+{% endblock %}	
 	<!-- END Pre-requisites -->
-	
-  </head>
 
-  <body>
 	<!-- Fixed navbar -->
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
@@ -55,8 +24,8 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="#">Home</a></li>
-            <li class="dropdown">
+            <!-- <li><a href="#">Home</a></li> -->
+            <!-- <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="#">Action</a></li>
@@ -67,12 +36,22 @@
                 <li><a href="#">Separated link</a></li>
                 <li><a href="#">One more separated link</a></li>
               </ul>
-            </li>
+            </li> -->
+            <!-- <li>
+              
+              <form class="form-search">
+                <input type="text" class=" input-medium search-query" placeholder="Search Trending Events" />
+                  
+              </form>
+            </li>-->
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <!-- <li class="active"><a href="">Default</a></li> -->
-            <li><a href="/publicevents/">Public Events</a></li>
-            <li><a href="/create_event/">Create an Event</a></li>
+            <li><a href="{{ url_for('trending_events') }}">Trending Events</a></li>
+            <li><a href="{{ url_for('create_event') }}">Create an Event</a></li>
+            
+
+            
             <!-- {% if not session['state'] %} -->
             <!-- <li > <div id="signinButton" style="padding-top: 9px;"> 
 				<span 
@@ -89,20 +68,22 @@
 			{% else %}
 			 <li> </li>  
 			 {% endif %}-->
-			 {% if current_user.id > 0 %}
+			 {% if g.user.is_authenticated() %}
+       <li><a href="{{ url_for('user_profile' , name = g.user.name, uid=g.user.id )}}"><i class="icon-bell-alt"></i> Notifications</a></li>
 			 <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user white"></i> {{current_user.name}}<b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{current_user.avatar(25)}}" class="img-circle">  {{current_user.name}}<b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="/profile/"><i class="icon-edit"></i> Profile</a></li>
-                <li><a href="/signout/"><i class="icon-signout"></i> Signout</a></li>
+                <li><a href="{{ url_for('user_profile' , name = g.user.name, uid=g.user.id )}}"><i class="icon-edit"></i> Profile</a></li>
+                <li><a href="{{ url_for('user_profile_settings', name=g.user.name, uid=g.user.id ) }}"><i class="icon-gear"></i> Settings</a></li>
+                <li><a href="{{ url_for('signout') }}"><i class="icon-signout"></i> Sign out</a></li>
                 
                 
               </ul>
             </li>
 			 
 			 {% else %}
-			 <li><a href="/signup/">Sign up</a></li>
-			 <li><a href="/signin/">Sign in</a></li>
+			 <li><a href="{{ url_for('signup') }}">Sign up</a></li>
+			 <li><a href="{{ url_for('signin') }}">Sign in</a></li>
 			 {% endif %} 
           </ul>
         </div><!--/.nav-collapse -->
@@ -128,14 +109,3 @@
 			 {% endif %} -->
           
     
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <!-- <script src="{{ url_for('static', filename='bootstrap/js/jquery.js') }}"></script> -->
-    <!-- <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script> --> 
-    <!-- Last part of BODY element in file index.html -->
-
-  </body>
-</html>

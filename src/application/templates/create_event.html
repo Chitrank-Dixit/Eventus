@@ -13,7 +13,10 @@
   </style>
 {% endblock %}
 {% block content %}
-    
+<div class="container">
+    <div class="span3">
+        </div>
+    <div class="span6">
     <form action="{{ url_for('create_event') }}" class="navbar-form form-inline" method="post" id="create_eventform">
     {{ form.csrf_token }}
         <fieldset>
@@ -138,8 +141,11 @@
             </div>
           </fieldset>
     </form>
-    
+</div>
 
+<div class="span3">
+    </div>
+</div>
 
 {% block tail_script %}
 <script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
