@@ -122,6 +122,12 @@ Google Cloud
 - https://developers.google.com/appengine/docs/python/ndb
 
 
+Bootstrap 2 (for front end and responsiveness)
+---------------------------------------------------------
+- Bootstrap Select : http://silviomoreto.github.io/bootstrap-select/
+- Bootstrap site: http://getbootstrap.com/2.3.2/
+
+
 List_of_JavaScript Libraries
 ------------------------------------------------
 - http://en.wikipedia.org/wiki/List_of_JavaScript_libraries

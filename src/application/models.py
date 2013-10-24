@@ -134,7 +134,7 @@ def is_logged_in():
 
 class EventData(model.Event):
   def __init__(self, event_db):
-    self.user_db = event_db
+    self.event_db = event_db
     self.id = event_db.key.id()
     self.name = event_db.name
     self.email = event_db.email

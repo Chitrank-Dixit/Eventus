@@ -143,6 +143,7 @@ class Event(Base,modelx.EventX):
     creator = ndb.KeyProperty(kind="User", required=True)
     creator_id = ndb.IntegerProperty(indexed=True , required=True)
     #creator_id = ndb.KeyProperty(kind='User', required=True)
+    event_type = ndb.StringProperty(indexed=True, required=True)
     manager = ndb.StringProperty(indexed=True)
     event_url = ndb.StringProperty(indexed=True)
     description=ndb.StringProperty(indexed=True, default='')

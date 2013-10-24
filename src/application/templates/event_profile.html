@@ -1,6 +1,6 @@
 
 {% extends 'base.html' %}
-{% block title %} Event Settings | Eventus {% endblock %}
+{% block title %} Event Profile | Eventus {% endblock %}
 {% block style_block %}
 	
 	<style type="text/css">
@@ -11,7 +11,9 @@
 	</style>
 {% endblock %}
 {% block content %}
-	
-	
+	<h2>{{events.name}}</h2>
+	<h3>{{events.description}}</h2>
+	<h4>{{events.creator.string_id()}}</h4>
+	<h4>{{events.venue}}</h4>
 
 {% endblock %}

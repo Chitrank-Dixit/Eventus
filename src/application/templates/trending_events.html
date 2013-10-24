@@ -8,7 +8,7 @@
       }
 
     .outer {
-       border-color: red;
+       border-width: 2px solid;
     }
   
   </style>
@@ -21,36 +21,28 @@
   <button type="submit" class="btn">Search</button>
 </form>
 </div>
-<br>
+<br><br>
 
 
 {% for event_list in events %}
 
 <div class="panel panel-default outer">
     <div class="panel-heading">
-     <h3 class="panel-title">{{ event_list.name }}</h3>
+     <h3 class="panel-title"><a href="{{ url_for('event_profile', ename=event_list.name,eid=event_list.key.id() )}}">{{ event_list.name }}</a></h3>
     </div>
     <div class="panel-body">
         <p>{{ event_list.description }}</p><br>
         <ul class="pull-right">
            <img src=" event_list.creator.string_id().avatar(90) " class='img-circle' /><br>
-          <a href="/user/{{ event_list.creator.string_id() }}/{{ event_list.creator_id }}/">{{ event_list.creator.string_id() }}</a><br><br>
-
-          
-
-
+          <a href="/user/{{ event_list.creator.string_id() }}/{{ event_list.creator_id }}/">{{ event_list.creator.string_id() }}</a>
         </ul>
     </div>
 </div>                
-
+<br><br>
 
 
 {% endfor %}
             
-{% for e in db_entry %}
-     <p>{{e.name.string_id()}}</p>
-     
-{% endfor %}
 
 
 {% endblock %}

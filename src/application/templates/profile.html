@@ -17,7 +17,7 @@
   			<img src="{{user.avatar(128)}}" class="img-rounded" />
         {% if g.user.id == euid %}
 
-  			   <a class="btn btn-default" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Edit Profile</a> <br><br>
+  			   <a href="{{ url_for('user_profile_settings' , name = g.user.name, uid=g.user.id )}}" class="btn btn-default" data-toggle="Edit Your Profile Data" title="Edit Your Profile Data">Edit Profile</a> <br><br>
            
 
         {% elif current_user.is_following(user) %}
@@ -55,7 +55,15 @@
 		</ul>
 		<div class="tab-content">
 		<div class="tab-pane active" id="posts">Heheh</div>
-		<div class="tab-pane" id="favourites">oheheh</div>
+		<div class="tab-pane" id="favourites">
+      <p>{{user_in}}</p>
+      {% for ne in user_in %}
+        {{ne.name}}
+        {{ne.id}}
+
+      {% endfor %}
+
+    </div>
 		<div class="tab-pane" id="events">
 			{% if not results %}
 				
@@ -74,9 +82,10 @@
 			
 			{% for event_list in results %}
           <br>
-			    <div class="panel panel-default">
+			    <div class="alert-info panel panel-info">
     			<div class="panel-heading">
-     			<h3 class="panel-title">{{ event_list.name }}</h3>
+     			<h3 class="panel-title">
+            <a href="{{ url_for('event_profile', ename=event_list.name , eid=event_list.key.id() )}}">{{ event_list.name }}</a></h3>
     			</div>
     			<div class="panel-body">
         			{{ event_list.description }}
@@ -92,9 +101,9 @@
     <div class="tab-pane" id="inbox">
       <div class="row">
         {% for message in inbox %}
-          {{ message.message_title }}
-          {{ message.message_body }}
-          {{ message.sent_from.string_id() }}
+          <h4>{{ message.message_title }}</h4>
+          <p>{{ message.message_body }}</p>
+          <p class="pill-right">{{ message.sent_from.string_id() }}</p>
 
         {% endfor %}
 
@@ -105,7 +114,7 @@
 		<div class="tab-pane" id="followers">
 			<div class="row">
           {% for follower in followers %}
-            {% if follower.followed_name.string_id() == user.name %}
+            {% if follower.followed_id == user.key.id() %}
             	<div class="span1">
                 <br>
                 <img src="{{ follower.follower_avatar.string_id() }}" class='img-circle' /><br>
@@ -118,11 +127,13 @@
 
 		</div>
 		<div class="tab-pane" id="following">
+
 			<div class="row">
           {% for follower in followers %}
-            {% if follower.follower_name.string_id() == user.name %}
+            {% if follower.follower_id == user.key.id() %}
   				    <div class="span1">
                 <br>
+
                 <img src="{{ follower.followed_avatar.string_id() }}" class='img-circle' /><br>
                 <a href="/user/{{ follower.followed_name.string_id() }}/{{ follower.followed_id }}" class="btn btn-link">{{ follower.followed_name.string_id() }}</a></div>
             {% endif %}

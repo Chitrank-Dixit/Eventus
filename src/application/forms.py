@@ -31,6 +31,7 @@ ExampleForm = model_form(ExampleModel, wtf.Form, field_args={
 '''
 class SignupForm(wtf.Form):
     name = wtf.TextField('Name', validators=[validators.Required()])
+
     #username = wtf.TextField('username', validators=[validators.Required()])
     email= wtf.html5.EmailField('Email', validators=[validators.Required()])
     password = wtf.PasswordField('Password', validators=[validators.Required(), validators.EqualTo('confirm', message='Passwords must match')])
@@ -40,7 +41,7 @@ class SignupForm(wtf.Form):
  
  
 class SigninForm(wtf.Form):
-    email = wtf.html5.EmailField('Email',validators=[validators.Required()])
+    name = wtf.TextField('Name',validators=[validators.Required()])
     password = wtf.PasswordField('Password',validators=[validators.Required()])
     remember_me = wtf.BooleanField('remember_me', default = False)
     
@@ -51,6 +52,7 @@ class CreateEventForm(wtf.Form):
     # logo = wtf.FileField('logo', )
     #creator = wtf.TextField('creator', validators=[validators.Required()])
     # manager = wtf.TextField('manager', default='')
+    event_type = wtf.SelectField('Event Type', choices=[('Team Event','Team Event'), ('Conference and Workshop','Conference and Workshop'), ('Party','Party')], validators=[validators.Required()])
     event_url = wtf.html5.URLField('URL')
     description = wtf.TextAreaField('Description',default='')
     venue = wtf.TextField('Where', validators=[validators.Required()])

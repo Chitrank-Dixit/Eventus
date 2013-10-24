@@ -195,7 +195,8 @@ def signin():
     if form.validate_on_submit() and request.method == 'POST':
         
         # model.User.retrieve_one_by('username', form.username.data) && model.User.retrieve_one_by('password', form.password.data) is not None:
-        user_db = model.User.retrieve_one_by('password',form.password.data)
+        user_db = model.User.retrieve_one_by('name' and  'password',form.name.data and form.password.data)
+        #user_is = model.User.query(model.User.name == form.name.data, model.User.password == form.password.data)
         if not user_db:
           flash('Please check the username or password')
           return flask.redirect(flask.url_for('signin'))
@@ -239,7 +240,6 @@ def after_login(resp):
     return redirect(request.args.get('next') or url_for('index'))
 '''
 
-
 @app.route('/signup/',methods = ['POST','GET'])
 def signup():
     #error = None
@@ -250,21 +250,29 @@ def signup():
     #next = request.args.get('next')
     if form.validate_on_submit() and request.method=='POST':
         signup = model.User(
-
-             name = form.name.data,
-             username = form.name.data,
-             email = form.email.data,
-             password = form.password.data,
+            name = form.name.data,
+            username = form.name.data,
+            email = form.email.data,
+            password = form.password.data,
              
         )
-        #session['remember_me']=form.remeber_me.data
-        passwd = model.User.retrieve_one_by('password',form.password.data)
-        user = model.User.retrieve_one_by('email', form.email.data)
+        #session['remember_me'] = form.remeber_me.data
+        #passwd = model.User.retrieve_one_by('password',form.password.data)
+        # user = model.User.retrieve_one_by('email', form.email.data)
+        user_db = model.User.retrieve_one_by('name' and 'email' and 'password' , form.name.data and form.email.data and form.password.data)
 
-        if user != None and passwd != None:
-            flash(u'User already registered with this %s email ' % form.email.data,category='error')
-            return redirect(url_for('signup'))
         
+        if user_db != None:
+          if user_db.name != None and user_db.email != None and user_db.password != None:
+            flash(u'User already registered with this %s email and %s name, Please choose different name and email ' % (form.email.data,form.name.data),category='error')
+            return redirect(url_for('signup'))
+
+          if user_db.name == form.name.data:
+            flash('Username already taken', category='warning')
+            return redirect(url_for('signup'))
+
+
+
         try:
             signup.put()
             #signup_id = .key.id()
@@ -291,19 +299,32 @@ def signup():
 @login_required
 def user_profile(name,uid):  #
     euid= uid
-    user_is = model.User.query(model.User.name == name , model.User.id == uid)
+    user_is = model.User.query()
+    usered = user_is.filter(model.User.name == name , model.User.id == uid)
+    user_in = user_is.fetch()
+    # user = 'Initialized'
+
+    user_key = ndb.Key(model.User, uid)
+    print user_key
+    
+    for res in user_in:
+      print res.name, res.id
+
+    
+
     if user_is == None:
         flash('User ' + name + ' not found.')
         return redirect(url_for('index'))
 
     # specific user profile
+    
     userid = current_user.id
-    user = model.User.retrieve_one_by('name' , name)
+    user = model.User.retrieve_one_by('name' and 'key' , name and user_key )
     #userid_db = ndb.Key(model.User, user.id)
-    print "-----------",user.key.id() , 
-    if user.key.id() != euid:
-      flash('Invalid User', category='danger')
-      return redirect(url_for('index'))
+    print "-----------++++",user
+    # if user.key.id() != euid:
+      #flash('Invalid User', category='danger')
+      #return redirect(url_for('index'))
 
     # Events created by the user
     event_st = model.Event.query()
@@ -337,7 +358,8 @@ def user_profile(name,uid):  #
     inbox = model.SendMessage.query()
 
     return flask.render_template('profile.html',results= results,
-     user = user, euid= euid, followers = followers, form=form, inbox=inbox
+     user = user, euid= euid, followers = followers, form=form, inbox=inbox,
+     user_in = user_in
      )
 
 
@@ -349,8 +371,9 @@ def follow_user(name,uid):
   user_is = model.User.query(model.User.name == name , model.User.id == uid)
   if user_is==None:
     return redirect(url_for('index'))
-  user = model.User.retrieve_one_by('name' ,name)
-  uid = model.User.retrieve_one_by('id' ,uid)
+  uiid = ndb.Key(model.User, uid)
+  user = model.User.retrieve_one_by('name' and 'key' ,name and uiid)
+  
   # print '-----------Here it is',user_is
   
   if user == g.user:
@@ -1107,6 +1130,7 @@ def create_event():
   if form.validate_on_submit() and request.method=='POST':
     event = model.Event(
         name = form.name.data,
+        event_type = form.event_type.data,
         creator = use_db ,
         creator_id = current_user.id,
         event_url = form.event_url.data,
@@ -1129,7 +1153,20 @@ def create_event():
       return redirect(url_for('index'))
   return render_template('create_event.html',form=form)
 
-  
+
+@app.route('/events/<ename>/<int:eid>/', methods=['POST','GET'])
+def event_profile(ename,eid):
+  event_id = ndb.Key(model.Event, eid)
+  events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+  #events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
+  return render_template('event_profile.html', events = events )
+
+'''
+@app.route('/events/<name>/<int:eid>/' methods=['GET'])
+def event_public_page(name, eid):
+  return render_template('event')
+'''
+
 @app.route('/poster/',methods=['POST','GET'])
 def post_it():
   form = CreatePost(request.form)
@@ -1156,9 +1193,8 @@ def post_it():
       return redirect(url_for('post_it'))
   return render_template('poster.html', form=form, use_db = use_db)
 
-@app.route('/trending_events', methods=['POST','GET'])
+@app.route('/events/', methods=['POST','GET'])
 def trending_events():
   events= model.Event.query()
-  db_entry = model.Post.query()
-  return render_template('trending_events.html', events=events, db_entry=db_entry)
+  return render_template('trending_events.html', events=events)
 
