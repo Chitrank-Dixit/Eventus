@@ -1,45 +1,39 @@
 <!-- Fixed navbar -->
-    <div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container">
-        <div class="navbar-header">
-          <a type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand btn-danger" href="/"><b>&Eopf; &Vopf; &Eopf; &Nopf; &Topf; &Uopf; &Sopf;</b></a>
-        </div>
-        <div class="navbar-collapse">
-          
-          <ul class="nav navbar-nav pull-right">
-            <!-- <li class="active"><a href="">Default</a></li> -->
-            <li><a href="{{ url_for('trending_events') }}">Trending Events</a></li>
-            <li><a href="{{ url_for('create_event') }}">Create an Event</a></li>
-                        
-            
-			 {% if g.user.is_authenticated() %}
-       <li><a href="{{ url_for('user_profile' , name = g.user.name, uid=g.user.id )}}"><i class="icon-bell-alt"></i> Notifications</a></li>
-			 <li class="dropdown">
+    <!-- http://twitter.github.io/bootstrap/examples/starter-template.html -->
+     <div class="navbar navbar-inverse navbar-fixed-top">
+       <div class="navbar-inner">
+         <div class="container">
+           <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+           </button>
+           <a class="brand" href="/">&Eopf; &Vopf; &Eopf; &Nopf; &Topf; &Uopf; &Sopf;</a>
+           <div class="nav-collapse collapse">
+             <ul class="nav pull-right">
+              <li><a href="{{ url_for('trending_events') }}">Trending Events</a></li>
+              <li><a href="{{ url_for('create_event') }}">Create an Event</a></li>
+              {% if g.user.is_authenticated() %}
+              <li><a href="{{ url_for('user_profile' , name = g.user.name, uid=g.user.id )}}"><i class="icon-bell-alt"></i> Notifications</a></li>
+              <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{current_user.avatar(25)}}" class="img-circle">  {{current_user.name}}<b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="{{ url_for('user_profile' , name = g.user.name, uid=g.user.id )}}"><i class="icon-edit"></i> Profile</a></li>
-                <li><a href="{{ url_for('user_profile_settings', name=g.user.name, uid=g.user.id ) }}"><i class="icon-gear"></i> Settings</a></li>
-                <li><a href="{{ url_for('signout') }}"><i class="icon-signout"></i> Sign out</a></li>
-                
-                
-              </ul>
-            </li>
-			 
-			 {% else %}
-			 <li><a href="{{ url_for('signup') }}">Sign up</a></li>
-			 <li><a href="{{ url_for('signin') }}">Sign in</a></li>
-			 {% endif %} 
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-      </div>
-    </div>
+                <ul class="dropdown-menu">
+                  <li><a href="{{ url_for('user_profile' , name = g.user.name, uid=g.user.id )}}"><i class="icon-edit"></i> Profile</a></li>
+                  <li><a href="{{ url_for('user_profile_settings', name=g.user.name, uid=g.user.id ) }}"><i class="icon-gear"></i> Settings</a></li>
+                  <li><a href="{{ url_for('signout') }}"><i class="icon-signout"></i> Sign out</a></li>
+                              
+                </ul>
+              </li>
+       
+              {% else %}
+                <li><a href="{{ url_for('signup') }}">Sign up</a></li>
+                <li><a href="{{ url_for('signin') }}">Sign in</a></li>
+                {% endif %} 
+             </ul>
+           </div><!-- nav-collapse -->
+          </div>
+         </div>
+       </div>
 	
     
             
