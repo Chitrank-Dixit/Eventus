@@ -139,4 +139,6 @@ class EventData(model.Event):
     self.name = event_db.name
     self.email = event_db.email
     
-  
+  def avatar(self, size):
+    return 'http://www.gravatar.com/avatar/' + md5(self.email).hexdigest() + '?d=mm&s=' + str(size)
+

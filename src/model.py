@@ -128,7 +128,9 @@ class SendMessage(Base, modelx.SentX):
   message_title = ndb.StringProperty(indexed=True , required= True)
   message_body = ndb.StringProperty(indexed=True, required=True)
   sent_from = ndb.KeyProperty(kind='User')
+  sent_from_id = ndb.KeyProperty(kind='User')
   sent_to = ndb.KeyProperty(kind='User')
+  sent_to_id = ndb.KeyProperty(kind='User')
 
 
 
@@ -165,6 +167,11 @@ class Post(Base, modelx.EventX):
     sdate = ndb.DateProperty(indexed= True, required= True)
     edate = ndb.DateProperty(indexed= True, required= True)
 
+class EventComments(Base, modelx.EventX):
+    name = ndb.KeyProperty(kind="User", required=True)
+    user_id = ndb.KeyProperty(kind="User", required=True)
+    event_id = ndb.KeyProperty(kind="Event", required=True)
+    comment = ndb.StringProperty(indexed=True, required=True)
 '''
 
 poster_obj = ndb.get(post_key)

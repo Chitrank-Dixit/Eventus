@@ -20,7 +20,7 @@
             
             <div class="control-group">
               <div class="controls">
-                {{ form.name.label }}
+                <label>{{ form.name.label }}</label>
                 {{ form.name(id='name',class='form-control required', placeholder="Enter your name") }}
                 {% if form.name.errors %}
                 <ul class="errors">
@@ -33,7 +33,7 @@
             </div>
             <div class="control-group">
               <div class="controls">
-                {{ form.password.label }}
+                <label>{{ form.password.label }}</label>
                 {{ form.password(id='password',class='form-control required',placeholder="Enter Password") }}
                 {% if form.password.errors %}
                 <ul class="errors">
