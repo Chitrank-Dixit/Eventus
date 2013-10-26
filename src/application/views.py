@@ -1205,11 +1205,10 @@ def post_it():
   #pos = jsonify(model.Post.query())
   #print "----------",pos
 
-  print "-w--w--w--", request.json
+  
   use_db = ndb.Key(model.User, current_user.name)
-  print "-w--w--w--", request.json['post']
   if request.method == 'POST':
-    print "-w--w--w--", request.json['post']
+    
     posting = model.Post(
         name = use_db,
         poster = request.json['post'],
@@ -1218,9 +1217,9 @@ def post_it():
         
       )
     try:
-      print "-w--w--w--", request.json['post']
+      
       posting.put()
-      flash("Poster has been populated", category='info')
+      #flash("Poster has been populated", category='info')
       return jsonify({ "post": request.json['post'],"postbody": request.json['postbody'], "posturl": request.json['posturl'] })
       #data = [current_user.name , form.poster.data, form.postbody.data, form.posturl.data]
       #response = make_response(json.dumps(data))

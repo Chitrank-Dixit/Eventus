@@ -78,9 +78,11 @@
           </fieldset>
     </form>
     <ul data-bind="foreach: posts, visible: posts().length > 0">
+        <div class="well">
         <p data-bind="text: post"></p>
         <p data-bind="text: postbody"></p>
         <p data-bind="text: posturl"></p>
+        </div>
     </ul>
     <div class="controls">
  
