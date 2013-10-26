@@ -164,8 +164,8 @@ class Post(Base, modelx.EventX):
     poster = ndb.StringProperty(indexed= True, required=True)
     postbody = ndb.StringProperty(indexed=True, required=True)
     posturl = ndb.StringProperty(indexed=True, required=True)
-    sdate = ndb.DateProperty(indexed= True, required= True)
-    edate = ndb.DateProperty(indexed= True, required= True)
+    sdate = ndb.DateProperty(indexed= True)
+    edate = ndb.DateProperty(indexed= True)
 
 class EventComments(Base, modelx.EventX):
     name = ndb.KeyProperty(kind="User", required=True)
