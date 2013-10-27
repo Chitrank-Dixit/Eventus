@@ -63,7 +63,7 @@ from flaskext import oauth
 import util
 import model
 import config
-from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm
+from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm
 # Google API python Oauth 2.0
 import httplib2
 from oauth2client.client import AccessTokenRefreshError
@@ -341,12 +341,17 @@ def user_profile(name,uid):  #
     # Sending a Message to a user
     sent_from = ndb.Key(model.User, current_user.name)
     sent_to = ndb.Key(model.User, name)
+    sent_from_id = ndb.Key(model.User, current_user.id)
+    sent_to_id = ndb.Key(model.User, euid)
     if form.validate_on_submit() and request.method=='POST':
       message = model.SendMessage(
         message_title =  form.message_title.data,
         message_body = form.message_body.data,
         sent_from = sent_from,
+        sent_from_id = sent_from_id,
         sent_to =  sent_to,
+        sent_to_id = sent_to_id,
+
       )
       try:
         message.put()
@@ -1159,7 +1164,28 @@ def event_profile(ename,eid):
   event_id = ndb.Key(model.Event, eid)
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
   #events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
-  return render_template('event_profile.html', events = events )
+  comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
+  print "______________________"
+
+  form = CommentForm(request.form)
+  if form.validate_on_submit() and request.method == 'POST':
+    comments = model.EventComments(
+        name = ndb.Key(model.User,current_user.name),
+        user_id = ndb.Key(model.User, current_user.id),
+        event_id = event_id,
+        comment = form.comment.data,
+
+      )
+    try:
+      comments.put()
+      flash('your comment has been posted', category='info')
+      #mail.send(msg)
+      # return redirect(url_for('event_profile'))
+    except CapabilityDisabledError:
+      flash('Something went wrong and your comment has not been posted', category='danger')
+  return render_template('event_profile.html', events = events, ename =ename , eid= eid , form= form, comments_store= comments_store)
+
+
 
 '''
 @app.route('/events/<name>/<int:eid>/' methods=['GET'])
@@ -1167,31 +1193,53 @@ def event_public_page(name, eid):
   return render_template('event')
 '''
 
-@app.route('/poster/',methods=['POST','GET'])
+@app.route('/post/new',methods=['POST','GET'])
 def post_it():
   form = CreatePost(request.form)
   # = ndb.Key(model.User, current_user.id)
   #user_db = model.User.retrieve_one_by('id',current_user.id)
   #flaks_user =  FlaskUser(user_db)
   #use_db = ndb.Key(urlsafe=current_user.get_id())
+  post_db = model.Post.query()
+  
+  #pos = jsonify(model.Post.query())
+  #print "----------",pos
+
+  
   use_db = ndb.Key(model.User, current_user.name)
-  if form.validate_on_submit() and request.method=='POST':
+  if request.method == 'POST':
+    
     posting = model.Post(
         name = use_db,
-        poster = form.poster.data,
-        postbody = form.postbody.data,
-        posturl = form.posturl.data,
-        sdate= form.sdate.data,
-        edate= form.edate.data,
+        poster = request.json['post'],
+        postbody = request.json['postbody'],
+        posturl = request.json['posturl'],
+        
       )
     try:
+      
       posting.put()
-      flash("Poster has been populated", category='info')
-      return (redirect(url_for('post_it')))
+      #flash("Poster has been populated", category='info')
+      return jsonify({ "post": request.json['post'],"postbody": request.json['postbody'], "posturl": request.json['posturl'] })
+      #data = [current_user.name , form.poster.data, form.postbody.data, form.posturl.data]
+      #response = make_response(json.dumps(data))
+      #response.content_type = 'application/json'
+      #return redirect(url_for('post_it'))
+      
+      
+      
     except CapabilityDisabledError:
       flash('Error Occured while posting')
       return redirect(url_for('post_it'))
-  return render_template('poster.html', form=form, use_db = use_db)
+  return render_template('poster.html', form=form, use_db = use_db, post_db = post_db)
+
+
+@app.route('/posts',methods=['GET'])
+def all_posts():
+  post_db = model.Post.query()
+  print "jsonifyiiiiiiing post",jsonify(post_db)
+  return jsonify(post_db=post_db)
+
 
 @app.route('/events/', methods=['POST','GET'])
 def trending_events():

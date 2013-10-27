@@ -8,17 +8,17 @@
              <span class="icon-bar"></span>
              <span class="icon-bar"></span>
            </button>
-           <a class="brand" href="/">&Eopf; &Vopf; &Eopf; &Nopf; &Topf; &Uopf; &Sopf;</a>
+           <a class="brand" href="/"><b>&Eopf; &Vopf; &Eopf; &Nopf; &Topf; &Uopf; &Sopf;</b></a>
            <div class="nav-collapse collapse">
              <ul class="nav pull-right">
-              <li><a href="{{ url_for('trending_events') }}">Trending Events</a></li>
-              <li><a href="{{ url_for('create_event') }}">Create an Event</a></li>
+              <li><a href="{{ url_for('trending_events') }}"><i class="icon-magnet"></i> Trending Events</a></li>
+              <li><a href="{{ url_for('create_event') }}"><i class="icon-cloud-upload"></i> Create an Event</a></li>
               {% if g.user.is_authenticated() %}
               <li><a href="{{ url_for('user_profile' , name = g.user.name, uid=g.user.id )}}"><i class="icon-bell-alt"></i> Notifications</a></li>
               <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{current_user.avatar(25)}}" class="img-circle">  {{current_user.name}}<b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{current_user.avatar(20)}}" class="img-circle">  {{current_user.name}}<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="{{ url_for('user_profile' , name = g.user.name, uid=g.user.id )}}"><i class="icon-edit"></i> Profile</a></li>
+                  <li><a href="{{ url_for('user_profile' , name = g.user.name, uid=g.user.id )}}"><i class="icon-user"></i> Profile</a></li>
                   <li><a href="{{ url_for('user_profile_settings', name=g.user.name, uid=g.user.id ) }}"><i class="icon-gear"></i> Settings</a></li>
                   <li><a href="{{ url_for('signout') }}"><i class="icon-signout"></i> Sign out</a></li>
                               

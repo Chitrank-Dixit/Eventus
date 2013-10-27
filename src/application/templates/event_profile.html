@@ -11,9 +11,99 @@
 	</style>
 {% endblock %}
 {% block content %}
+  <div class="container well">
 	<h2>{{events.name}}</h2>
 	<h3>{{events.description}}</h2>
 	<h4>{{events.creator.string_id()}}</h4>
 	<h4>{{events.venue}}</h4>
+  </div>
+<div class="row">
+	<div class="span3">
+		Thi isii
+	</div>
+	<div class="span6">
+		<h3><i class="icon-comments"></i> Comments</h3> 
+		<form id="comment_form" class="navbar-form form-inline" action="{{ url_for('event_profile', ename = ename , eid = eid ) }}" method="post">
+		{{ form.csrf_token }}
+		<fieldset>
+			{{ form.hidden_tag() }}
+			<div class="control-group">
+                <p>{{ form.comment.label }}</p>
+                  <div class="controls">
+
+                        <p>
+                        {{ form.comment(id='comment',class='form-horizontal full-width required ',placeholder="Please post your Comment Here", style="width: 600px;", autocomplete=True)}}</p>
+                        {% if form.comment.errors %}
+                        <ul class="errors">
+                            {% for error in form.comment.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    	
+                    </div>
+
+                    
+            </div>
+            <div class="control-group">
+                    <div class="controls">
+                        <button type="submit" id="event_comment" value"event_comment" class="btn btn-success" data-loading-text="Posting Comment...." >Add Comment</button><br><br>
+                    
+                    </div>
+            </div>
+
+		</fieldset>
+
+		</form>
+
+	
+	{% for comments in comments_store %}
+		<div class="well">
+			
+
+				<p>{{comments.comment}}</p>
+				<p class="pull-right">{{comments.name.string_id()}}</p>
+			
+		</div>
+	{% endfor %}
+	
+	</div>
+	<div class="span3">
+		{% if events.event_type == 'Team Event' %}
+			Team Event
+
+		{% elif events.event_type == 'Conference and Workshop' %}
+			Conference and Workshop
+		{% elif events.event_type == 'Party' %}
+			Party
+		{% endif %}
+	</div>
+</div>
+
+
+{% block tail_script %}
+<script type="text/javascript">
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+$(document).ready(function () {
+
+$('#comment_form').validate({
+    rules: {
+        
+        
+    },
+    
+    highlight: function (element) {
+        $(element).closest('control-group').removeClass('success').addClass('error');
+    },
+    success: function (element) {
+        element.text('OK!').addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
+    }
+});
+});
+
+</script>
+{% endblock %}
 
 {% endblock %}

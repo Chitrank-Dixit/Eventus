@@ -81,14 +81,15 @@ class CreatePost(wtf.Form):
     poster = wtf.TextField('Post', validators=[validators.Required()])
     postbody= wtf.TextAreaField('postbody', validators=[validators.Required()])
     posturl = wtf.html5.URLField('post url', validators=[validators.Required()])
-    sdate= wtf.html5.DateField('Date' , validators=[validators.Required()] )
-    edate= wtf.html5.DateField('Date' , validators=[validators.Required()] )
+    sdate= wtf.html5.DateField('Start Date' , validators=[validators.Required()] )
+    edate= wtf.html5.DateField('End Date' , validators=[validators.Required()] )
 
 class MessageForm(wtf.Form):
     message_title = wtf.TextField('', validators=[validators.Required()])
     message_body =  wtf.TextAreaField('', validators=[validators.Required()])
 
-
+class CommentForm(wtf.Form):
+    comment= wtf.TextAreaField('Your Comment', validators=[validators.Required()] )
 
 '''     
 No need to make a model that is already made

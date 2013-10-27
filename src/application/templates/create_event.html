@@ -120,7 +120,7 @@
                   <div class="controls">
                                                 
                         <p>
-                        {{ form.sdate(id='start_date',class='form-control required ',autocomplete=True )}}</p>
+                        {{ form.sdate(id='start_date',class='form-control required ',autocomplete=True, min="" )}}</p>
                         {% if form.sdate.errors %}
                         <ul class="errors">
                             {% for error in form.sdate.errors %}
@@ -138,7 +138,7 @@
                   <div class="controls">
                                                 
                         <p>
-                        {{ form.edate(id='end_date',class='required', autocomplete=True )}}</p>
+                        {{ form.edate(id='end_date',class='required', autocomplete=True , min="")}}</p>
                         {% if form.edate.errors %}
                         <ul class="errors">
                             {% for error in form.edate.errors %}
@@ -154,7 +154,7 @@
 
             <div class="control-group">
                     <div class="controls">
-                        <button type="submit" name="event_submit" value"create_event" class="btn btn-primary" data-loading-text="Creating Event..." >Create Event</button><br><br>
+                        <button type="submit" id="event_submit" value"create_event" class="btn btn-primary" data-loading-text="Creating Event..." >Create Event</button><br><br>
                     
                     </div>
             </div>
@@ -167,12 +167,14 @@
 </div>
 
 {% block tail_script %}
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-buttons.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-select.js') }}"></script>
 <script type="text/javascript">
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
  // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+
 
 // Enabling Select Picker custom select fields from Bootstrap
 $('.selectpicker').selectpicker();

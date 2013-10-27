@@ -107,13 +107,19 @@ Using Google App Engine from virtualenv
   export PATH=$PATH:/home/chitrank/google_appengine/
 </pre>
 
+Google App Engine Tutorials
+--------------------------------------------
+- http://googcloudlabs.appspot.com/codelabexercise1.html
 
 Google Cloud Datastore (NoSQL DB made for scalability)
 --------------------------------------------------------
 - https://developers.google.com/datastore/docs/getstarted/
 - https://developers.google.com/appengine/docs/python/datastore/
 - https://developers.google.com/appengine/docs/python/datastore/queryclass
-- 
+
+Redis (For Future Release as per learning more)
+---------------------------------------------------
+- redis.io
 
 Google Cloud
 --------------------------------------------------------
@@ -126,7 +132,13 @@ Bootstrap 2 (for front end and responsiveness)
 ---------------------------------------------------------
 - Bootstrap Select : http://silviomoreto.github.io/bootstrap-select/
 - Bootstrap site: http://getbootstrap.com/2.3.2/
+- Twitter Bootstrap (road to perfection):
+http://twitter-bootstrap.node1.zygote.cc/#
 
+Ajax with Python Flask
+----------------------------
+- http://runnable.com/UiPhLHanceFYAAAP/how-to-perform-ajax-in-flask-for-python
+- http://www.giantflyingsaucer.com/blog/?p=4310
 
 List_of_JavaScript Libraries
 ------------------------------------------------

@@ -1,8 +1,8 @@
-{% extends '/addables/nav.html' %}
+{% extends 'base.html' %}
 {% import 'macro/error.html' as forms %}
 {% block title %} Post Something | Eventus {% endblock %}
 {% block style_block %}
-  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}" rel="stylesheet" />
+  
   <style type="text/css">
     .background {
        background-color: #F3F3F3;
@@ -16,7 +16,7 @@
     
         <p>{{ use_db }}</p>
     
-    <form action="{{ url_for('post_it') }}" class="navbar-form form-inline" method="post" id="new_postform">
+    <form id="new_postform" action="{{ url_for('post_it') }}" data-bind="submit: addPost" class="navbar-form form-inline" method="post" >
     {{ form.csrf_token }}
         <fieldset>
           {{ form.hidden_tag() }}
@@ -24,11 +24,11 @@
 
             {% from "macro/_formhelpers.html" import render_field %}
             <div class="control-group">
-                <p>{{ form.poster.label }}</p>
+                <p>Post</p>
                   <div class="controls">
                                                 
                         <p>
-                        {{ form.poster(id='post',class='form-control required ',placeholder="My Post", autocomplete=True , size=3,**{'data-bind': 'value: bodyte'})}}</p>
+                        {{ form.poster(id='post',class='form-control required ',placeholder="My Post", autocomplete=True , size=3,**{'data-bind': 'value: post'})}}</p>
                         {% if form.poster.errors %}
                         <ul class="errors">
                             {% for error in form.poster.errors %}
@@ -41,22 +41,22 @@
                     
             </div>
             <div class="control-group">
-                <p>{{ form.postbody.label }}<p>
+                <p>postbody<p>
                   <div class="controls">
                                                 
                         
-                        <p>{{ form.postbody(id='postbody',class='form-control required ',placeholder="Post Description", autocomplete=True , size=3,)}}</p>
+                        <p>{{ form.postbody(id='postbody',class='form-control required ',placeholder="Post Description", autocomplete=True , size=3, **{'data-bind': 'value: postbody'} )}}</p>
                         
                     </div>
 
                     
             </div>
             <div class="control-group">
-                <p>{{ form.posturl.label }}</p>
+                <p>post url</p>
                   <div class="controls">
                                                 
                         <p>
-                        {{ form.posturl(id='post',class='form-control required ',placeholder="My Post", autocomplete=True , size=3)}}</p>
+                        {{ form.posturl(id='posturl',class='form-control required ',placeholder="My Post", autocomplete=True , size=3, **{'data-bind': 'value: posturl'} )}}</p>
                         {% if form.posturl.errors %}
                         <ul class="errors">
                             {% for error in form.posturl.errors %}
@@ -68,31 +68,7 @@
 
                     
             </div>
-            <div class="control-group">
-            <div class="controls">
-                        {{ form.sdate.label }}
-                        {{ form.sdate(id="est", class="required", formatString="MM/DD/YYYY") }}
-                        {% if form.sdate.errors %}
-                        <ul class="errors">
-                            {% for error in form.sdate.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-            </div>
-            <div class="control-group">
-            <div class="controls">
-                        {{ form.edate.label }}
-                        {{ form.edate(id="est", class="required", formatString="MM/DD/YYYY") }}
-                        {% if form.edate.errors %}
-                        <ul class="errors">
-                            {% for error in form.edate.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-            </div>
-        </div>
+            
             <div class="control-group">
                     <div class="controls">
                         <br><input type="submit" id="postit"  name="postit" value"poster" class="btn btn-primary" /><br><br>
@@ -101,31 +77,88 @@
             </div>
           </fieldset>
     </form>
+    <ul data-bind="foreach: posts, visible: posts().length > 0">
+        <div class="well">
+        <p data-bind="text: post"></p>
+        <p data-bind="text: postbody"></p>
+        <p data-bind="text: posturl"></p>
+        </div>
+    </ul>
     <div class="controls">
- <!-- <p>Post: <input data-bind="value: bodyte" class="form-control" name="posts" /></p> -->
-                    </div>
+ 
+    </div>
 
-                <input type="select" choices="('a','b')"/>
-                    <p>BodyText: <strong data-bind="text: bodytext" /></strong></p>
-                <p>{{ current_user }}</p>
-
+                
+    <p>BodyText: <strong data-bind="text: bodytext" /></strong></p>
+                
 {% block tail_script %}
 <script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
 <script type="text/javascript">
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
  // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
-function AppViewModel() {
-    this.bodyte = ko.observable();
-    this.bodytext = ko.computed(function(){
-        return this.bodyte();
 
-    }, this);
+function Post(data) {
+    this.post = ko.observable(data.post);
+    this.postbody = ko.observable(data.postbody);
+    this.posturl = ko.observable(data.posturl);
     
 }
 
+function PostViewModel() {
+    var self = this;
+    self.posts = ko.observableArray([]);
+    self.post = ko.observable();
+    self.postbody = ko.observable();
+    self.posturl = ko.observable();
+    
+
+    console.log(self.post)
+       
+    self.addPost = function() {
+        self.save();
+        self.post("");
+        self.postbody("");
+        self.posturl("");
+        
+    };
+
+    $.getJSON('/posts', function(postModels) {
+        var t = $.map(postModels.posts, function(item) {
+            return new Post(item);
+        });
+        self.posts(t);
+    });
+
+    self.save = function() {
+        return $.ajax({
+            url: '/post/new',
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify({
+                'post': self.post(),
+                'postbody': self.postbody(),
+                'posturl': self.posturl(),
+                
+            }),
+            success: function(data) {
+                console.log("Pushing to post array");
+                self.posts.push(new Post({ post: data.post, postbody: data.postbody, posturl: data.posturl }));
+                return;
+            },
+            error: function() {
+                return console.log("Failed");
+            }
+        });
+    };
+}
+
+
+
+
+
 // Activates knockout.js
-ko.applyBindings(new AppViewModel());
+ko.applyBindings(new PostViewModel());
 
 /*
 var FormHelpers = {
