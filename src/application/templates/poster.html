@@ -222,26 +222,7 @@ var FormHelpers = {
 
 */
 
-$(document).ready(function () {
 
-
-
-$('#postbody').validate({
-    rules: {
-        
-        
-    },
-    highlight: function (element) {
-        $(element).parent().css('border-color','red');
-        $(element).text('Please type some post').closest('.control-group').removeClass('success').addClass('error');
-        
-    },
-    success: function (element) {
-        element.text('OK!').addClass('valid')
-            .closest('.control-group').removeClass('error').addClass('success');
-    }
-});
-});
 
 
 </script>
