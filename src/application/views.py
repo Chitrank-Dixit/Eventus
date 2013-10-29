@@ -1171,7 +1171,7 @@ def event_profile(ename,eid):
   if form.validate_on_submit() and request.method == 'POST':
     comments = model.EventComments(
         name = ndb.Key(model.User,current_user.name),
-        user_id = ndb.Key(model.User, current_user.id),
+        user_id = ndb.Key(model.User, posts.current_user.id),
         event_id = event_id,
         comment = form.comment.data,
 
@@ -1208,7 +1208,7 @@ def post_it():
   
   use_db = ndb.Key(model.User, current_user.name)
   if request.method == 'POST':
-    
+    print request.json
     posting = model.Post(
         name = use_db,
         poster = request.json['post'],
@@ -1237,8 +1237,16 @@ def post_it():
 @app.route('/posts',methods=['GET'])
 def all_posts():
   post_db = model.Post.query()
-  print "jsonifyiiiiiiing post",jsonify(post_db)
-  return jsonify(post_db=post_db)
+  first = {}; second = []
+  for posts in post_db:
+    first['name'] = posts.name.string_id()
+    first['poster'] = posts.poster
+    first['postbody'] = posts.postbody
+    first['posturl'] = posts.posturl
+    second = second.append(first)
+    first = {}
+
+  return jsonify(second=second)
 
 
 @app.route('/events/', methods=['POST','GET'])
