@@ -23,7 +23,7 @@
 	</div>
 	<div class="span6">
 		<h3><i class="icon-comments"></i> Comments</h3> 
-		<form id="comment_form" class="navbar-form form-inline" action="{{ url_for('event_profile', ename = ename , eid = eid ) }}" method="post">
+		<form id="comment_form" class="navbar-form form-inline"  data-bind="submit: addComment" method="post">
 		{{ form.csrf_token }}
 		<fieldset>
 			{{ form.hidden_tag() }}
@@ -32,7 +32,7 @@
                   <div class="controls">
 
                         <p>
-                        {{ form.comment(id='comment',class='form-horizontal full-width required ',placeholder="Please post your Comment Here", style="width: 600px;", autocomplete=True)}}</p>
+                        {{ form.comment(id='comment',class='form-horizontal full-width required ',placeholder="Please post your Comment Here", style="width: 600px;", autocomplete=True, **{'data-bind': 'value:  comment', 'data-required' : 'true'})}}</p>
                         {% if form.comment.errors %}
                         <ul class="errors">
                             {% for error in form.comment.errors %}
@@ -56,28 +56,30 @@
 
 		</form>
 
+	<ul data-bind="foreach: comments, visible: comments().length > 0">
+        <div class="well">
+            <p data-bind="text: comment"></p>
+            <p data-bind="text: name"></p>
+        </div>
+    </ul>
+    
+    {% for comments in comments_store %}
+    <ul>
+        <div class="well">
+        	{% if comments.user_id.integer_id() == current_user.id and comments.event_id.integer_id() == eid %}
+            	<p>{{ comments.comment }}</p>
+            	<p>{{ comments.name.string_id() }}</p>
+            {% endif %}
+        </div>
+    </ul>
+    {% endfor %}
 	
-	{% for comments in comments_store %}
-		<div class="well">
-			
-
-				<p>{{comments.comment}}</p>
-				<p class="pull-right">{{comments.name.string_id()}}</p>
-			
-		</div>
-	{% endfor %}
 	
 	</div>
 	<div class="span3">
-		{% if events.event_type == 'Team Event' %}
-			Team Event
-
-		{% elif events.event_type == 'Conference and Workshop' %}
-			Conference and Workshop
-		{% elif events.event_type == 'Party' %}
-			Party
-		{% endif %}
+		hhh
 	</div>
+	
 </div>
 
 
@@ -102,6 +104,69 @@ $('#comment_form').validate({
     }
 });
 });
+
+
+function Comment(data) {
+    this.comment = ko.observable(data.comment);
+    
+}
+
+
+
+function CommentViewModel() {
+    var self = this;
+    self.comments = ko.observableArray([]);
+    self.comment = ko.observable();
+    
+    
+       
+    self.addComment = function() {
+        if ( self.comment() != ""){
+            self.save();
+        }
+        self.comment("");
+        
+        
+    };
+
+    $.getJSON('/comments', function(commentModels) {
+        var t = $.map(commentModels.comments, function(item) {
+            return new Comment(item);
+        });
+        self.comments(t);
+    });
+
+    self.save = function() {
+        return $.ajax({
+            url: "{{ url_for('event_profile', ename = ename , eid = eid ) }}",
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify({
+                'comment': self.comment()
+                
+            }),
+
+
+            success: function(data) {
+                console.log("Pushing to comment array");
+                self.comments.push(new Comment({ comment: data.comment }));
+                return;
+            },
+            error: function() {
+            	console.log(ename);
+                return console.log("Failed");
+            }
+        });
+    };
+}
+
+
+// enable validation
+// ko.validation.init();
+
+// Activates knockout.js
+ko.applyBindings(new CommentViewModel());
+
 
 </script>
 {% endblock %}
