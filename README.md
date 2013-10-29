@@ -109,7 +109,7 @@ Using Google App Engine from virtualenv
 
 Google App Engine Tutorials
 --------------------------------------------
-- http://googcloudlabs.appspot.com/codelabexercise1.html
+- https://developers.google.com/appengine/docs/videoresources#training
 
 Google Cloud Datastore (NoSQL DB made for scalability)
 --------------------------------------------------------

@@ -28,7 +28,7 @@
                   <div class="controls">
                                                 
                         <p>
-                        {{ form.poster(id='post',class='form-control required ',placeholder="My Post", autocomplete=True , size=3,**{'data-bind': 'value: post'})}}</p>
+                        {{ form.poster(id='post',class='form-control required ',placeholder="My Post", autocomplete=True , size=3,**{'data-bind': 'value: post', 'data-required' : 'true'})}}</p>
                         {% if form.poster.errors %}
                         <ul class="errors">
                             {% for error in form.poster.errors %}
@@ -71,7 +71,7 @@
             
             <div class="control-group">
                     <div class="controls">
-                        <br><input type="submit" id="postit"  name="postit" value"poster" class="btn btn-primary" /><br><br>
+                        <br><input type="submit" id="postit" onClick="" name="postit" value"poster" class="btn btn-primary" /><br><br>
                     
                     </div>
             </div>
@@ -79,24 +79,58 @@
     </form>
     <ul data-bind="foreach: posts, visible: posts().length > 0">
         <div class="well">
-        <p data-bind="text: post"></p>
-        <p data-bind="text: postbody"></p>
-        <p data-bind="text: posturl"></p>
+            <p data-bind="text: post"></p>
+            <p data-bind="text: postbody"></p>
+            <p data-bind="text: posturl"></p>
         </div>
     </ul>
-    <div class="controls">
+    
+        {% for posts in post_db %}
+        <ul>
+            <div class="well">
+                <p>{{ posts.poster }}</p>
+                <p>{{ posts.postbody }}</p>
+                <p>{{ posts.posturl }}</p>
+            </div>
+        </ul>
+        {% endfor %}
  
-    </div>
+    
 
                 
     <p>BodyText: <strong data-bind="text: bodytext" /></strong></p>
                 
 {% block tail_script %}
-<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
-<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script> 
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script> 
+<!-- <script src="{{ url_for('static', filename='bootstrap/js/knockout.validate.js') }}"></script> -->
 <script type="text/javascript">
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
  // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+
+$(document).ready(function () {
+
+
+
+$('#new_postform').validate({
+    rules: {
+        post: {
+            minlength: 2,
+            required: true
+        }
+        
+    },
+    highlight: function (element) {
+        $(element).parent().css('border-color','red');
+        $(element).text('Please type some post').closest('.control-group').removeClass('success').addClass('error');
+        
+    },
+    success: function (element) {
+        element.text('OK!').addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
+    }
+});
+});
 
 function Post(data) {
     this.post = ko.observable(data.post);
@@ -108,7 +142,7 @@ function Post(data) {
 function PostViewModel() {
     var self = this;
     self.posts = ko.observableArray([]);
-    self.post = ko.observable();
+    self.post = ko.observable().extend({ required :true });
     self.postbody = ko.observable();
     self.posturl = ko.observable();
     
@@ -188,29 +222,7 @@ var FormHelpers = {
 
 */
 
-$(document).ready(function () {
 
-
-
-$('#new_postform').validate({
-    rules: {
-        post: {
-            minlength: 2,
-            required: true
-        }
-        
-    },
-    highlight: function (element) {
-        $(element).parent().css('border-color','red');
-        $(element).text('Please type some post').closest('.control-group').removeClass('success').addClass('error');
-        
-    },
-    success: function (element) {
-        element.text('OK!').addClass('valid')
-            .closest('.control-group').removeClass('error').addClass('success');
-    }
-});
-});
 
 
 </script>
