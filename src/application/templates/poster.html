@@ -103,8 +103,8 @@
 {% block tail_script %}
 <script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script> 
 <script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script> 
-<script src="{{ url_for('static', filename='bootstrap/js/knockout.validate.js') }}"></script>
-<script type="text/javascript">
+<!-- <script src="{{ url_for('static', filename='bootstrap/js/knockout.validate.js') }}"></script> -->
+<script type="text/javascript"> 
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
  // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
 
@@ -163,9 +163,9 @@ function Post(data) {
 function PostViewModel() {
     var self = this;
     self.posts = ko.observableArray([]);
-    self.post = ko.observable().extend({ required: { onlyIf: function() { return true; } } });
-    self.postbody = ko.observable().extend({ minLength: 3,required :true , message: 'Hey this doesnt match my pattern' });
-    self.posturl = ko.observable().extend({ minLength: 16,required :true , message: 'Hey this doesnt match my pattern' });
+    self.post = ko.observable();
+    self.postbody = ko.observable();
+    self.posturl = ko.observable();
     
     
 
@@ -175,6 +175,11 @@ function PostViewModel() {
     self.addPost = function() {
         if ((self.post() && self.postbody() && self.posturl()) != ""){
             self.save();
+        }
+        else {
+            self.post();
+            self.postbody();
+            self.posturl()
         }
         self.post("");
         self.postbody("");
