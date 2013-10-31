@@ -91,6 +91,9 @@ class MessageForm(wtf.Form):
 class CommentForm(wtf.Form):
     comment= wtf.TextAreaField('Your Comment', validators=[validators.Required()] )
 
+
+class TeamRegisterForm(wtf.Form):
+    teamName = wtf.TextField('Team Name', validators=[validators.Required()])
 '''     
 No need to make a model that is already made
 
