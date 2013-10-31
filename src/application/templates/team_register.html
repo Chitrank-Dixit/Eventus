@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% import 'macro/error.html' as forms %}
+{% block title %} Post Something | Eventus {% endblock %}
+{% block style_block %}
+  
+  <style type="text/css">
+    .background {
+       background-color: #F3F3F3;
+      }
+    p.error {
+        color: red;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+    
+        <p>{{ use_db }}</p>
+    
+    <form id="new_register" data-bind="submit: addTeam" class="navbar-form form-inline" method="post" >
+    {{ form.csrf_token }}
+        <fieldset>
+          {{ form.hidden_tag() }}
+            
+
+            {% from "macro/_formhelpers.html" import render_field %}
+            <div class="control-group">
+                <p>Post</p>
+                  <div class="controls">
+                                                
+                        <p>
+                        {{ form.teamName(id='teamName',class='form-control required ',placeholder="My Team Name", autocomplete=True , **{'data-bind': 'value: teamName'} )}}</p>
+                        {% if form.teamName.errors %}
+                        <ul class="errors">
+                            {% for error in form.teamName.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+            </div>
+            
+            
+            <div class="control-group">
+                    <div class="controls">
+                        <br><input type="submit" id="register" onClick="" name="teamName" value"teamName" class="btn btn-primary" /><br><br>
+                    
+                    </div>
+            </div>
+          </fieldset>
+    </form>
+    
+
+    <ul data-bind="foreach: teams, visible: teams().length > 0">
+        <div class="well">
+            <p data-bind="text: teamName"></p>
+            THiisisisi
+        </div>
+    </ul>
+
+                
+    
+                
+{% block tail_script %}
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script> 
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script> 
+<!-- <script src="{{ url_for('static', filename='bootstrap/js/knockout.validate.js') }}"></script> -->
+<script type="text/javascript">
+ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+ // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+
+$(document).ready(function () {
+
+
+
+$('#new_register').validate({
+    rules: {
+        
+        
+    },
+    highlight: function (element) {
+        $(element).parent().css('border-color','red');
+        $(element).text('Please type some post').closest('.control-group').removeClass('success').addClass('error');
+        
+    },
+    success: function (element) {
+        element.text('OK!').addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
+    }
+});
+});
+
+function Team(data) {
+    this.teamName = ko.observable(data.teamName);
+    
+    
+}
+
+
+function TeamViewModel() {
+    var self = this;
+    self.teams = ko.observableArray([]);
+    self.teamName = ko.observable();
+    
+    console.log(self.teamName)
+
+    
+       
+    self.addTeam = function() {
+        self.save();
+        self.teamName("");
+        
+        
+    };
+
+    $.getJSON('/teams', function(teamModels) {
+        var t = $.map(teamModels.teams, function(item) {
+            console.log("Working!!")
+            return new Team(item);
+        });
+        self.teams(t);
+    });
+
+    self.save = function() {
+        return $.ajax({
+            url: '/team_register/',
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify({
+                'teamName': self.teamName(),
+                
+            }),
+            success: function(data) {
+                console.log("Pushing to post array");
+                self.teams.push(new Team({ teamName: data.teamName }));
+                return;
+            },
+            error: function() {
+                return console.log("Failed");
+            }
+        });
+    };
+}
+
+
+ko.applyBindings(new TeamViewModel());
+
+
+</script>
+
+{% endblock %}
+
+
+{% endblock %}
