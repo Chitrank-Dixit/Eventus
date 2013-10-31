@@ -16,7 +16,7 @@
     
         <p>{{ use_db }}</p>
     
-    <form id="new_postform" action="{{ url_for('post_it') }}" data-bind="submit: addPost" class="navbar-form form-inline" method="post" >
+    <form id="new_postform" data-bind="submit: addPost" class="navbar-form form-inline" method="post" >
     {{ form.csrf_token }}
         <fieldset>
           {{ form.hidden_tag() }}
@@ -45,7 +45,7 @@
                   <div class="controls">
                                                 
                         
-                        <p>{{ form.postbody(id='postbody',class='form-control required ',placeholder="Post Description", autocomplete=True , size=3, **{'data-bind': 'value: postbody'} )}}</p>
+                        <p>{{ form.postbody(id='postbody',class='form-control required ',placeholder="Post Description", autocomplete=True , size=3, **{'data-bind': 'value: postbody, valueUpdate: "afterkeydown" '} )}}</p>
                         
                     </div>
 
@@ -71,7 +71,7 @@
             
             <div class="control-group">
                     <div class="controls">
-                        <br><input type="submit" id="postit" onClick="" name="postit" value"poster" class="btn btn-primary" /><br><br>
+                        <br><input type="submit" id="postit"  name="postit" value"poster" class="btn btn-primary" /><br><br>
                     
                     </div>
             </div>
@@ -104,53 +104,83 @@
 <script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script> 
 <script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script> 
 <!-- <script src="{{ url_for('static', filename='bootstrap/js/knockout.validate.js') }}"></script> -->
-<script type="text/javascript">
+<script type="text/javascript"> 
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
  // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
 
 $(document).ready(function () {
-
-
-
-$('#new_postform').validate({
-    rules: {
-        post: {
-            minlength: 2,
-            required: true
-        }
+    $('#new_postform').validate({
         
-    },
-    highlight: function (element) {
-        $(element).parent().css('border-color','red');
-        $(element).text('Please type some post').closest('.control-group').removeClass('success').addClass('error');
+        rules: {
+            post: {
+                required: true,
+                minlength: 2
+                
+            },
+            postbody: {
+                required: true,
+                minlength: 2
+                
+            },
+            posturl: {
+                required: true,
+                minlength: 16
+                
+            }
+        },
+
         
-    },
-    success: function (element) {
-        element.text('OK!').addClass('valid')
+
+        submitHandler: function(form) {
+            $(form).ajaxSubmit();
+            PostViewModel.addPost();
+        },
+
+        highlight: function (element) {
+            $(element).parent().css('border-color','red');
+            $(element).text('').closest('.control-group').removeClass('success').addClass('error');
+        },
+
+        success: function (element) {
+            element.text('').addClass('valid')
             .closest('.control-group').removeClass('error').addClass('success');
-    }
+        }
+    });
+
+    
 });
-});
+
+
 
 function Post(data) {
     this.post = ko.observable(data.post);
     this.postbody = ko.observable(data.postbody);
     this.posturl = ko.observable(data.posturl);
-    
 }
+
+
 
 function PostViewModel() {
     var self = this;
     self.posts = ko.observableArray([]);
-    self.post = ko.observable().extend({ required :true });
+    self.post = ko.observable();
     self.postbody = ko.observable();
     self.posturl = ko.observable();
     
+    
 
-    console.log(self.post)
+
+    console.log(self.post);
        
     self.addPost = function() {
-        self.save();
+        if ((self.post() && self.postbody() && self.posturl()) != ""){
+            self.save();
+        }
+        else {
+            self.post();
+            self.postbody();
+            self.posturl()
+        }
         self.post("");
         self.postbody("");
         self.posturl("");
@@ -188,11 +218,13 @@ function PostViewModel() {
 }
 
 
-
-
+// enable validation
+// ko.validation.init();
 
 // Activates knockout.js
 ko.applyBindings(new PostViewModel());
+
+console.log(PostViewModel.isValid());
 
 /*
 var FormHelpers = {

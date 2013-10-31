@@ -1122,7 +1122,13 @@ class OpenIDLogin(flask.views.MethodView):
       self.error(400)
 """
 
-# Creating user events in Eventus 
+#################################################################
+# Create an Event
+# Trending Events
+# Event Profile
+# new comments
+# event specific comments
+#################################################################
 
 @app.route('/create_event/', methods=['POST','GET'])
 @login_required
@@ -1132,7 +1138,7 @@ def create_event():
   use_db = ndb.Key(model.User, current_user.name)
   #id_db = ndb.Key(model.User, current_user.id)
 
-  if form.validate_on_submit() and request.method=='POST':
+  if request.method=='POST':
     event = model.Event(
         name = form.name.data,
         event_type = form.event_type.data,
@@ -1159,31 +1165,55 @@ def create_event():
   return render_template('create_event.html',form=form)
 
 
-@app.route('/events/<ename>/<int:eid>/', methods=['POST','GET'])
+@app.route('/events/', methods=['POST','GET'])
+def trending_events():
+  events= model.Event.query()
+  return render_template('trending_events.html', events=events)
+
+
+@app.route('/events/<ename>/<int:eid>/', methods=['GET', 'POST'])
 def event_profile(ename,eid):
   event_id = ndb.Key(model.Event, eid)
+  print "TESTING THINGS",eid
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
   #events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
   comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
-  print "______________________"
-
+  print "_______AVANI I LOVE YOU_______________"
+  user_id = ndb.Key(model.User, current_user.id)
+  name = ndb.Key(model.User, current_user.name)
   form = CommentForm(request.form)
-  if form.validate_on_submit() and request.method == 'POST':
+  print request.json
+  if request.method == 'POST':
+    print request.json
     comments = model.EventComments(
-        name = ndb.Key(model.User,current_user.name),
-        user_id = ndb.Key(model.User, current_user.id),
+        name = name,
+        user_id = user_id,
         event_id = event_id,
-        comment = form.comment.data,
-
+        comment = request.json['comment'],
       )
     try:
       comments.put()
       flash('your comment has been posted', category='info')
-      #mail.send(msg)
-      # return redirect(url_for('event_profile'))
+      # mail.send(msg)
+      # print name.string_id() , user_id.integer_id() , event_id
+      return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
   return render_template('event_profile.html', events = events, ename =ename , eid= eid , form= form, comments_store= comments_store)
+
+@app.route('/comments',methods=['GET'])
+@login_required
+def all_event_comments():
+  comments_store = model.Post.query()
+  first = {}; second = []
+  for comments in comments_store:
+    comment['name'] = comments.name.string_id()
+    comment['user_id'] = comments.user_id
+    comment['event_id'] = comments.event_id
+    comment['comment'] = comments.comment
+    second.append(first)
+    first = {}
+  return jsonify(second=second)
 
 
 
@@ -1208,7 +1238,7 @@ def post_it():
   
   use_db = ndb.Key(model.User, current_user.name)
   if request.method == 'POST':
-    
+    print request.json
     posting = model.Post(
         name = use_db,
         poster = request.json['post'],
@@ -1235,16 +1265,21 @@ def post_it():
 
 
 @app.route('/posts',methods=['GET'])
+@login_required
 def all_posts():
   post_db = model.Post.query()
-  print "jsonifyiiiiiiing post",jsonify(post_db)
-  return jsonify(post_db=post_db)
+  first = {}; second = []
+  for posts in post_db:
+    first['name'] = posts.name.string_id()
+    first['poster'] = posts.poster
+    first['postbody'] = posts.postbody
+    first['posturl'] = posts.posturl
+    second.append(first)
+    first = {}
+  return jsonify(second=second)
 
 
-@app.route('/events/', methods=['POST','GET'])
-def trending_events():
-  events= model.Event.query()
-  return render_template('trending_events.html', events=events)
+
 
 @app.route('/team_register/', methods=['POST','GET'])
 def team_register():
