@@ -58,7 +58,7 @@ class EventX(object):
   def get_master_db(cls):
       return cls.get_or_insert('master')
 
-<<<<<<< HEAD
+
 class TeamX(object):
   @classmethod
   def get_master_db(cls):
@@ -68,9 +68,9 @@ class ConfWorkX(object):
   @classmethod
   def get_master_db(cls):
       return cls.get_or_insert('master')
-=======
+
 class TeamRegisterX(object):
   @classmethod
   def get_master_db(cls):
       return cls.get_or_insert('master')
->>>>>>> 9adc7c79d49e488c844e87666ab1aab70d9b6fb6
+

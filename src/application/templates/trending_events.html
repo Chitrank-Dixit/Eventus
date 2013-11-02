@@ -3,9 +3,7 @@
 {% block style_block %}
 
 <!-- added version 3 bootstrap theme css to support panel -->
-<link href="{{ url_for('static', filename='bootstrap/css/bootstrap-theme-3.min.css') }}" rel="stylesheet" />
 
-  
   <style type="text/css">
     .background {
        background-color: #F3F3F3;
@@ -27,21 +25,6 @@
 </div>
 <br><br>
 
-<!-- sample panel code start|Needs version 3 bootstrap theme css -->
- <div class="panel panel-primary">  
-  <!-- try :pannel-default/success/info/warning -->
-            <div class="panel-heading">
-              <h3 class="panel-title">Panel title</h3>
-            </div>
-            <div class="panel-body">
-              {% for x in range(4) %}
-              <li> x</li>
-              {% endfor %}
-            </div>
-  </div>
-         
-<!-- sample pannel code end -->
-
 
 {% for event_list in events %}
 <!-- Pannel code is not working here ! Include for loop in content body instead -->
@@ -53,16 +36,11 @@
     <div class="panel-body">
         {{ event_list.description }}<br><br>
     </div>
-<<<<<<< HEAD
     <div class="panel-footer">
       <img src="event_list.creator.string_id().avatar(90)" class='img-circle'/><br><a href="/user/{{ event_list.creator.string_id() }}/{{ event_list.creator_id }}/">{{ event_list.creator.string_id() }}</a></ul>
     </div>
         
     
-=======
-
-
->>>>>>> 9adc7c79d49e488c844e87666ab1aab70d9b6fb6
 </div>                
 <br><br>
 
