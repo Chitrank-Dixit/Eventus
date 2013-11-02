@@ -29,21 +29,21 @@
     {% block head_script %}{# defer-incapable JS block #}{% endblock %} 
 </head>
 <body>
-<div id="wrap">
-    <div id="header">
-        {% include 'addables/header.html' %} {# pull in navbar #}
-    </div>
-    <div class="container" id="maincontent">
-        <!-- {% include 'includes/flash_message.html' %} {# page-level feedback notices #} -->
-        <div id="body_content">
-            {% block content %}{# main content area #}{% endblock %}
+    <div id="wrap">
+        <div id="header">
+            {% include 'addables/header.html' %} {# pull in navbar #}
         </div>
-    </div><!-- /container -->
-    </div>
-    <div id="footer">
-        {% include 'addables/footer.html' %}
-    </div><!-- /footer -->
-    
+        <div class="container" id="maincontent">
+            {% include 'addables/flash_message.html' %} {# page-level feedback notices #}
+            <div id="body_content">
+                {% block content %}{# main content area #}{% endblock %}
+            </div>
+        </div><!-- /container -->
+        </div>
+        <div id="footer">
+            {% include 'addables/footer.html' %}
+        </div><!-- /footer -->
+        
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/{{ jquery_version }}/jquery.min.js"></script> -->
     <!-- 
     <script src="{{ url_for('static', filename='bootstrap/js/jquery.js') }}"></script>

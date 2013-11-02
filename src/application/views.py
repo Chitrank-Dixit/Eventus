@@ -63,7 +63,7 @@ from flaskext import oauth
 import util
 import model
 import config
-from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm
+from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm, TeamRegisterForm
 # Google API python Oauth 2.0
 import httplib2
 from oauth2client.client import AccessTokenRefreshError
@@ -1079,3 +1079,34 @@ def all_posts():
 
 
 
+@app.route('/team_register/', methods=['POST','GET'])
+def team_register():
+  form = TeamRegisterForm(request.form)
+  event_user = ndb.Key(model.User, current_user.name)
+  print "THis is nice",request.json
+  if request.method == 'POST':
+    register = model.TeamRegister(
+        teamName = request.json['teamName'],
+        captain = event_user
+      )
+    try: 
+      register.put()
+      print "Jsonified"
+      
+      return jsonify({'teamName': request.json['teamName'] })
+    except CapabilityDisabledError:
+      flash("App engine Error")
+
+  return render_template("team_register.html", form=form)
+
+@app.route('/teams', methods= ['GET'])
+def allTeams():
+  allTeams = model.TeamRegister.query()
+  first = {}; second = []
+  for team in allTeams:
+    first['name']= team.teamName,
+    #first['captain']= team.captain.string_io()
+    second.append(first)
+    first = {}
+
+  return jsonify(second = second )

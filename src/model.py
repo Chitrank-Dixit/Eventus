@@ -178,6 +178,11 @@ class EventComments(Base, modelx.EventX):
     user_id = ndb.KeyProperty(kind="User", required=True)
     event_id = ndb.KeyProperty(kind="Event", required=True)
     comment = ndb.StringProperty(indexed=True, required=True)
+
+class TeamRegister(Base, modelx.TeamRegisterX):
+    teamName = ndb.StringProperty("Team Name", required=True)
+    captain = ndb.KeyProperty(kind="User", required= True)
+
 '''
 
 poster_obj = ndb.get(post_key)
