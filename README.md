@@ -157,6 +157,12 @@ Knockout.js Tutorials
 --------------------------------------------------
 - http://learn.knockoutjs.com/#/?tutorial=intro
 - interactive tutorials: http://chooseyourownapplication.com/chapters/intro
+- http://www.knockmeout.net/
+- http://pluralsight.com/training/Courses/TableOfContents?courseName=knockout-mvvm
+- http://blog.stevensanderson.com/2010/07/12/editing-a-variable-length-list-knockout-style/
+- https://github.com/carlhoerberg/knockout-websocket-example
+- https://github.com/knockout/knockout/wiki/Recipes
+- https://github.com/knockout/knockout/wiki/Plugins
 
 Jquery Validation:
 ----------------------------------------------
@@ -178,9 +184,6 @@ Making an API ( RESTful API ) for user with backbone.js
 - http://blog.luisrei.com/articles/flaskrest.html
 
 - http://blog.luisrei.com/articles/rest.html
-
-
-_______________________________________________________________________________________
 
 
 HTML5 References

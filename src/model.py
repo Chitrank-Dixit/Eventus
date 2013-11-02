@@ -158,6 +158,12 @@ class Event(Base,modelx.EventX):
     twitter_id = ndb.StringProperty(indexed=True, default='')
     public = ndb.BooleanProperty(default=True)
     private= ndb.BooleanProperty(default=False)
+
+class Teams(Base, modelx.TeamX):
+    event_id = ndb.KeyProperty(kind="Event", required=True)
+    event_name = ndb.KeyProperty(kind="Event", required=True)
+    name = ndb.StringProperty(indexed=True, required= True)
+    captain = ndb.StringProperty(indexed=True, required= True)
     
 class Post(Base, modelx.EventX):
     name = ndb.KeyProperty(kind="User", required=True)

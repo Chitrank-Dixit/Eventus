@@ -26,11 +26,11 @@
 
             {% from "macro/_formhelpers.html" import render_field %}
             <div class="control-group">
-                <p>{{ form.name.label }}</p>
+                
                   <div class="controls">
-                                                
-                        <p>
-                        {{ form.name(id='ename',class='form-control required ',placeholder="Event Name", autocomplete=True )}}</p>
+                        {{ form.name.label }}
+                        
+                        {{ form.name(id='ename',class='form-control required ',placeholder="Event Name", autocomplete=True )}}
                         {% if form.name.errors %}
                         <ul class="errors">
                             {% for error in form.name.errors %}
@@ -44,11 +44,11 @@
             </div>
 
             <div class="control-group">
-                <p>{{ form.event_type.label }}</p>
+                
                   <div class="controls">
-                                                
-                        <p>
-                        {{ form.event_type(id='evtype',class='selectpicker required ',placeholder="Event Name", autocomplete=True )}}</p>
+                        {{ form.event_type.label }}                        
+                        
+                        {{ form.event_type(id='evtype',class='selectpicker required ',placeholder="Event Name", autocomplete=True )}}
                         {% if form.event_type.errors %}
                         <ul class="errors">
                             {% for error in form.event_type.errors %}
@@ -62,11 +62,11 @@
             </div>
 
             <div class="control-group">
-                <p>{{ form.event_url.label }}</p>
+                
                   <div class="controls">
                                                 
-                        <p>
-                        {{ form.event_url(id='eurl',class='form-control required ',placeholder="URL/Blog/Website", autocomplete=True )}}</p>
+                        {{ form.event_url.label }}
+                        {{ form.event_url(id='eurl',class='form-control required ',placeholder="URL/Blog/Website", autocomplete=True )}}
                         {% if form.event_url.errors %}
                         <ul class="errors">
                             {% for error in form.event_url.errors %}
@@ -80,11 +80,11 @@
             </div>
             
             <div class="control-group">
-                <p>{{ form.description.label }}</p>
+                
                   <div class="controls">
-                                                
-                        <p>
-                        {{ form.description(id='edescription',class='form-control required ',placeholder="Describe your Event", autocomplete=True )}}</p>
+                        {{ form.description.label }}                        
+                        
+                        {{ form.description(id='edescription',class='form-control required ',placeholder="Describe your Event", autocomplete=True )}}
                         {% if form.description.errors %}
                         <ul class="errors">
                             {% for error in form.description.errors %}
@@ -98,11 +98,10 @@
             </div>
 
              <div class="control-group">
-                <p>{{ form.venue.label }}</p>
+                
                   <div class="controls">
-                                                
-                        <p>
-                        {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}</p>
+                        {{ form.venue.label }}                        
+                        {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}
                         {% if form.venue.errors %}
                         <ul class="errors">
                             {% for error in form.venue.errors %}
@@ -116,11 +115,11 @@
             </div>
 
             <div class="control-group">
-                <p>{{ form.sdate.label }}</p>
+                
                   <div class="controls">
-                                                
-                        <p>
-                        {{ form.sdate(id='start_date',class='form-control required ',autocomplete=True, min="" )}}</p>
+                        {{ form.sdate.label }}                        
+                        
+                        {{ form.sdate(id='start_date',class='form-control required ',autocomplete=True, min="" )}}
                         {% if form.sdate.errors %}
                         <ul class="errors">
                             {% for error in form.sdate.errors %}
@@ -134,11 +133,11 @@
             </div>
 
             <div class="control-group">
-                <p>{{ form.edate.label }}</p>
+                
                   <div class="controls">
-                                                
-                        <p>
-                        {{ form.edate(id='end_date',class='required', autocomplete=True , min="")}}</p>
+                        {{ form.edate.label }}                        
+                        
+                        {{ form.edate(id='end_date',class='required', autocomplete=True , min="")}}
                         {% if form.edate.errors %}
                         <ul class="errors">
                             {% for error in form.edate.errors %}
