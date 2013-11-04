@@ -90,6 +90,10 @@ class MessageForm(wtf.Form):
 
 class CommentForm(wtf.Form):
     comment= wtf.TextAreaField('Your Comment', validators=[validators.Required()] )
+    
+class InviteUserForm(wtf.Form):
+    invite_to = wtf.TextField('Invite User', validators=[validators.Required()])
+    invitation_message =  wtf.TextAreaField('Message', validators=[validators.Required()])
 
 
 class TeamRegisterForm(wtf.Form):

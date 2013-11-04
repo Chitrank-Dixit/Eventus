@@ -85,15 +85,7 @@
         </div>
     </ul>
     
-        {% for posts in post_db %}
-        <ul>
-            <div class="well">
-                <p>{{ posts.poster }}</p>
-                <p>{{ posts.postbody }}</p>
-                <p>{{ posts.posturl }}</p>
-            </div>
-        </ul>
-        {% endfor %}
+        
  
     
 
@@ -101,13 +93,13 @@
     <p>BodyText: <strong data-bind="text: bodytext" /></strong></p>
                 
 {% block tail_script %}
-<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script> 
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script> 
-<!-- <script src="{{ url_for('static', filename='bootstrap/js/knockout.validate.js') }}"></script> -->
+<script src="{{ url_for('static', filename='bootstrap/js/knockout.validation.js') }}"></script>
 <script type="text/javascript"> 
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
  // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
-
+  
 $(document).ready(function () {
     $('#new_postform').validate({
         
@@ -163,9 +155,9 @@ function Post(data) {
 function PostViewModel() {
     var self = this;
     self.posts = ko.observableArray([]);
-    self.post = ko.observable();
-    self.postbody = ko.observable();
-    self.posturl = ko.observable();
+    self.post = ko.observable().extend({required: true});
+    self.postbody = ko.observable().extend({required: true});
+    self.posturl = ko.observable().extend({required: true});
     
     
 
@@ -187,13 +179,15 @@ function PostViewModel() {
         
     };
 
+    
     $.getJSON('/posts', function(postModels) {
         var t = $.map(postModels.posts, function(item) {
+            console.log(item);
             return new Post(item);
         });
         self.posts(t);
     });
-
+    
     self.save = function() {
         return $.ajax({
             url: '/post/new',
@@ -219,7 +213,7 @@ function PostViewModel() {
 
 
 // enable validation
-// ko.validation.init();
+ko.validation.init();
 
 // Activates knockout.js
 ko.applyBindings(new PostViewModel());

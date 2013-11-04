@@ -22,7 +22,9 @@ from hashlib import md5
 # The timestamp of the currently deployed version
 TIMESTAMP = long(os.environ.get('CURRENT_VERSION_ID').split('.')[1]) >> 28
 
-
+# Base Table that would be inherited by all the tables and thus
+# created, modified and version properties would by default reside.
+# in the table those have inherited the Base Table
 class Base(ndb.Model, modelx.BaseX):
   created = ndb.DateTimeProperty(auto_now_add=True)
   modified = ndb.DateTimeProperty(auto_now=True)
@@ -35,7 +37,8 @@ class Base(ndb.Model, modelx.BaseX):
       'modified',
     ])
 
-
+# Config Table is contains all the necessary information regarding our application
+# The Brand Name and other details of the application that are specific to an application
 class Config(Base, modelx.ConfigX):
   analytics_id = ndb.StringProperty(default='')
   announcement_html = ndb.StringProperty(default='')
@@ -69,17 +72,19 @@ class Config(Base, modelx.ConfigX):
       'twitter_consumer_secret',
     ]))
 
-
+# The user table model defines the Web site users Here 
+# we have allowed user to log in either manually or using social 
+# accounts, we are fetching the picture of the user using gravatar
 class User(Base, modelx.UserX):
-  id = ndb.IntegerProperty(indexed= True)
-  name = ndb.StringProperty(indexed=True, required=True)
-  username = ndb.StringProperty(indexed=True, required=True)
+  id = ndb.IntegerProperty()
+  name = ndb.StringProperty(required=True)
+  username = ndb.StringProperty(required=True)
   #email = ndb.EmailProperty(indexed=True, default='')
-  about_me = ndb.StringProperty(indexed=True)
-  location = ndb.StringProperty(indexed=True)
-  email = ndb.StringProperty(indexed=True, default='')
-  password = ndb.StringProperty(indexed=True , default='')
-  confirm = ndb.StringProperty(indexed=True , default='')
+  about_me = ndb.StringProperty()
+  location = ndb.StringProperty()
+  email = ndb.StringProperty(default='')
+  password = ndb.StringProperty(default='')
+  confirm = ndb.StringProperty(default='')
 
   active = ndb.BooleanProperty(default=True)
   admin = ndb.BooleanProperty(default=False)
@@ -87,11 +92,11 @@ class User(Base, modelx.UserX):
   manager= ndb.BooleanProperty(default=False)
   end_client = ndb.BooleanProperty(default=False)
 
-  federated_id = ndb.StringProperty(indexed=True, default='')
-  facebook_id = ndb.StringProperty(indexed=True, default='')
-  googleplus_id = ndb.StringProperty(indexed=True, default='')
-  linkedin_id = ndb.StringProperty(indexed=True, default='')
-  twitter_id = ndb.StringProperty(indexed=True, default='')
+  federated_id = ndb.StringProperty(default='')
+  facebook_id = ndb.StringProperty(default='')
+  googleplus_id = ndb.StringProperty(default='')
+  linkedin_id = ndb.StringProperty(default='')
+  twitter_id = ndb.StringProperty(default='')
   # follows = ndb.KeyProperty(kind='Follow', repeated=True)
   # followers = ndb.KeyProperty(kind='User', repeated=True)
   followers = ndb.KeyProperty(kind='User')
@@ -110,75 +115,92 @@ class User(Base, modelx.UserX):
   def ent_key(self):
     return self.user_db.key.urlsafe()
 
+
+# Followers table would include the list of follower and following user
+# follower (user who is following to some user) and following ( user who is being followed by some user)
+# This would make a strong social network and would create specified circle for the user
 class Followers(Base,modelx.FollowersX):
   follower_name = ndb.KeyProperty(kind='User')
-  follower_id = ndb.IntegerProperty(indexed=True , required=True)
+  follower_id = ndb.IntegerProperty(required=True)
   followed_name = ndb.KeyProperty(kind='User')
-  followed_id = ndb.IntegerProperty(indexed=True , required=True)
+  followed_id = ndb.IntegerProperty(required=True)
   follower_avatar = ndb.KeyProperty(kind='User')
   followed_avatar = ndb.KeyProperty(kind='User')
 
-  
+# Inbox would contain all the direct messages sent from one user to another user
 class Inbox(Base, modelx.InboxX):
-  message_title = ndb.StringProperty(indexed=True , required= True)
-  message_body = ndb.StringProperty(indexed=True, required=True)
+  message_title = ndb.StringProperty(required= True)
+  message_body = ndb.StringProperty(required=True)
   sent_from = ndb.KeyProperty(kind='User')
 
+# SendMessage would contain all the direct messages sent from one user to another user
 class SendMessage(Base, modelx.SentX):
-  message_title = ndb.StringProperty(indexed=True , required= True)
-  message_body = ndb.StringProperty(indexed=True, required=True)
+  message_title = ndb.StringProperty(required= True)
+  message_body = ndb.StringProperty(required=True)
   sent_from = ndb.KeyProperty(kind='User')
   sent_from_id = ndb.KeyProperty(kind='User')
   sent_to = ndb.KeyProperty(kind='User')
   sent_to_id = ndb.KeyProperty(kind='User')
 
 
-
+# Event Table would contain the Specified Event Information, like creator name and id
+# Event url , venue , start and end date, type of event , if Team Event Team size and No of Teams
 class Event(Base,modelx.EventX):
     '''
     Refering Google + and Facebook Event model , also 
     customizing to generate team based events performance reports and visualizations 
     '''
-    name = ndb.StringProperty(indexed=True, required=True)
+    name = ndb.StringProperty(required=True)
     #logo = ndb.FileProperty(indexed=True)
     #creator = ndb.StringProperty(indexed=True, required=True)
     creator = ndb.KeyProperty(kind="User", required=True)
-    creator_id = ndb.IntegerProperty(indexed=True , required=True)
+    creator_id = ndb.IntegerProperty(required=True)
     #creator_id = ndb.KeyProperty(kind='User', required=True)
-    event_type = ndb.StringProperty(indexed=True, required=True)
-    manager = ndb.StringProperty(indexed=True)
-    event_url = ndb.StringProperty(indexed=True)
-    description=ndb.StringProperty(indexed=True, default='')
-    phone = ndb.IntegerProperty(indexed=True,default=0000000000)
-    venue = ndb.StringProperty(indexed=True, required=True)
-    sdate = ndb.DateProperty(indexed= True)
-    edate = ndb.DateProperty(indexed= True)
-    googleplus_page = ndb.StringProperty(indexed=True, default='')
-    facebook_page = ndb.StringProperty(indexed=True, default='')
-    twitter_id = ndb.StringProperty(indexed=True, default='')
+    event_type = ndb.StringProperty(required=True)
+    teamSize = ndb.IntegerProperty()
+    manager = ndb.StringProperty()
+    event_url = ndb.StringProperty()
+    description=ndb.StringProperty(default='')
+    phone = ndb.IntegerProperty(default=0000000000)
+    venue = ndb.StringProperty(required=True)
+    sdate = ndb.DateProperty()
+    edate = ndb.DateProperty()
+    googleplus_page = ndb.StringProperty(default='')
+    facebook_page = ndb.StringProperty(default='')
+    twitter_id = ndb.StringProperty(default='')
     public = ndb.BooleanProperty(default=True)
     private= ndb.BooleanProperty(default=False)
 
 class Teams(Base, modelx.TeamX):
     event_id = ndb.KeyProperty(kind="Event", required=True)
     event_name = ndb.KeyProperty(kind="Event", required=True)
-    name = ndb.StringProperty(indexed=True, required= True)
-    captain = ndb.StringProperty(indexed=True, required= True)
-    
+    name = ndb.StringProperty(required= True)
+    captain = ndb.StringProperty(required= True)
+
+# Sample post model for testing purposes    
 class Post(Base, modelx.EventX):
     name = ndb.KeyProperty(kind="User", required=True)
-    poster = ndb.StringProperty(indexed= True, required=True)
-    postbody = ndb.StringProperty(indexed=True, required=True)
-    posturl = ndb.StringProperty(indexed=True, required=True)
-    sdate = ndb.DateProperty(indexed= True)
-    edate = ndb.DateProperty(indexed= True)
+    poster = ndb.StringProperty(required=True)
+    postbody = ndb.StringProperty(required=True)
+    posturl = ndb.StringProperty(required=True)
+    sdate = ndb.DateProperty()
+    edate = ndb.DateProperty()
 
+# Event Comments are the Associated Comments in an Event
 class EventComments(Base, modelx.EventX):
     name = ndb.KeyProperty(kind="User", required=True)
     user_id = ndb.KeyProperty(kind="User", required=True)
     event_id = ndb.KeyProperty(kind="Event", required=True)
-    comment = ndb.StringProperty(indexed=True, required=True)
+    comment = ndb.StringProperty(required=True)
 
+# Event Invites model to invite site users to attend the Event
+class EventInvites(Base, modelx.EventX):
+    user_id = ndb.KeyProperty(kind="User", required=True)
+    event_id = ndb.KeyProperty(kind="Event", required=True)
+    invited_to = ndb.KeyProperty(kind="Event", required=True)
+    invitation_message = ndb.StringProperty(required=True)
+
+# Team Register Model yet to be made
 class TeamRegister(Base, modelx.TeamRegisterX):
     teamName = ndb.StringProperty("Team Name", required=True)
     captain = ndb.KeyProperty(kind="User", required= True)

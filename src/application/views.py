@@ -63,12 +63,14 @@ from flaskext import oauth
 import util
 import model
 import config
-from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm, TeamRegisterForm
+from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm, TeamRegisterForm, InviteUserForm
 # Google API python Oauth 2.0
 import httplib2
+
 from oauth2client.client import AccessTokenRefreshError
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
+
 
 from simplekv.memory import DictStore
 from flaskext.kvsession import KVSessionExtension
@@ -78,6 +80,9 @@ cache = Cache(app)
 
 # Mail settings specified
 # message = mail.InboundEmailMessage(request.body)
+
+
+
 
 @login_manager.user_loader
 def load_user(key):
@@ -962,12 +967,14 @@ def event_profile(ename,eid):
   event_id = ndb.Key(model.Event, eid)
   print "TESTING THINGS",eid
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
-  #events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
-  comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
+  # events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
+  # comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
   user_id = ndb.Key(model.User, current_user.id)
   name = ndb.Key(model.User, current_user.name)
+  comment_json = request.json
   form = CommentForm(request.form)
-  print request.json
+  inviteform = InviteUserForm(request.form)
+  print request.json, type(comment_json)
   if request.method == 'POST':
     print request.json
     comments = model.EventComments(
@@ -984,23 +991,50 @@ def event_profile(ename,eid):
       return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
-  return render_template('event_profile.html', events = events, ename =ename , eid= eid , form= form, comments_store= comments_store)
+  return render_template('event_profile.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform)
 
-@app.route('/comments',methods=['GET'])
+@app.route('/comments/<int:eid>',methods=['GET'])
 @login_required
-def all_event_comments():
-  comments_store = model.Post.query()
+def all_event_comments(eid):
+  event_id = ndb.Key(model.Event, eid)
+  comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
+  first = {}; comments = []
+  for comment in comments_store:
+    first['name'] = comment.name.string_id()
+    first['user_id'] = comment.user_id.integer_id()
+    first['event_id'] = comment.event_id.integer_id()
+    first['comment'] = comment.comment
+    comments.append(first)
+    first = {}
+  return jsonify(comments=comments)
+
+'''
+@app.route('/events/<ename>/<int:eid>/invite/', methods=['POST','GET'])
+def invite_user(ename,eid):
+  event_id = ndb.Key(model.Event, eid)
+  events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+  inviteform = InviteUserForm(request.form)
+  
+  if inviteform.validate_on_submit():
+    invites = model.EventInvites(
+
+      )
+  
+  return render_template('add_inviteModal.html', inviteform=inviteform)
+'''
+
+@app.route('/users', methods=['GET'])
+@login_required
+def get_all_users():
+  all_users =  model.User.query()
   first = {}; second = []
-  for comments in comments_store:
-    comment['name'] = comments.name.string_id()
-    comment['user_id'] = comments.user_id
-    comment['event_id'] = comments.event_id
-    comment['comment'] = comments.comment
+  for user in all_users:
+    first['name'] = user.name
+    first['id'] = user.id
     second.append(first)
     first = {}
-  return jsonify(second=second)
 
-
+  return jsonify(second=second)  #(all_users =all_users)
 # Event_Type = Team Event Specifying the Teams
 '''
 @app.route('/events/<ename>/<int:eid>/', methods=['POST','GET'])
@@ -1066,15 +1100,16 @@ def post_it():
 @login_required
 def all_posts():
   post_db = model.Post.query()
-  first = {}; second = []
-  for posts in post_db:
-    first['name'] = posts.name.string_id()
-    first['poster'] = posts.poster
-    first['postbody'] = posts.postbody
-    first['posturl'] = posts.posturl
-    second.append(first)
+  first = {}; posts = []
+  for post in post_db:
+    first['name'] = post.name.string_id()
+    first['poster'] = post.poster
+    first['postbody'] = post.postbody
+    first['posturl'] = post.posturl
+    posts.append(first)
     first = {}
-  return jsonify(second=second)
+  
+  return jsonify(posts=posts)
 
 
 
