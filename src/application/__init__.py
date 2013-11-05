@@ -10,7 +10,7 @@ from werkzeug.debug import DebuggedApplication
 #from flaskext.mail import Mail
 import jinja2
 #from flaskext.flask_googlelogin import GoogleLogin
-
+import wtforms_json
 
 import os
 
@@ -27,7 +27,7 @@ app.config.update(
 
 #mail = Mail()
 
-                       
+wtforms_json.init()                       
                                                                      
 jinja_environment = jinja2.Environment(autoescape=True,
     loader=jinja2.FileSystemLoader(os.path.join('application', 'templates')))

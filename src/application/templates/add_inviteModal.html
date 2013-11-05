@@ -1,0 +1,68 @@
+{% import 'macro/error.html' as forms %}
+
+<!-- Send Message Modal -->
+<div class="modal hide fade" id="add-invite-modal">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>  </h3>
+  </div>
+  <form id="add_invite" class="navbar-form form-inline" method="Post">
+      {{ inviteform.csrt_token }}
+  <div class="modal-body">
+    
+      <fieldset>
+        {{ inviteform.hidden_tag() }}
+            
+
+            {% from "macro/_formhelpers.html" import render_field %}
+            <div class="control-group">
+                
+                  <div class="controls">
+                         Invite User                       
+                        {{ inviteform.invite_to(id='inviteTo',class='form-control required',placeholder="Enter User Name" ,autocomplete=True, **{'data-provide': "typeahead"} ) }}
+                        {% if inviteform.invite_to.errors %}
+                        <ul class="errors">
+                            {% for error in inviteform.invite_to.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+            <div class="control-group">
+                
+                  <div class="controls">
+                        Message                       
+                        {{ inviteform.invitation_message(id='invitationMessage',class='form-control required ',placeholder="Your Message", autocomplete=True ) }}
+                        {% if inviteform.invitation_message.errors %}
+                        <ul class="errors">
+                            {% for error in inviteform.invitation_message.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+            </div>
+
+
+
+      
+
+
+    
+    
+  </div>
+  <div class="modal-footer">
+    
+    <div class="control-group">
+      <div class="controls">
+        <a href="#" class="btn" class="close" data-dismiss="modal">Close</a>
+        <button type="submit" id="send_message" class="btn btn-primary" data-loading-text="Sending...">Send Invite</button>
+      </div>
+    </div>
+  </div>
+  </fieldset>
+
+</div>
+</form>
+<div>
