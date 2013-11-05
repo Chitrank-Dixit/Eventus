@@ -150,7 +150,7 @@ class Event(Base,modelx.EventX):
     Refering Google + and Facebook Event model , also 
     customizing to generate team based events performance reports and visualizations 
     '''
-    name = ndb.StringProperty(required=True)
+    name = ndb.StringProperty(indexed=True,required=True)
     #logo = ndb.FileProperty(indexed=True)
     #creator = ndb.StringProperty(indexed=True, required=True)
     creator = ndb.KeyProperty(kind="User", required=True)

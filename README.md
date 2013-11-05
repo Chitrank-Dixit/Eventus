@@ -135,6 +135,11 @@ Bootstrap 2 (for front end and responsiveness)
 - Twitter Bootstrap (road to perfection):
 http://twitter-bootstrap.node1.zygote.cc/#
 
+Bootstrap Plugins
+------------------------------------------------------
+- http://tutorialzine.com/2013/07/50-must-have-plugins-for-extending-twitter-bootstrap/
+- http://bootsnipp.com/resources
+
 Ajax with Python Flask
 ----------------------------
 - http://runnable.com/UiPhLHanceFYAAAP/how-to-perform-ajax-in-flask-for-python

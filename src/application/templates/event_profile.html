@@ -11,12 +11,15 @@
 	</style>
 {% endblock %}
 {% block content %}
-{% include 'add_inviteModal.html' %}
+
   <div class="container well-inverse">
+    <h4 class="pull-right"><i class="icon-heart"></i> <i class="icon-facebook-sign"></i> <i class="icon-twitter-sign"></i> <i class="icon-google-plus-sign"></i></h4>
 	<h2>{{events.name}}</h2>
+
 	<h3>{{events.description}}</h2>
 	<h4>{{events.creator.string_id()}}</h4>
 	<h4>{{events.venue}}</h4>
+    <h4><i class="icon-thumbs-up"></i> <i class="icon-thumbs-down"></i> </h4>
   </div>
 <div class="row">
 	<div class="span3">
@@ -33,9 +36,12 @@
 
         <ul class="nav nav-tabs">
             <li class="active">
-            <a href="#attending" data-toggle="tab">Attending</a>
+            <a href="#invited" data-toggle="tab">Invited</a>
             </li>
-            <li><a href="#invited" data-toggle="tab">Invited</a>
+            <li>
+            <a href="#coming" data-toggle="tab">Coming</a>
+            </li>
+            <li><a href="#notcoming" data-toggle="tab">Not Coming</a>
             </li>
         </ul>
         </div>
@@ -77,8 +83,10 @@
 
 	<ul data-bind="foreach: comments, visible: comments().length > 0">
         <div class="well-inverse">
+
             <p data-bind="text: comment"></p>
-            <p data-bind="text: username"></p>
+            <a data-bind="attr: { href: '/user/name/uid/'   }"><p data-bind="text: name"></p></a>
+            <p data-bind="text: uid"></p>
         </div>
     </ul>
     
@@ -86,15 +94,15 @@
 	
 	
 	</div>
-	<div class="span3">
+	<div class="span2">
         
 	</div>
 	
 </div>
-
+{% include 'add_inviteModal.html' %}
 
 {% block tail_script %}
-<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
+
 <script type="text/javascript">
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
@@ -116,22 +124,14 @@ $('#comment_form').validate({
 });
 });
 
-$('#invite_to').typeahead({
-    ajax: {
-        url: "{{ url_for('get_all_users') }}"
-    }
-        
-});
-
-
 
 
 // Knockoutjs Comment Code
 
 function Comment(data) {
     this.comment = ko.observable(data.comment);
-    this.username = ko.observable(data.name);
-    
+    this.name = ko.observable(data.name);
+    this.uid = ko.observable(data.uid);
     
 }
 
@@ -157,8 +157,10 @@ function CommentViewModel() {
     $.getJSON("{{ url_for('all_event_comments', eid=eid ) }}", function(commentModels) {
         var t = $.map(commentModels.comments, function(item) {
             return new Comment(item);
+
         });
         self.comments(t);
+
     });
 
     self.save = function() {
@@ -169,13 +171,13 @@ function CommentViewModel() {
             data: JSON.stringify({
                 'comment': self.comment(),
                 'name' : "{{current_user.name}}",
-                
+                'uid' : "{{current_user.id}}",
             }),
 
 
             success: function(data) {
                 console.log("Pushing to comment array");
-                self.comments.push(new Comment({ comment: data.comment, name: data.name }));
+                self.comments.push(new Comment({ comment: data.comment, name: data.name, uid: data.uid }));
                 return;
             },
             error: function() {
@@ -192,94 +194,8 @@ function CommentViewModel() {
 
 // Activates knockout.js
 ko.applyBindings(new CommentViewModel());
+console.log("current_user.id");
 
-
-// Knockoutjs Add/Invite Code
-/*
-function Invite(data) {
-    this.inviteTo = ko.observable(data.inviteTo);
-    this.invitationMessage = ko.observable(data.invitationMessage);
-    
-    
-}
-
-// providing users data to invite_to 
-
-
-function CommentViewModel() {
-    var self = this;
-    self.invites = ko.observableArray([]);
-    self.inviteTo = ko.observable();
-    self.invitationMessage = ko.observable();
-    
-    
-    
-       
-    self.inviteUser = function() {
-        if ( self.inviteTo() != ""){
-            self.save();
-        }
-        self.inviteTo("");
-        self.invitationMessage("");
-        
-        
-    };
-
-    $.getJSON('/users', function(invitationModels) {
-        var t = $.map(commentModels.comments, function(item) {
-            return new Comment(item);
-        });
-        self.comments(t);
-    });
-
-    self.save = function() {
-        return $.ajax({
-            url: "{{ url_for('event_profile', ename = ename , eid = eid ) }}",
-            contentType: 'application/json',
-            type: 'POST',
-            data: JSON.stringify({
-                'comment': self.comment(),
-                'name' : "{{current_user.name}}",
-                
-            }),
-
-
-            success: function(data) {
-                console.log("Pushing to comment array");
-                self.comments.push(new Comment({ comment: data.comment, name: data.name }));
-                return;
-            },
-            error: function() {
-                console.log(ename);
-                return console.log("Failed");
-            }
-        });
-    };
-}
-
-
-// enable validation
-// ko.validation.init();
-
-// Activates knockout.js
-ko.applyBindings(new CommentViewModel());
-
-$('#invite_to').typeahead({
-    source: [
-            { id: 1, name: 'Toronto' },
-            { id: 2, name: 'Montreal' },
-            { id: 3, name: 'New York' },
-            { id: 4, name: 'Buffalo' },
-            { id: 5, name: 'Boston' },
-            { id: 6, name: 'Columbus' },
-            { id: 7, name: 'Dallas' },
-            { id: 8, name: 'Vancouver' },
-            { id: 9, name: 'Seattle' },
-            { id: 10, name: 'Los Angeles' }
-        ]
-        
-});
-*/
 
 </script>
 {% endblock %}

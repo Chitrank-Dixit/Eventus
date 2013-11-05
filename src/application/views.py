@@ -971,11 +971,16 @@ def event_profile(ename,eid):
   # comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
   user_id = ndb.Key(model.User, current_user.id)
   name = ndb.Key(model.User, current_user.name)
+  # if comments been posted
   comment_json = request.json
+
+  # if user been invited
+  invite_json = request.json
+
   form = CommentForm(request.form)
   inviteform = InviteUserForm(request.form)
   print request.json, type(comment_json)
-  if request.method == 'POST':
+  if request.method == 'POST' and comment_json:
     print request.json
     comments = model.EventComments(
         name = name,
@@ -988,9 +993,27 @@ def event_profile(ename,eid):
       # flash('your comment has been posted', category='info')
       # mail.send(msg)
       # print name.string_id() , user_id.integer_id() , event_id
-      return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
+      return jsonify({ "name": name.string_id(),"uid": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
+  '''
+  elif request.method == 'POST' and invite_json:
+    print "HAHAHAHAH"
+    invites = model.EventInvites(
+        user_id = user_id ,
+        event_id = event_id ,
+        invited_to = name ,
+        invitation_message = request.json['invitationMessage']
+      )
+    try:
+      invites.put()
+      # flash('your comment has been posted', category='info')
+      # mail.send(msg)
+      # print name.string_id() , user_id.integer_id() , event_id
+      #return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
+    except CapabilityDisabledError:
+      flash('Something went wrong and your comment has not been posted', category='danger')
+  '''
   return render_template('event_profile.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform)
 
 @app.route('/comments/<int:eid>',methods=['GET'])
@@ -1001,40 +1024,52 @@ def all_event_comments(eid):
   first = {}; comments = []
   for comment in comments_store:
     first['name'] = comment.name.string_id()
-    first['user_id'] = comment.user_id.integer_id()
+    first['uid'] = comment.user_id.integer_id()
     first['event_id'] = comment.event_id.integer_id()
     first['comment'] = comment.comment
     comments.append(first)
     first = {}
   return jsonify(comments=comments)
 
-'''
+
 @app.route('/events/<ename>/<int:eid>/invite/', methods=['POST','GET'])
 def invite_user(ename,eid):
   event_id = ndb.Key(model.Event, eid)
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
   inviteform = InviteUserForm(request.form)
-  
-  if inviteform.validate_on_submit():
+  user_id = ndb.Key(model.User, current_user.id)
+  name = ndb.Key(model.User, current_user.name)
+  if request.method == 'POST':
     invites = model.EventInvites(
-
+        user_id = user_id ,
+        event_id = event_id ,
+        invited_to = name ,
+        invitation_message = request.json['invitationMessage']
       )
-  
+    try:
+      invites.put()
+      # flash('your comment has been posted', category='info')
+      # mail.send(msg)
+      # print name.string_id() , user_id.integer_id() , event_id
+      #return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
+    except CapabilityDisabledError:
+      flash('Something went wrong and your comment has not been posted', category='danger')
   return render_template('add_inviteModal.html', inviteform=inviteform)
-'''
+
 
 @app.route('/users', methods=['GET'])
 @login_required
 def get_all_users():
   all_users =  model.User.query()
-  first = {}; second = []
+  first = {}; users = []
   for user in all_users:
+    user_key = user.key
     first['name'] = user.name
-    first['id'] = user.id
-    second.append(first)
+    first['id'] = user_key.integer_id()
+    users.append(first)
     first = {}
-
-  return jsonify(second=second)  #(all_users =all_users)
+    print user
+  return jsonify(users=users)  #(all_users =all_users)
 # Event_Type = Team Event Specifying the Teams
 '''
 @app.route('/events/<ename>/<int:eid>/', methods=['POST','GET'])
@@ -1137,11 +1172,11 @@ def team_register():
 @app.route('/teams', methods= ['GET'])
 def allTeams():
   allTeams = model.TeamRegister.query()
-  first = {}; second = []
+  first = {}; teams = []
   for team in allTeams:
     first['name']= team.teamName,
     #first['captain']= team.captain.string_io()
-    second.append(first)
+    teams.append(first)
     first = {}
 
-  return jsonify(second = second )
+  return jsonify(teams = teams )
