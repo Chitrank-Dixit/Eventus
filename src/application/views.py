@@ -928,6 +928,7 @@ def create_event():
   #use_db = ndb.Key(urlsafe=current_user.get_id())
   use_db = ndb.Key(model.User, current_user.name)
   #id_db = ndb.Key(model.User, current_user.id)
+ 
 
   if request.method=='POST':
     event = model.Event(
@@ -979,7 +980,7 @@ def event_profile(ename,eid):
 
   form = CommentForm(request.form)
   inviteform = InviteUserForm(request.form)
-  print request.json, type(comment_json)
+  # print request.json, type(comment_json)
   if request.method == 'POST' and comment_json:
     print request.json
     comments = model.EventComments(
@@ -1057,18 +1058,20 @@ def invite_user(ename,eid):
   return render_template('add_inviteModal.html', inviteform=inviteform)
 
 
-@app.route('/users', methods=['GET'])
+@app.route('/users')
 @login_required
 def get_all_users():
   all_users =  model.User.query()
   first = {}; users = []
   for user in all_users:
     user_key = user.key
-    first['name'] = user.name
-    first['id'] = user_key.integer_id()
+    first['uname'] = user.name
+    first['uuid'] = user_key.integer_id()
+    first['about_me'] = user.about_me
+    first['email'] = user.email
     users.append(first)
     first = {}
-    print user
+  print "Users--------",users
   return jsonify(users=users)  #(all_users =all_users)
 # Event_Type = Team Event Specifying the Teams
 '''
@@ -1178,5 +1181,89 @@ def allTeams():
     #first['captain']= team.captain.string_io()
     teams.append(first)
     first = {}
-
   return jsonify(teams = teams )
+
+
+
+
+
+# This url is used to create database entries.
+@app.route('/dataentry', methods=['GET'])
+def datae():
+  userFromDb = model.User.query()
+  # calling this function, creates the fake users
+  createDemoUsers(userFromDb)
+  userFromDb = model.User.query()
+  
+  
+  for h in userFromDb :
+    userKey = ndb.Key(model.User, h.email)
+    cid = h.id
+    print 100 * "*" + str(cid) + str(h.email)
+  event = model.Event(
+      name = "Event1",
+      event_type = "Team Event",
+      creator = userKey ,
+      event_url = "https://googleplusee.com",
+      description = "from testing script ",
+      venue= "India ",
+      sdate= datetime(2013,11,22),
+      edate= datetime(2013,11,23),
+      creator_id = 6395859138772992,
+    ) 
+      
+  event.put()
+
+
+
+
+  return render_template("dataentry.html", user=userFromDb)
+
+
+
+
+# This is the helper function to create facke users
+def createDemoUsers(userFromDb):
+  # empty list containing all the email address from User table
+  emailList =[]
+
+
+  # creating list of emails
+  for u in userFromDb:
+    emailList.append(u.email)
+
+
+  # creating users in database,
+  # if database is not created, create it and add users
+  if  ( len(emailList) == 0) :
+    create_user_db(
+        "test@gmail.com".split('@')[0].replace('.', ' ').title(),
+        "test",
+        "test@gmail.com",
+        federated_id="147015317214368465184",
+        
+      )
+    userList = ["test1@gmail.com", "test2@gmail.com","test3@gmail.com", "test4@gmail.com", "test5@gmail.com" ]
+    
+    for user in userList:
+      randList = [] 
+      randomVar = random.randint(1245678 , 8456373)
+      if randomVar not in randList:
+        randList.append(randomVar)
+      else :
+        randomVar = random.randint(1245678 , 8456373)
+
+      user = model.User(
+        name = user.split('@')[0].replace('.', ' ').title(),
+        email= user,
+        username=user[0:user.index('@')],
+        federated_id= "1489"+ str(randomVar) +"14368465184"
+
+        )
+      user.put()
+
+    # if database created , do not add any users
+    else :
+      return render_template("dataentry.html", user=userFromDb)
+  
+

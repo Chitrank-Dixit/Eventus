@@ -7,8 +7,16 @@
 		.background {
 			 background-color: #F3F3F3;
 			}
-	
+	    .modal {
+        /* new custom width */
+            width: 700px;
+            margin-left: -375px;
+         
+}
 	</style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/data_page.css') }}" /> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/data_table.css') }}" /> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/shCore.css') }}" /> 
 {% endblock %}
 {% block content %}
 
@@ -19,7 +27,7 @@
 	<h3>{{events.description}}</h2>
 	<h4>{{events.creator.string_id()}}</h4>
 	<h4>{{events.venue}}</h4>
-    <h4><i class="icon-thumbs-up"></i> <i class="icon-thumbs-down"></i> </h4>
+    <h4><i class="icon-thumbs-up"></i> <font color="green">10</font> <i class="icon-thumbs-down"></i> <font color="red">3</font> </h4>
   </div>
 <div class="row">
 	<div class="span3">
@@ -91,6 +99,8 @@
     </ul>
     
     
+
+    {% include 'add_inviteModal.html' %}
 	
 	
 	</div>
@@ -99,29 +109,18 @@
 	</div>
 	
 </div>
-{% include 'add_inviteModal.html' %}
+
 
 {% block tail_script %}
+<script src="{{ url_for('static', filename = 'bootstrap/js/bootstrap-typeahead.js') }}"></script>
+<script src="{{ url_for('static', filename = 'bootstrap/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename = 'bootstrap/js/shCore.js') }}"></script>
 
 <script type="text/javascript">
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
 $(document).ready(function () {
-
-$('#comment_form').validate({
-    rules: {
-        
-        
-    },
-    
-    highlight: function (element) {
-        $(element).closest('control-group').removeClass('success').addClass('error');
-    },
-    success: function (element) {
-        element.text('OK!').addClass('valid')
-            .closest('.control-group').removeClass('error').addClass('success');
-    }
-});
+    $('#inviteUser').dataTable();
 });
 
 
@@ -132,13 +131,22 @@ function Comment(data) {
     this.comment = ko.observable(data.comment);
     this.name = ko.observable(data.name);
     this.uid = ko.observable(data.uid);
+
     
 }
 
-
-
+function Invite(data) {
+    this.uname = ko.observable(data.uname);
+    this.uuid = ko.observable(data.uuid);
+    this.about_me = ko.observable(data.about_me);
+    this.email = ko.observable(data.email);
+    
+    
+}
+var users = new Array();
 function CommentViewModel() {
     var self = this;
+    self.users = ko.observableArray([]);
     self.comments = ko.observableArray([]);
     self.comment = ko.observable();
     
@@ -161,6 +169,14 @@ function CommentViewModel() {
         });
         self.comments(t);
 
+    });
+
+    $.getJSON('/users', function(invitationModels) {
+        var t = $.map(invitationModels.users, function(item) {
+            console.log("Something",item);
+            return new Invite(item);
+        });
+        self.users(t);
     });
 
     self.save = function() {
@@ -189,13 +205,18 @@ function CommentViewModel() {
 }
 
 
+
 // enable validation
 // ko.validation.init();
 
 // Activates knockout.js
 ko.applyBindings(new CommentViewModel());
-console.log("current_user.id");
 
+
+$('#inviteTo').typeahead({
+        source: users,
+        
+});
 
 </script>
 {% endblock %}
