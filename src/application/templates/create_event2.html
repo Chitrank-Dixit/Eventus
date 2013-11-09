@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+{% import 'macro/error.html' as forms %}
+{% block title %} Create a New Event | Eventus {% endblock %}
+{% block style_block %}
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-select.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-wysihtml5.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='bootstrap/css/datepicker.css') }}" rel="stylesheet">
+
+
+
+  <style type="text/css">
+    .background {
+       background-color: #F3F3F3;
+      }
+    p.error {
+        color: red;
+    }
+
+    .venue-form {
+        background-color: #f9faf7;
+        webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-box-shadow: 0 1px 2px 1px rgba(0,0,0,0.25);
+        box-shadow: 0 1px 2px 1px rgba(0,0,0,0.25);
+        border-radius: 1px;
+        -webkit-border-radius: 1px;
+        padding: 30px 20px 48px 30px;
+        width: 100%;
+        height: 100%;       
+
+
+    }
+
+
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- outer most span12 -->
+    <div class="span12">
+        <form action="{{ url_for('create_event') }}" class="navbar-form form-inline" method="post" id="create_eventform">
+
+        <div class="row">
+            <div class="span12" id = "title">
+                    
+                <div class="span7">
+                    
+                    
+                    <h3 style="color : #C43F2C;">Create a New Event</h3>
+                    <p>Hello guys, 
+                    Here you can create your event. Its very easy to create an event. Just put the required details and that's it. The event is created.
+                    <strong>Note:</strong> Please choose a unique name for your event . Its fun you know. </p>
+                </div>
+
+                
+            </div>
+            <!-- id= title  end here-->
+
+        </div>
+
+
+        <!-- mainForm details information here  -->
+        <div class="span7" id = "mainForm">
+            
+            {{ form.csrf_token }}
+            <fieldset>
+                {{ form.hidden_tag() }}
+
+                {% from "macro/_formhelpers.html" import render_field %}
+                <div class="control-group">
+                    <!-- Event Name -->
+                    <div class="controls" >
+                        <label> <h5>Event Name</h5> </label><br>
+                        {{ form.name(id='ename', class='form-control required ', placeholder="Event name here", style="width:50%", autocomplete=True, autocomplete=True)}}
+                        {% if form.name.errors %}
+                        <ul class="errors">
+                            {% for error in form.name.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    <!-- Event name div end below-->
+                    </div>
+                <!-- event name control-group end below -->    
+                </div>
+
+
+                <!-- type of event control started -->
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h5>Type of Event</h5></label><br>
+                        {{ form.event_type(id='evtype', class='selectpicker required', placeholder="Event Name", autocomplete=True )}}
+                        {% if form.event_type.errors %}
+                        <ul class="errors">
+                            {% for error in form.event_type.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                    <!-- type of event controls class ended below -->
+                    </div>
+                <!-- type of event control-group ended below -->
+                </div>
+
+                <!-- google plus url control started -->
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h5> URL of event at G+ </h5></label><br>
+
+                        {{ form.event_url(id='eurl', class="form-control required", placeholder="Enter the google+ url of the event",style="width:50%", autocomplete=True ) }}
+                        {% if form.event_url.errors %}
+                        <ul class="errors">
+                            {% for error in form.event_url.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    <!-- google plus url controls class end -->
+                    </div>
+                <!-- google plus url  control-group end -->
+                </div>
+
+
+                <!-- Wsyiwyg editor control started -->
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h4>  About the event</h4></label><br>
+                        {{ form.description(id='edescription',class='form-control required ',placeholder="Describe your Event", style="width:80%; height:140px;", autocomplete=True )}}
+                        {% if form.description.errors %}
+                        <ul class="errors">
+                            {% for error in form.description.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    <!-- Wsyiwyg editor  controls class end below -->
+                    </div>
+                <!-- Wsyiwyg editor control-group end below-->
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <!-- Downloaded datepicker from 
+                        http://www.eyecon.ro/bootstrap-datepicker/
+                         -->
+                        <label><h4>  From </h4></label><br>
+
+                        <input type="text" id="start_date" >
+                        
+
+                      
+                    </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h4> To </h4></label><br>
+                        <input type="text" id = "end_date" >
+                            
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h4>Upload logo</h4></label><br>
+                        <input type="text"> <button type="upload" name ="logoUpload">Upload</button>
+                        
+
+                    <!-- upload logo controls class end below-->
+                    </div>
+
+                <!-- upload logo control-group end below-->
+                </div>
+                
+                <!-- create event button -->
+                <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" id="event_submit" value"create_event" class="btn btn-primary" data-loading-text="Creating Event..." >Create Event</button><br><br>
+                        
+                        </div>
+                </div>
+
+
+
+            </fieldset>
+
+
+
+            
+
+
+        <!-- mainForm ends below-->
+        </div>
+
+        
+
+        <!-- venue information form here  -->
+        <div class="span4" id = "venue">
+            <h4> Venue Information</h4>
+            <div class="venue-form">
+            <!--venue control-group started -->
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>Venue </h4></label><br>
+                    {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}
+                    {% if form.venue.errors %}
+                    <ul class="errors">
+                        {% for error in form.venue.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- venue controls class end below-->
+                </div>
+
+            <!-- Venue control-group end below-->
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>Address </h4></label><br>
+                    {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}
+                    {% if form.venue.errors %}
+                    <ul class="errors">
+                        {% for error in form.venue.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- address controls class end below-->
+                </div>
+
+            <!-- address control-group end below-->
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>City </h4></label><br>
+                    {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}
+                    {% if form.venue.errors %}
+                    <ul class="errors">
+                        {% for error in form.venue.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- city controls class end below-->
+                </div>
+
+            <!-- venue control-group end below-->
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>State</h4></label><br>
+                    {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}
+                    {% if form.venue.errors %}
+                    <ul class="errors">
+                        {% for error in form.venue.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- state controls class end below-->
+                </div>
+
+            <!-- state control-group end below-->
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>Country</h4></label><br>
+                    {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}
+                    {% if form.venue.errors %}
+                    <ul class="errors">
+                        {% for error in form.venue.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- country controls class end below-->
+                </div>
+
+            <!-- Country control-group end below-->
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>Postal Code</h4></label><br>
+                    {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}
+                    {% if form.venue.errors %}
+                    <ul class="errors">
+                        {% for error in form.venue.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- poastal code controls class end below-->
+                </div>
+
+            <!-- postal code control-group end below-->
+            </div>
+
+
+
+
+            <!-- class venue-form div ends below-->
+            </div>
+
+        <!-- venue information ends below-->
+        </div>
+
+
+    </form>
+    <!-- outer most span12 ends below -->    
+    </div>
+
+<!-- container ends below -->
+</div>
+
+{% block tail_script %}
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-buttons.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-select.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-datepicker.js') }}"></script>
+
+<script type="text/javascript">
+ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+ // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+
+
+// Enabling Select Picker custom select fields from Bootstrap
+$('.selectpicker').selectpicker();
+
+function AppViewModel() {
+    this.bodyte = ko.observable();
+    this.bodytext = ko.computed(function(){
+        return this.bodyte();
+
+    }, this);
+    
+}
+
+// Activates knockout.js
+ko.applyBindings(new AppViewModel());
+
+/*
+var FormHelpers = {
+            validate: function (form, evt) {
+                // Form validation for modal dialog
+                var postbody = form.find('#body').val();
+                
+                if (!(postbody)) {
+                    evt.preventDefault();
+                    Utils.renderFieldErrorTooltip('#body', 'Name is required', 'right');
+                }
+                
+            },
+            init: function () {
+                var self = this;
+                var example_form = $('#new_postform');
+                example_form.on('submit', function (evt) {
+                    self.validate(example_form, evt)
+                });
+            }
+        };
+        $(document).ready(function() {
+            FormHelpers.init();
+        });
+
+
+
+*/
+
+/* datepicker validation here from  "" http://www.eyecon.ro/bootstrap-datepicker/ ""  */
+
+var nowTemp = new Date();
+var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+ 
+var checkin = $('#start_date').datepicker({
+  onRender: function(date) {
+    return date.valueOf() < now.valueOf() ? 'disabled' : '';
+  }
+}).on('changeDate', function(ev) {
+  if (ev.date.valueOf() > checkout.date.valueOf()) {
+    var newDate = new Date(ev.date)
+    newDate.setDate(newDate.getDate() + 1);
+    checkout.setValue(newDate);
+  }
+  checkin.hide();
+  $('#end_date')[0].focus();
+}).data('datepicker');
+var checkout = $('#end_date').datepicker({
+  onRender: function(date) {
+    return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+  }
+}).on('changeDate', function(ev) {
+  checkout.hide();
+}).data('datepicker');
+
+/* date picker validation ends*/
+
+$(document).ready(function () {
+
+
+$('.dpkr').datepicker(); 
+
+$('#create_eventform').validate({
+    rules: {
+        
+        
+    },
+    highlight: function (element) {
+        $(element).parent().css('border-color','red');
+        $(element).text('Please type some post').closest('.control-group').removeClass('success').addClass('error');
+        
+    },
+    success: function (element) {
+        element.text('OK!').addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
+    }
+
+    
+});
+
+});
+
+
+</script>
+
+{% endblock %}
+
+
+{% endblock %}
