@@ -6,6 +6,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h3> Send {{user.name}} a Message </h3>
   </div>
+  <center>
   <form name="send_message" id="send_message" action="{{ url_for('user_profile', name=user.name, uid=euid) }}" class="navbar-form form-inline" method="Post">
       {{ form.csrt_token }}
   <div class="modal-body">
@@ -67,4 +68,5 @@
 
 </div>
 </form>
-<div>
+</center>
+

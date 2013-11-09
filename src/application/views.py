@@ -379,6 +379,7 @@ def unfollow_user(name,uid):
 @app.route('/edit_profile/<name>/<int:uid>', methods=['GET','POST'])
 @login_required
 def user_profile_settings(name,uid):
+
   return render_template('edit_profile.html')
 
 
@@ -941,7 +942,7 @@ def create_event():
         venue= form.venue.data,
         sdate= form.sdate.data,
         edate= form.edate.data, 
-        
+        access = form.access_type.data,
       )
     print current_user.name
     try:
@@ -1120,7 +1121,7 @@ def post_it():
       
       posting.put()
       #flash("Poster has been populated", category='info')
-      return jsonify({ "post": request.json['post'],"postbody": request.json['postbody'], "posturl": request.json['posturl'] })
+      return jsonify({ "name": current_user.name, "post": request.json['post'],"postbody": request.json['postbody'], "posturl": request.json['posturl'] })
       #data = [current_user.name , form.poster.data, form.postbody.data, form.posturl.data]
       #response = make_response(json.dumps(data))
       #response.content_type = 'application/json'
@@ -1150,7 +1151,22 @@ def all_posts():
   return jsonify(posts=posts)
 
 
-
+@app.route('/postjson/<name>', methods=['GET'])
+@login_required
+def get_posts_json(name):
+  post_db = model.Post.query()
+  print name
+  first = {}; posts = []
+  for post in post_db:
+    first['name'] = post.name.string_id()
+    first['poster'] = post.poster
+    first['postbody'] = post.postbody
+    first['posturl'] = post.posturl
+    first['nick'] = name
+    posts.append(first)
+    first = {}
+  
+  return jsonify(posts=posts)
 
 @app.route('/team_register/', methods=['POST','GET'])
 def team_register():

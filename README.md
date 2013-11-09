@@ -168,6 +168,7 @@ Knockout.js Tutorials
 - https://github.com/carlhoerberg/knockout-websocket-example
 - https://github.com/knockout/knockout/wiki/Recipes
 - https://github.com/knockout/knockout/wiki/Plugins
+- Building urls using knockout (http://www.softfinity.com/blog/an-simple-introduction-to-url-routing/)
 
 Jquery Validation:
 ----------------------------------------------

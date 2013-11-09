@@ -14,6 +14,65 @@
 	
 	<h2>Settings</h2>
 	<legend>General</legend>
-	<legend>Social Profile</legent>
+		<div class="control-group">
+                
+                  <div class="controls">
+                        {{ form.location.label }}
+                        
+                        {{ form.location(id='location',class='form-control required ',placeholder="Where you live", autocomplete=True )}}
+                        {% if form.location.errors %}
+                        <ul class="errors">
+                            {% for error in form.location.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+        </div>
+
+        <div class="control-group">
+                
+                  <div class="controls">
+                        {{ form.name.label }}
+                        
+                        {{ form.name(id='ename',class='form-control required ',placeholder="Event Name", autocomplete=True )}}
+                        {% if form.name.errors %}
+                        <ul class="errors">
+                            {% for error in form.name.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+        </div>
+
+        <div class="control-group">
+                
+                  <div class="controls">
+                        {{ form.name.label }}
+                        
+                        {{ form.name(id='ename',class='form-control required ',placeholder="Event Name", autocomplete=True )}}
+                        {% if form.name.errors %}
+                        <ul class="errors">
+                            {% for error in form.name.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+        </div>
+
+	<legend>Social Profile</legend>
+		<table id="general">
+		<tr><td>Google +</td></tr>
+		<tr><td>Facebook</td></tr>
+		<tr><td>Twitter</td></tr>
+		</table><br><br>
 
 {% endblock %}

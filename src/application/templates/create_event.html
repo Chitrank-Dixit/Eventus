@@ -150,6 +150,24 @@
                     
             </div>
 
+            <div class="control-group">
+                
+                  <div class="controls">
+                        {{ form.access_type.label }}                        
+                        
+                        {{ form.access_type(id='actype',class='selectpicker required ',placeholder="Event Name", autocomplete=True )}}
+                        {% if form.access_type.errors %}
+                        <ul class="errors">
+                            {% for error in form.access_type.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+            </div>
+
 
             <div class="control-group">
                     <div class="controls">

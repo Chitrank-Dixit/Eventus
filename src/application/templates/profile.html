@@ -29,7 +29,8 @@
         {% endif %}
         <h3>{{user.name}}</h3>
         <h5>{{user.email}}</h5>
-        {% if g.user.id != euid %}
+        {% if current_user.is_following(user) and current_user.has_follower(user) %}
+
         <a href="#send-message-modal" class="btn btn-info btn-lg" data-toggle="modal">Send Message</a>
         
         {% endif %}
