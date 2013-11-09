@@ -78,10 +78,11 @@
           </fieldset>
     </form>
     <ul data-bind="foreach: posts, visible: posts().length > 0">
-        <div class="well">
+        <div class="well" data-bind="css: {active: $root.currentView() == $data}"> >
             <p data-bind="text: post"></p>
             <p data-bind="text: postbody"></p>
             <p data-bind="text: posturl"></p>
+            <a data-bind="text:$data, attr:{ href:  '{{ url_for('get_posts_json', name=current_user.name) }}' + $data }"></a>><p data-bind="text: name"></p></a>
         </div>
     </ul>
     
@@ -145,6 +146,7 @@ $(document).ready(function () {
 
 
 function Post(data) {
+    this.name = ko.observable(data.name);
     this.post = ko.observable(data.post);
     this.postbody = ko.observable(data.postbody);
     this.posturl = ko.observable(data.posturl);
@@ -154,6 +156,7 @@ function Post(data) {
 
 function PostViewModel() {
     var self = this;
+    self.currentView = ko.observable();
     self.posts = ko.observableArray([]);
     self.post = ko.observable().extend({required: true});
     self.postbody = ko.observable().extend({required: true});
@@ -194,6 +197,7 @@ function PostViewModel() {
             contentType: 'application/json',
             type: 'POST',
             data: JSON.stringify({
+                'name': '{{current_user.name}}',
                 'post': self.post(),
                 'postbody': self.postbody(),
                 'posturl': self.posturl(),
@@ -201,7 +205,7 @@ function PostViewModel() {
             }),
             success: function(data) {
                 console.log("Pushing to post array");
-                self.posts.push(new Post({ post: data.post, postbody: data.postbody, posturl: data.posturl }));
+                self.posts.push(new Post({ name: data.name, post: data.post, postbody: data.postbody, posturl: data.posturl }));
                 return;
             },
             error: function() {
@@ -211,6 +215,8 @@ function PostViewModel() {
     };
 }
 
+var vm = new PostViewModel();
+
 
 // enable validation
 ko.validation.init();
@@ -218,6 +224,17 @@ ko.validation.init();
 // Activates knockout.js
 ko.applyBindings(new PostViewModel());
 
+
+Sammy(function () {
+    /*
+    **"#:view" means that sammy takes whatever is after the hash tag 
+    **and applies it to the value of "this.params.view"
+    */
+    this.get('#:view', function () {
+        //Set currentView on your view model
+        vm.currentView(this.params.view);
+    });
+}).run('');//
 console.log(PostViewModel.isValid());
 
 /*

@@ -90,7 +90,13 @@ class FlaskUser(AnonymousUser):
         return True
     return False
     #return (cur_user.string_id() == current_user.name and to_follow.string_id() == user.name)
-    
+  
+  def has_follower(self,user):
+    model_ex = model.Followers.query()
+    for entry in model_ex:
+      if entry.follower_name.string_id() == user.name and entry.followed_name.string_id() == current_user.name:
+        return True
+    return False
 
   def followed_posts(self):
     return Post.query.join(followers, (followers.c.followed_id == Post.user_id)).filter(followers.c.follower_id == self.id).order_by(Post.timestamp.desc())

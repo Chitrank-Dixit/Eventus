@@ -168,8 +168,7 @@ class Event(Base,modelx.EventX):
     googleplus_page = ndb.StringProperty(default='')
     facebook_page = ndb.StringProperty(default='')
     twitter_id = ndb.StringProperty(default='')
-    public = ndb.BooleanProperty(default=True)
-    private= ndb.BooleanProperty(default=False)
+    access = ndb.StringProperty(required=True)
 
 class Teams(Base, modelx.TeamX):
     event_id = ndb.KeyProperty(kind="Event", required=True)

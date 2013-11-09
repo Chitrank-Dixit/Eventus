@@ -58,6 +58,7 @@ class CreateEventForm(wtf.Form):
     venue = wtf.TextField('Where', validators=[validators.Required()])
     sdate= wtf.html5.DateField('From')
     edate= wtf.html5.DateField('To')
+    access_type = wtf.SelectField('Access Type', choices=[('Public','Public'), ('Private','Private')], validators=[validators.Required()])
     
     #phone = wtf.IntegerField('phone', default= 0000000000)
     #googleplus_page = wtf.TextField('googleplus_page', default='')
