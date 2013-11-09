@@ -955,7 +955,7 @@ def create_event():
     except CapabilityDisabledError:
       flash(u'App Engine Datastore is currently in read-only mode.', category='info')
       return redirect(url_for('index'))
-  return render_template('create_event.html',form=form)
+  return render_template('create_event2.html',form=form)
 
 
 @app.route('/events/', methods=['POST','GET'])
@@ -1206,7 +1206,7 @@ def allTeams():
 def newEvents():
   
   print 100* "*" + "  " + " new events"
-  return render_template('event_profile2.html')
+  return render_template('create_event2.html')
 
 
 # This url is used to create database entries.
