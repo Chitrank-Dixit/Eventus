@@ -1016,7 +1016,7 @@ def event_profile(ename,eid):
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
   '''
-  return render_template('event_profile.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform)
+  return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform)
 
 @app.route('/comments/<int:eid>',methods=['GET'])
 @login_required
@@ -1207,6 +1207,7 @@ def newEvents():
   
   print 100* "*" + "  " + " new events"
   return render_template('event_profile2.html')
+
 
 # This url is used to create database entries.
 @app.route('/dataentry', methods=['GET'])
