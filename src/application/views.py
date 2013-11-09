@@ -1186,6 +1186,11 @@ def allTeams():
 
 
 
+@app.route('/newevents', methods=['GET', 'POST'])
+def newEvents():
+  
+  print 100* "*" + "  " + " new events"
+  return render_template('event_profile2.html')
 
 # This url is used to create database entries.
 @app.route('/dataentry', methods=['GET'])
@@ -1197,9 +1202,10 @@ def datae():
   
   
   for h in userFromDb :
-    userKey = ndb.Key(model.User, h.email)
-    cid = h.id
-    print 100 * "*" + str(cid) + str(h.email)
+    userKey = ndb.Key(model.User, h.name)
+    cid = h.key
+    cid1 = cid.integer_id()
+    print 100 * "*" + str(cid1) + str(h.email)
   event = model.Event(
       name = "Event1",
       event_type = "Team Event",
