@@ -146,8 +146,15 @@
                         http://www.eyecon.ro/bootstrap-datepicker/
                          -->
                         <label><h4>  From </h4></label><br>
-
-                        <input type="text" id="start_date" >
+                        {{ form.sdate(id='start_date',class='form-control required ', autocomplete=True )}}
+                        {% if form.sdate.errors %}
+                        <ul class="errors">
+                            {% for error in form.sdate.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        
                         
 
                       
@@ -156,7 +163,15 @@
                 <div class="control-group">
                     <div class="controls">
                         <label><h4> To </h4></label><br>
-                        <input type="text" id = "end_date" >
+                        {{ form.edate(id='end_date',class='form-control required ', autocomplete=True )}}
+                        {% if form.edate.errors %}
+                        <ul class="errors">
+                            {% for error in form.edate.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        
                             
                     </div>
                 </div>
