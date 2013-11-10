@@ -94,6 +94,7 @@ class CommentForm(wtf.Form):
     
 class InviteUserForm(wtf.Form):
     invite_to = wtf.TextField('Invite User', validators=[validators.Required()])
+    invite_email = wtf.html5.EmailField('Email', validators=[validators.Required()])
     invitation_message =  wtf.TextAreaField('Message', validators=[validators.Required()])
 
 

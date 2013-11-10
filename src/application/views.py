@@ -998,24 +998,28 @@ def event_profile(ename,eid):
       return jsonify({ "name": name.string_id(),"uid": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
-  '''
-  elif request.method == 'POST' and invite_json:
+      
+  elif request.method == 'POST' and inviteform.validate_on_submit():
     print "HAHAHAHAH"
+    invitedUser = model.User.retrieve_one_by('name' and 'email', inviteform.invite_to.data and inviteform.invite_email.data)
+    print invitedUser
+    invitedUserKey = invitedUser.key
     invites = model.EventInvites(
-        user_id = user_id ,
+        user_id = invitedUserKey ,
         event_id = event_id ,
-        invited_to = name ,
-        invitation_message = request.json['invitationMessage']
+        invited_to = inviteform.invite_to.data ,
+        invitation_message = inviteform.invitation_message.data
       )
     try:
       invites.put()
       # flash('your comment has been posted', category='info')
       # mail.send(msg)
       # print name.string_id() , user_id.integer_id() , event_id
+      return redirect(url_for('index'))
       #return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
-  '''
+
   return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform)
 
 @app.route('/comments/<int:eid>',methods=['GET'])
