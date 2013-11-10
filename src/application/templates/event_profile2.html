@@ -253,7 +253,7 @@
                 <!-- data-bind="attr: { href: commentBy , name: name , uid: uid }" -->
 
                 <p data-bind="text: comment"></p>
-                <a data-bind="attr:{ href:  '{{ url_for('index')}}' }"><p data-bind="text: cname"></p></a>
+                <a data-bind="attr:{ href:  '/user/' + name() + '/' + uid() + '/' }"><p data-bind="text: cname"></p></a>
                 <p data-bind="text: cid"></p>
 
             </div>
