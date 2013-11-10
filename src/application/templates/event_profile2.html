@@ -414,11 +414,14 @@ function CommentViewModel() {
 // Activates knockout.js
 ko.applyBindings(new CommentViewModel());
 
+$('#invite_to').typeahead({
+    source: function (process) {
+        return $.get('/users', function (data) {
+            return process(data.options);
+        });
+    }
+});  
 
-$('#inviteTo').typeahead({
-        source: users,
-        
-});
 
 </script>
 {% endblock %}

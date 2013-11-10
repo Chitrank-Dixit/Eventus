@@ -68,7 +68,7 @@
                   <div class="controls">
                         {{ inviteform.invite_to.label }}
                         
-                        {{ inviteform.invite_to(id='invite_to',class='form-control required ',placeholder="Event Name", autocomplete=True )}}
+                        {{ inviteform.invite_to(id='invite_to',class='form-control required ',placeholder="Event Name", autocomplete=True, **{'data-provide': 'typeahead'} )}}
                         {% if inviteform.invite_to.errors %}
                         <ul class="errors">
                             {% for error in inviteform.invite_to.errors %}
