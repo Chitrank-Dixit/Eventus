@@ -721,13 +721,12 @@ def create_event():
   use_db = ndb.Key(model.User, current_user.name)
   #id_db = ndb.Key(model.User, current_user.id)
  
-  start_date =  form.sdate.data
-  sdate_list = start_date.split('/')
-  end_date = form.edate.data
-  edate_list = end_date.split('/')
-
-  print start_date,end_date,sdate_list
+   
   if request.method=='POST':
+    start_date =  form.sdate.data
+    sdate_list = start_date.split('/')
+    end_date = form.edate.data
+    edate_list = end_date.split('/')
     event = model.Event(
         name = form.name.data,
         event_type = form.event_type.data,
