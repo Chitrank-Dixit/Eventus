@@ -145,7 +145,7 @@
                 <div class="well-inverse">
                 <h4>{{ message.message_title }}</h4>
                 <p>{{ message.message_body }}</p>
-                <p class="pull-right">{{ message.sent_from.string_id() }}</p>
+                <a href="{{ url_for('user_profile', name=message.sent_from.string_id() , uid=message.sent_from_id.integer_id()) }}" class="pull-right">{{ message.sent_from.string_id() }}</a>
 
               </div>
               {% endif %}
@@ -161,7 +161,7 @@
                 <div class="well-inverse">
                 <h4>{{ message.message_title }}</h4>
                 <p>{{ message.message_body }}</p>
-                <p class="pull-right">{{ message.sent_to.string_id() }}</p>
+                <a href="{{ url_for('user_profile', name=message.sent_to.string_id() , uid=message.sent_to_id.integer_id()) }}" class="pull-right">{{ message.sent_to.string_id() }}</a>
 
               </div>
               {% endif %}
