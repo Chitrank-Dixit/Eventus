@@ -1,0 +1,29 @@
+<title>Notifcations | Events Never been so Interesting</title>
+{% extends "base.html" %}
+
+{% block content %}	    
+		<div class="container">
+               <p></p>
+			<center>
+			  {% if g.user.is_authenticated() %}    
+          Welcome
+        {% else %}
+        <p><a href="#" class="btn btn-default btn-lg" role="button">Learn more &raquo;</a> <a href="{{ url_for('signin') }}" class="btn btn-success btn-lg" role="button">Sign in &raquo;</a></p>
+        {% endif %}
+        <center>
+      </div>
+      <div class="container">
+        {% for notif in notify %}
+		    <div class="alert alert-info">
+          {{ notif.invitation_message}}
+        </div>
+				{% endfor %}
+		      
+      </div>
+
+      
+
+
+{% endblock %}	
+    
+

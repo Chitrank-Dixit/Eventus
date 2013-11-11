@@ -274,6 +274,7 @@ def user_profile(name,uid):  #
       try:
         message.put()
         flash('Message Sent to %s'%(name), category='info')
+        redirect(url_for('user_profile', name=name, uid=uid))
       except CapabilityDisabledError:
         flash('Something went wrong Message not delievered', category='danger')
     
@@ -343,6 +344,7 @@ def follow_user(name,uid):
   try:
     follow.put()
     flash('%s you are now following %s' %(current_user.name,user.name), category='info')
+    redirect(url_for('user_profile', name=n, uid=ui))
   except CapabilityDisabledError:
     flash('Ahh Something Went wrong with the server',category = 'danger')  
   return redirect(url_for('user_profile',name = n, uid= ui, m=False))
@@ -373,7 +375,13 @@ def unfollow_user(name,uid):
         flash(u'App Engine Datastore is currently in read-only mode.', category='danger')
   return redirect(url_for('user_profile',name = n, uid= ui))
 
-
+@app.route('/notifications/<name>/<int:uid>', methods=['GET','POST'])
+@login_required
+def user_notifications(name,uid):
+  user_id = ndb.Key(model.User, current_user.id)
+  print user_id
+  notify = model.EventInvites.query(model.EventInvites.invited_to == current_user.name, model.EventInvites.user_id == user_id)
+  return render_template('notifications.html', notify=notify)
 
 
 @app.route('/edit_profile/<name>/<int:uid>', methods=['GET','POST'])
@@ -755,7 +763,7 @@ def create_event():
 
 @app.route('/events/', methods=['POST','GET'])
 def trending_events():
-  events= model.Event.query()
+  events= model.Event.query() # model.Event.event_type == "Public"
   return render_template('trending_events.html', events=events)
 
 
