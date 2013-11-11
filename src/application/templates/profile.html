@@ -50,8 +50,7 @@
       <li><a href="#followers" data-toggle="tab">Followers</a></li>
   		<li><a href="#following" data-toggle="tab">Following</a></li>
       {% if g.user.id == euid %}
-      <li><a href="#inbox" data-toggle="tab">Inbox</a></li>
-      <li><a href="#sent" data-toggle="tab">Sent Messages</a></li>
+      <li><a href="#messages" data-toggle="tab">Messages</a></li>
       {% endif %}
 
 		</ul>
@@ -125,42 +124,64 @@
 		</div>
 
     {% if g.user.id == euid %}
-    <div class="tab-pane" id="inbox">
-      
-        {% for message in inbox %}
-          
-          <div class="well">
-            
-          <h4>{{ message.message_title }}</h4>
-          <p>{{ message.message_body }}</p>
-          <p class="pull-right">{{ message.sent_from.string_id() }}</p>
-           </div>
-          
-        {% endfor %}
+    <div class="tab-pane" id="messages">
+       <ul class="nav nav-pills">
+            <li class="active">
+            <a href="#inbox" data-toggle="tab">Inbox</a>
+            </li>
+            <li>
+            <a href="#archived" data-toggle="tab">Archived</a>
+            </li>
+            <li><a href="#sent" data-toggle="tab">Sent</a>
+            </li>
+            <li><a href="#spams" data-toggle="tab">spam</a>
+            </li>
+        </ul>
 
-     
-    <div class="tab-pane" id="sent">
-      
-        {% for message in inbox %}
+        <div class="tab-content">
+            <div class="tab-pane active" id="inbox">
+               {% for message in inbox %}
+               {% if current_user.id == message.sent_to_id.integer_id() %}
+                <div class="well-inverse">
+                <h4>{{ message.message_title }}</h4>
+                <p>{{ message.message_body }}</p>
+                <p class="pull-right">{{ message.sent_from.string_id() }}</p>
+
+              </div>
+              {% endif %}
           
-          <div class="well">
+              {% endfor %}         
+            </div>
+            <div class="tab-pane" id="archived">
 
-          <h4>{{ message.message_title }}</h4>
-          <p>{{ message.message_body }}</p>
-          <p class="pull-right">{{ message.sent_to.string_id() }}</p>
-          </div>
+            </div>
+            <div class="tab-pane" id="sent">
+                {% for message in inbox %}
+               {% if current_user.id == message.sent_from_id.integer_id() %}
+                <div class="well-inverse">
+                <h4>{{ message.message_title }}</h4>
+                <p>{{ message.message_body }}</p>
+                <p class="pull-right">{{ message.sent_to.string_id() }}</p>
+
+              </div>
+              {% endif %}
           
-        {% endfor %}
+              {% endfor %}
+            </div>
+            <div class="tab-pane" id="spams">
 
-      
+            </div>
+        </div>
+        
 
-    </div>
+    </div> 
+    
     {% endif %}
     
 		</div>
 		</div>
 		
-  		</div>
+  	</div>
   		
 	</div>
 	<hr>
