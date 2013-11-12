@@ -5,7 +5,7 @@ Initialize Flask app
 from flask import Flask
 
 from flask_debugtoolbar import DebugToolbarExtension
-#from gae_mini_profiler import profiler, templatetags
+from gae_mini_profiler import profiler, templatetags
 from werkzeug.debug import DebuggedApplication
 #from flaskext.mail import Mail
 import jinja2
@@ -24,7 +24,7 @@ app.config.update(
     GOOGLE_LOGIN_CLIENT_SECRET='SFxHRvAvD_w9JzfUhI8EiJrS',
     GOOGLE_LOGIN_REDIRECT_URI='http://localhost:8080/registered/')
     
-
+app.debug = True
 #mail = Mail()
 
 # wtforms_json.init()                       
@@ -44,7 +44,7 @@ def inject_profiler():
 import urls
 
 # Flask-DebugToolbar (only enabled when DEBUG=True)
-toolbar = DebugToolbarExtension(app)
+# toolbar = DebugToolbarExtension(app)
 
 # Werkzeug Debugger (only enabled when DEBUG=True)
 if app.debug:
