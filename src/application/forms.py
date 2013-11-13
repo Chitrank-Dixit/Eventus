@@ -69,12 +69,12 @@ class CreateEventForm(wtf.Form):
     #private= wtf.BooleanField('private',default=False)
 
 
-class SettingsForm(wtf.Form):
+class UserSettingsForm(wtf.Form):
     location = wtf.TextField('Location')
     about = wtf.TextAreaField('About')
-    google_plus = wtf.TextField('Google +')
-    facebook = wtf.TextField('Facebook')
-    twitter = wtf.TextField('Twitter')
+    google_plusId = wtf.html5.URLField('Google +')
+    facebookId = wtf.html5.URLField('Facebook')
+    twitterId = wtf.html5.URLField('Twitter')
 
 
 

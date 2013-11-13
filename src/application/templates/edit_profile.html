@@ -11,18 +11,22 @@
 	</style>
 {% endblock %}
 {% block content %}
-	
-	<h2>Settings</h2>
+    <h2>Settings</h2>
+	<form id="usersettings_form" action="{{ url_for('user_profile_settings', name=g.user.name, uid=g.user.id) }}" method="post">
+        <fieldset>
+	{{ userSettings.csrf_token }}
+    {{ userSettings.hidden_tag() }}
 	<legend>General</legend>
+        <div class="container">
 		<div class="control-group">
                 
                   <div class="controls">
-                        {{ form.location.label }}
+                        {{ userSettings.location.label }}
                         
-                        {{ form.location(id='location',class='form-control required ',placeholder="Where you live", autocomplete=True )}}
-                        {% if form.location.errors %}
+                        {{ userSettings.location(id='location',class='form-control required ',placeholder="Where you live", autocomplete=True )}}
+                        {% if userSettings.location.errors %}
                         <ul class="errors">
-                            {% for error in form.location.errors %}
+                            {% for error in userSettings.location.errors %}
                             <li>{{ error }}</li>
                             {% endfor %}
                         </ul>
@@ -35,12 +39,12 @@
         <div class="control-group">
                 
                   <div class="controls">
-                        {{ form.name.label }}
+                        {{ userSettings.about.label }}
                         
-                        {{ form.name(id='ename',class='form-control required ',placeholder="Event Name", autocomplete=True )}}
-                        {% if form.name.errors %}
+                        {{ userSettings.about(id='about',class='form-control required ',placeholder="Say something about you", autocomplete=True )}}
+                        {% if userSettings.about.errors %}
                         <ul class="errors">
-                            {% for error in form.name.errors %}
+                            {% for error in userSettings.about.errors %}
                             <li>{{ error }}</li>
                             {% endfor %}
                         </ul>
@@ -49,30 +53,101 @@
 
                     
         </div>
-
-        <div class="control-group">
-                
-                  <div class="controls">
-                        {{ form.name.label }}
-                        
-                        {{ form.name(id='ename',class='form-control required ',placeholder="Event Name", autocomplete=True )}}
-                        {% if form.name.errors %}
-                        <ul class="errors">
-                            {% for error in form.name.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </div>
-
-                    
-        </div>
+    </div>
+        
 
 	<legend>Social Profile</legend>
-		<table id="general">
-		<tr><td>Google +</td></tr>
-		<tr><td>Facebook</td></tr>
-		<tr><td>Twitter</td></tr>
-		</table><br><br>
+        <div class="container">
+		<div class="control-group">
+                
+                  <div class="controls">
+                        {{ userSettings.google_plusId.label }}
+                        
+                        {{ userSettings.google_plusId(id='gplus',class='form-control required ',placeholder="Your Google + Profile URL", autocomplete=True )}}
+                        {% if userSettings.google_plusId.errors %}
+                        <ul class="errors">
+                            {% for error in userSettings.google_plusId.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+        </div>
+        <div class="control-group">
+                
+                  <div class="controls">
+                        {{ userSettings.facebookId.label }}
+                        
+                        {{ userSettings.facebookId(id='facebook',class='form-control required ',placeholder="Your Facebook Profile URL", autocomplete=True )}}
+                        {% if userSettings.facebookId.errors %}
+                        <ul class="errors">
+                            {% for error in userSettings.facebookId.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+        </div>
+        <div class="control-group">
+                
+                  <div class="controls">
+                        {{ userSettings.twitterId.label }}
+                        
+                        {{ userSettings.twitterId(id='twitter',class='form-control required ',placeholder="Your Twitter Profile URL", autocomplete=True )}}
+                        {% if userSettings.twitterId.errors %}
+                        <ul class="errors">
+                            {% for error in userSettings.twitterId.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+        </div>
+        </div>
+        <br><br>
+        <center>
+        <button id="usersettings" class="btn btn-primary" type="submit">Save Changes</button>
+        </center>
+
+    </fieldset>
+</form>
+
+{% block tail_script %}
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
+<script type="text/javascript">
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+$(document).ready(function () {
+
+
+
+$('#usersettings_form').validate({
+    rules: {
+        
+        
+    },
+    highlight: function (element) {
+        $(element).parent().css('border-color','red');
+        $(element).text('Please type some post').closest('.control-group').removeClass('success').addClass('error');
+        
+    },
+    success: function (element) {
+        element.addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
+    }
+
+    
+});
+
+});
+</script>
+{% endblock %}
+
 
 {% endblock %}

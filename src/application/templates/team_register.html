@@ -28,7 +28,7 @@
                   <div class="controls">
                                                 
                         <p>
-                        {{ form.teamName(id='teamName',class='form-control required ',placeholder="My Team Name", autocomplete=True , **{'data-bind': 'value: teamName'} )}}</p>
+                        {{ form.teamName(id='teamName',class='form-control required ',placeholder="Your Unique Team Name", autocomplete=True , **{'data-bind': 'value: teamName'} )}}</p>
                         {% if form.teamName.errors %}
                         <ul class="errors">
                             {% for error in form.teamName.errors %}

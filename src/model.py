@@ -151,7 +151,7 @@ class Event(Base,modelx.EventX):
     customizing to generate team based events performance reports and visualizations 
     '''
     name = ndb.StringProperty(indexed=True,required=True)
-    #logo = ndb.FileProperty(indexed=True)
+    logo = ndb.BlobProperty(indexed=True)
     #creator = ndb.StringProperty(indexed=True, required=True)
     creator = ndb.KeyProperty(kind="User", required=True)
     creator_id = ndb.IntegerProperty(required=True)
@@ -163,6 +163,11 @@ class Event(Base,modelx.EventX):
     description=ndb.StringProperty(default='')
     phone = ndb.IntegerProperty(default=0000000000)
     venue = ndb.StringProperty(required=True)
+    address = ndb.StringProperty()
+    city = ndb.StringProperty()
+    state= ndb.StringProperty()
+    country = ndb.StringProperty()
+    postal = ndb.IntegerProperty()
     sdate = ndb.DateProperty()
     edate = ndb.DateProperty()
     googleplus_page = ndb.StringProperty(default='')

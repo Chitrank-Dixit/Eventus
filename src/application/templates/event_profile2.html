@@ -93,7 +93,7 @@
     <div class="span5">
     	<div class="video" >
         <iframe width="410px" height="230px"
-        src="http://www.youtube.com/embed/XGSy3_Czz8k" alternate="nothing">
+        src="http://www.youtube.com/embed/RjoSN595F0E" alternate="nothing">
         </iframe>
     	
 
@@ -289,6 +289,8 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
 $(document).ready(function () {
     $('#inviteUser').dataTable();
+
+
 });
 
 
@@ -381,6 +383,8 @@ function CommentViewModel() {
         self.users(t);
     });
 
+    
+
     self.save = function() {
         return $.ajax({
             url: "{{ url_for('event_profile', ename = ename , eid = eid ) }}",
@@ -414,13 +418,7 @@ function CommentViewModel() {
 // Activates knockout.js
 ko.applyBindings(new CommentViewModel());
 
-$('#invite_to').typeahead({
-    source: function (process) {
-        return $.get('/users', function (data) {
-            return process(data.options);
-        });
-    }
-});  
+
 
 
 </script>

@@ -63,7 +63,7 @@ from flaskext import oauth
 import util
 import model
 import config
-from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm, TeamRegisterForm, InviteUserForm
+from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm, TeamRegisterForm, InviteUserForm, UserSettingsForm
 # Google API python Oauth 2.0
 import httplib2
 
@@ -387,8 +387,23 @@ def user_notifications(name,uid):
 @app.route('/edit_profile/<name>/<int:uid>', methods=['GET','POST'])
 @login_required
 def user_profile_settings(name,uid):
-
-  return render_template('edit_profile.html')
+  userSettings = UserSettingsForm(request.form)
+  user_is = model.User.query(model.User.name == name , model.User.id == uid)
+  uiid = ndb.Key(model.User, uid)
+  user = model.User.retrieve_one_by('name' and 'key' ,name and uiid)
+  if userSettings.validate_on_submit() and request.method == 'POST':
+    print "Scooby DOO"
+    user.location = userSettings.location.data
+    user.about_me = userSettings.about.data
+    user.googleplus_id = userSettings.google_plusId.data
+    user.facebook_id = userSettings.facebookId.data
+    user.twitter_id = userSettings.twitterId.data
+    user.put()
+    flash('Profile has been updated', category="info")
+    return redirect(url_for('user_profile_settings', name=name, uid=uid))
+  print user, user_is
+  
+  return render_template('edit_profile.html', userSettings=userSettings, user_is =user_is)
 
 
 
@@ -885,7 +900,8 @@ def get_all_users():
 '''
 @app.route('/events/<ename>/<int:eid>/', methods=['POST','GET'])
 @login_required
-def 
+def RegisterTeam():
+
 '''
 
 

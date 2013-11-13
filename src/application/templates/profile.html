@@ -29,6 +29,11 @@
         {% endif %}
         <h3>{{user.name}}</h3>
         <h5>{{user.email}}</h5>
+        <hr>
+        <h4>Find me on</h4>
+        <h5><a class="btn btn-google-plus btn-block" href="{{user.googleplus_id}}"><i class="icon-google-plus"> Google Plus</i></a></h5>
+        <h5><a class="btn btn-facebook btn-block" href="{{user.facebook_id}}"><i class="icon-facebook"> Facebook</i></a></h5>
+        <h5><a class="btn btn-twitter btn-block" href="{{user.twitter_id}}"><i class="icon-twitter"> Twitter</i></a></h5>
         {% if current_user.is_following(user) and current_user.has_follower(user) %}
 
         <a href="#send-message-modal" class="btn btn-info btn-lg" data-toggle="modal">Send Message</a>
