@@ -158,6 +158,7 @@ class Event(Base,modelx.EventX):
     #creator_id = ndb.KeyProperty(kind='User', required=True)
     event_type = ndb.StringProperty(required=True)
     teamSize = ndb.IntegerProperty()
+    noofTeams = ndb.IntegerProperty()
     manager = ndb.StringProperty()
     event_url = ndb.StringProperty()
     description=ndb.StringProperty(default='')

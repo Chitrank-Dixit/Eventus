@@ -743,7 +743,10 @@ def create_event():
   #use_db = ndb.Key(urlsafe=current_user.get_id())
   use_db = ndb.Key(model.User, current_user.name)
   #id_db = ndb.Key(model.User, current_user.id)
- 
+  teamsize = 0 ; noofteams = 0
+  if form.teamSize.data and form.noofTeams.data:
+    teamsize = int(form.teamSize.data)
+    noofteams = int(form.noofTeams.data)
    
   if request.method=='POST':
     start_date =  form.sdate.data
@@ -753,11 +756,18 @@ def create_event():
     event = model.Event(
         name = form.name.data,
         event_type = form.event_type.data,
+        teamSize = teamsize,
+        noofTeams = noofteams ,
         creator = use_db ,
         creator_id = current_user.id,
         event_url = form.event_url.data,
         description = form.description.data,
         venue= form.venue.data,
+        address = form.address.data,
+        city = form.city.data,
+        state = form.state.data,
+        country = form.country.data,
+        postal = int(form.postal.data),
         sdate= datetime(int(sdate_list[2]),int(sdate_list[0]),int(sdate_list[1])),
         edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
         access = form.access_type.data,
