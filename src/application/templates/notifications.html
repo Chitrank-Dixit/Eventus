@@ -1,11 +1,9 @@
-<title>Eventus | Events Never been so Interesting</title>
+<title>Notifcations | Events Never been so Interesting</title>
 {% extends "base.html" %}
 
 {% block content %}	    
 		<div class="container">
-        <img src="{{ url_for('static', filename='static/img/favicon.jpg') }}" />
-        <h1>Eventus - Events never been so Interesting</h1>
-        <p></p>
+               <p></p>
 			<center>
 			  {% if g.user.is_authenticated() %}    
           Welcome
@@ -15,8 +13,11 @@
         <center>
       </div>
       <div class="container">
-		
-		<!-- Add any content here like intro video , testimonials , how to use Help doc links, Support , who is using ETC -->		
+        {% for notif in notify %}
+		    <div class="alert alert-info">
+          {{ notif.invitation_message }}
+        </div>
+				{% endfor %}
 		      
       </div>
 

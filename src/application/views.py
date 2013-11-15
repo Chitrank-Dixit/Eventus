@@ -63,7 +63,7 @@ from flaskext import oauth
 import util
 import model
 import config
-from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm, TeamRegisterForm, InviteUserForm
+from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm, TeamRegisterForm, InviteUserForm, UserSettingsForm
 # Google API python Oauth 2.0
 import httplib2
 
@@ -274,6 +274,7 @@ def user_profile(name,uid):  #
       try:
         message.put()
         flash('Message Sent to %s'%(name), category='info')
+        redirect(url_for('user_profile', name=name, uid=uid))
       except CapabilityDisabledError:
         flash('Something went wrong Message not delievered', category='danger')
     
@@ -343,6 +344,7 @@ def follow_user(name,uid):
   try:
     follow.put()
     flash('%s you are now following %s' %(current_user.name,user.name), category='info')
+    redirect(url_for('user_profile', name=n, uid=ui))
   except CapabilityDisabledError:
     flash('Ahh Something Went wrong with the server',category = 'danger')  
   return redirect(url_for('user_profile',name = n, uid= ui, m=False))
@@ -373,14 +375,35 @@ def unfollow_user(name,uid):
         flash(u'App Engine Datastore is currently in read-only mode.', category='danger')
   return redirect(url_for('user_profile',name = n, uid= ui))
 
-
+@app.route('/notifications/<name>/<int:uid>', methods=['GET','POST'])
+@login_required
+def user_notifications(name,uid):
+  user_id = ndb.Key(model.User, current_user.id)
+  print user_id
+  notify = model.EventInvites.query(model.EventInvites.invited_to == current_user.name, model.EventInvites.user_id == user_id)
+  return render_template('notifications.html', notify=notify)
 
 
 @app.route('/edit_profile/<name>/<int:uid>', methods=['GET','POST'])
 @login_required
 def user_profile_settings(name,uid):
-
-  return render_template('edit_profile.html')
+  userSettings = UserSettingsForm(request.form)
+  user_is = model.User.query(model.User.name == name , model.User.id == uid)
+  uiid = ndb.Key(model.User, uid)
+  user = model.User.retrieve_one_by('name' and 'key' ,name and uiid)
+  if userSettings.validate_on_submit() and request.method == 'POST':
+    print "Scooby DOO"
+    user.location = userSettings.location.data
+    user.about_me = userSettings.about.data
+    user.googleplus_id = userSettings.google_plusId.data
+    user.facebook_id = userSettings.facebookId.data
+    user.twitter_id = userSettings.twitterId.data
+    user.put()
+    flash('Profile has been updated', category="info")
+    return redirect(url_for('user_profile_settings', name=name, uid=uid))
+  print user, user_is
+  
+  return render_template('edit_profile.html', userSettings=userSettings, user_is =user_is)
 
 
 
@@ -400,216 +423,7 @@ class admin(flask.views.MethodView):
 ################################################################################
 # Google + Signin
 ################################################################################
-'''
-APPLICATION_NAME = 'Uscore_Authentication'
 
-# See the simplekv documentation for details
-store = DictStore()
-
-
-# This will replace the app's session handling
-KVSessionExtension(store, app)
-
-
-# Update client_secrets.json with your Google API project information.
-# Do not change this assignment.
-CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
-SERVICE = build('plus', 'v1')
-
-
-@app.route('/signin/google_oauth/', methods=['GET'])
-def google_signin():
-  """Initialize a session for the current user, and render index.html."""
-  # Create a state token to prevent request forgery.
-  # Store it in the session for later validation.
-  state = ''.join(random.choice(string.ascii_uppercase + string.digits)
-                  for x in xrange(32))
-  session['state'] = state
-  # Set the Client ID, Token State, and Application Name in the HTML while
-  # serving it.
-  response = make_response(
-      render_template("index.html",
-                      CLIENT_ID=CLIENT_ID,
-                      STATE=state,
-                      APPLICATION_NAME=APPLICATION_NAME))
-  response.headers['Content-Type'] = 'text/html'
-  return response
-
-
-@app.route('/connect', methods=['POST'])
-def connect():
-  """Exchange the one-time authorization code for a token and
-  store the token in the session."""
-  # Ensure that the request is not a forgery and that the user sending
-  # this connect request is the expected user.
-  if request.args.get('state', '') != session['state']:
-    response = make_response(json.dumps('Invalid state parameter.'), 401)
-    response.headers['Content-Type'] = 'application/json'
-    return response
-  # Normally, the state is a one-time token; however, in this example,
-  # we want the user to be able to connect and disconnect
-  # without reloading the page.  Thus, for demonstration, we don't
-  # implement this best practice.
-  # del session['state']
-
-  code = request.data
-
-  try:
-    # Upgrade the authorization code into a credentials object
-    oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
-    oauth_flow.redirect_uri = 'postmessage'
-    credentials = your-gmail-username@gmail.comoauth_flow.step2_exchange(code)
-  except FlowExchangeError:
-    response = make_response(
-        json.dumps('Failed to upgrade the authorization code.'), 401)
-    response.headers['Content-Type'] = 'application/json'
-    return response
-
-  # An ID Token is a cryptographically-signed JSON object encoded in base 64.
-  # Normally, it is critical that you validate an ID Token before you use it,
-  # but since you are communicating directly with Google over an
-  # intermediary-free HTTPS channel and using your Client Secret to
-  # authenticate yourself to Google, you can be confident that the token you
-  # receive really comes from Google and is valid. If your server passes the
-  # ID Token to other components of your app, it is extremely important that
-  # the other components validate the token before using it.
-  gplus_id = credentials.id_token['sub']
-
-  stored_credentials = session.get('credentials')
-  stored_gplus_id = session.get('gplus_id')
-  if stored_credentials is not None and gplus_id == stored_gplus_id:
-    response = make_response(json.dumps('Current user is already connected.'),
-                             200)
-    response.headers['Content-Type'] = 'application/json'
-    return response
-  # Store the access token in the session for later use.
-  session['credentials'] = credentials
-  session['gplus_id'] = gplus_id
-  response = make_response(json.dumps('Successfully connected user.', 200))
-  response.headers['Content-Type'] = 'application/json'
-  return response
-
-
-@app.route('/disconnect', methods=['POST'])
-def disconnect():
-  """Revoke current user's token and reset their session."""
-
-  # Only disconnect a connected user.
-  credentials = session.get('credentials')
-  if credentials is None:
-    response = make_response(json.dumps('Current user not connected.'), 401)
-    response.headers['Content-Type'] = 'application/json'
-    return response
-
-  # Execute HTTP GET request to revoke current token.
-  access_token = credentials.access_token
-  url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
-  h = httplib2.Http()
-  result = h.request(url, 'GET')[0]
-
-  if result['status'] == '200':
-    # Reset the user's session.
-    del session['credentials']
-    response = make_response(json.dumps('Successfully disconnected.'), 200)
-    response.headers['Content-Type'] = 'application/json'
-    return response
-  else:
-    # For whatever reason, the given token was invalid.
-    response = make_response(
-        json.dumps('Failed to revoke token for given user.', 400))
-    response.headers['Content-Type'] = 'application/json'
-    return response
-
-
-@app.route('/people', methods=['GET'])
-def people():
-  """Get list of people user has shared with this app."""
-  credentials = session.get('credentials')
-  # Only fetch a list of people for connected users.
-  if credentials is None:
-    response = make_response(json.dumps('Current user not connected.'), 401)
-    response.headers['Content-Type'] = 'application/json'
-    return response
-  try:
-    # Create a new authorized API client.
-    http = httplib2.Http()
-    http = credentials.authorize(http)
-    # Get a list of people that this user has shared with this app.
-    google_request = SERVICE.people().list(userId='me', collection='visible')
-    result = google_request.execute(http=http)
-
-    response = make_response(json.dumps(result), 200)
-    response.headers['Content-Type'] = 'application/json'
-    return response
-  except AccessTokenRefreshError:
-    response = make_response(json.dumps('Failed to refresh access token.'), 500)
-    response.headers['Content-Type'] = 'application/json'
-    return response
-'''
-
-'''
-GOOGLE_CLIENT_ID = '1075048200759-5hunu03e087bha87d48874veh1rvr97f.apps.googleusercontent.com'
-GOOGLE_CLIENT_SECRET = 'SFxHRvAvD_w9JzfUhI8EiJrS'
-REDIRECT_URI = '/authorized'  # one of the Redirect URIs from Google APIs console
-
-goauth = oauth.OAuth()
-
-google = goauth.remote_app('Uscore_Authentication',
-                          base_url='https://www.google.com/accounts/',
-                          authorize_url='https://accounts.google.com/o/oauth2/auth',
-                          request_token_url=None,
-                          request_token_params={'scope': 'https://www.googleapis.com/auth/userinfo.email',
-                                                'response_type': 'code'},
-                          access_token_url='https://accounts.google.com/o/oauth2/token',
-                          access_token_method='POST',
-                          access_token_params={'grant_type': 'authorization_code'},
-                          consumer_key=GOOGLE_CLIENT_ID,
-                          consumer_secret=GOOGLE_CLIENT_SECRET)
-
-@app.route('/signin/google_oauth/')
-def google_signin():
-    access_token = session.get('access_token')
-    if access_token is None:
-        return redirect(url_for('login'))
-
-    access_token = access_token[0]
-    from urllib2 import Request, urlopen, URLError
-
-    headers = {'Authorization': 'OAuth '+access_token}
-    req = Request('https://www.googleapis.com/oauth2/v1/userinfo',
-                  None, headers)
-    try:
-        res = urlopen(req)
-    except URLError, e:
-        if e.code == 401:
-            # Unauthorized - bad token
-            session.pop('access_token', None)
-            return redirect(url_for('login'))
-        return res.read()
-
-    return res['email']
-
-
-@app.route('/login')
-def login():
-    callback=url_for('authorized', _external=True)
-    return google.authorize(callback=callback)
-
-
-
-@app.route(REDIRECT_URI)
-@google.authorized_handler
-def authorized(resp):
-    access_token = resp['access_token']
-    session['access_token'] = access_token, ''
-    return redirect(url_for('index'))
-
-
-@google.tokengetter
-def get_access_token():
-    return session.get('access_token')
-'''
 
 GOOGLE_CLIENT_ID = '284844940078.apps.googleusercontent.com'
 GOOGLE_CLIENT_SECRET = '1AXUm5M_1tYd13xNfn3MxDj6'
@@ -929,19 +743,33 @@ def create_event():
   #use_db = ndb.Key(urlsafe=current_user.get_id())
   use_db = ndb.Key(model.User, current_user.name)
   #id_db = ndb.Key(model.User, current_user.id)
- 
-
+  teamsize = 0 ; noofteams = 0
+  if form.teamSize.data and form.noofTeams.data:
+    teamsize = int(form.teamSize.data)
+    noofteams = int(form.noofTeams.data)
+   
   if request.method=='POST':
+    start_date =  form.sdate.data
+    sdate_list = start_date.split('/')
+    end_date = form.edate.data
+    edate_list = end_date.split('/')
     event = model.Event(
         name = form.name.data,
         event_type = form.event_type.data,
+        teamSize = teamsize,
+        noofTeams = noofteams ,
         creator = use_db ,
         creator_id = current_user.id,
         event_url = form.event_url.data,
         description = form.description.data,
         venue= form.venue.data,
-        sdate= form.sdate.data,
-        edate= form.edate.data, 
+        address = form.address.data,
+        city = form.city.data,
+        state = form.state.data,
+        country = form.country.data,
+        postal = int(form.postal.data),
+        sdate= datetime(int(sdate_list[2]),int(sdate_list[0]),int(sdate_list[1])),
+        edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
         access = form.access_type.data,
       )
     print current_user.name
@@ -960,7 +788,7 @@ def create_event():
 
 @app.route('/events/', methods=['POST','GET'])
 def trending_events():
-  events= model.Event.query()
+  events= model.Event.query() # model.Event.event_type == "Public"
   return render_template('trending_events.html', events=events)
 
 
@@ -998,24 +826,28 @@ def event_profile(ename,eid):
       return jsonify({ "name": name.string_id(),"uid": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
-  '''
-  elif request.method == 'POST' and invite_json:
+      
+  elif request.method == 'POST' and inviteform.validate_on_submit():
     print "HAHAHAHAH"
+    invitedUser = model.User.retrieve_one_by('name' and 'email', inviteform.invite_to.data and inviteform.invite_email.data)
+    print invitedUser
+    invitedUserKey = invitedUser.key
     invites = model.EventInvites(
-        user_id = user_id ,
+        user_id = invitedUserKey ,
         event_id = event_id ,
-        invited_to = name ,
-        invitation_message = request.json['invitationMessage']
+        invited_to = inviteform.invite_to.data ,
+        invitation_message = inviteform.invitation_message.data
       )
     try:
       invites.put()
       # flash('your comment has been posted', category='info')
       # mail.send(msg)
       # print name.string_id() , user_id.integer_id() , event_id
+      return redirect(url_for('index'))
       #return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
-  '''
+
   return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform)
 
 @app.route('/comments/<int:eid>',methods=['GET'])
@@ -1078,7 +910,8 @@ def get_all_users():
 '''
 @app.route('/events/<ename>/<int:eid>/', methods=['POST','GET'])
 @login_required
-def 
+def RegisterTeam():
+
 '''
 
 
@@ -1233,6 +1066,7 @@ def datae():
       sdate= datetime(2013,11,22),
       edate= datetime(2013,11,23),
       creator_id = 6395859138772992,
+      access = "Public",
     ) 
       
   event.put()

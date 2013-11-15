@@ -4,6 +4,7 @@
 {% block style_block %}
   <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-select.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-wysihtml5.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-switch.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', filename='bootstrap/css/datepicker.css') }}" rel="stylesheet">
 
 
@@ -90,7 +91,7 @@
                 <div class="control-group">
                     <div class="controls">
                         <label><h5>Type of Event</h5></label><br>
-                        {{ form.event_type(id='evtype', class='selectpicker required', placeholder="Event Name", autocomplete=True )}}
+                        {{ form.event_type(id='evtype', class='selectpicker required', placeholder="Event Name", autocomplete=True , **{'data-bind': 'value: eventType', 'data-required' : 'true'} )}}
                         {% if form.event_type.errors %}
                         <ul class="errors">
                             {% for error in form.event_type.errors %}
@@ -103,6 +104,43 @@
                     </div>
                 <!-- type of event control-group ended below -->
                 </div>
+
+                
+                <div data-bind="visible: nTeams, valueUpdate: 'afterkeydown' " class="control-group">
+                    <div class="controls">
+                        <label><h5>No of Teams</h5></label><br>
+                        {{ form.noofTeams(id='evtype', class='selectpicker', placeholder="No of Teams", autocomplete=True )}}
+                        {% if form.noofTeams.errors %}
+                        <ul class="errors">
+                            {% for error in form.noofTeams.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                    <!-- type of event controls class ended below -->
+                    </div>
+                <!-- type of event control-group ended below -->
+                </div>
+
+                <div data-bind="visible: nTeams, valueUpdate: 'afterkeydown'" class="control-group">
+                    <div class="controls">
+                        <label><h5>Team Size</h5></label><br>
+                        {{ form.teamSize(id='teamSize', class='selectpicker', placeholder="No of Team Members", autocomplete=True )}}
+                        {% if form.teamSize.errors %}
+                        <ul class="errors">
+                            {% for error in form.teamSize.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                    <!-- type of event controls class ended below -->
+                    </div>
+                <!-- type of event control-group ended below -->
+                </div>
+
+                
 
                 <!-- google plus url control started -->
                 <div class="control-group">
@@ -146,8 +184,15 @@
                         http://www.eyecon.ro/bootstrap-datepicker/
                          -->
                         <label><h4>  From </h4></label><br>
-
-                        <input type="text" id="start_date" >
+                        {{ form.sdate(id='start_date',class='form-control required ', autocomplete=True )}}
+                        {% if form.sdate.errors %}
+                        <ul class="errors">
+                            {% for error in form.sdate.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        
                         
 
                       
@@ -156,7 +201,15 @@
                 <div class="control-group">
                     <div class="controls">
                         <label><h4> To </h4></label><br>
-                        <input type="text" id = "end_date" >
+                        {{ form.edate(id='end_date',class='form-control required ', autocomplete=True )}}
+                        {% if form.edate.errors %}
+                        <ul class="errors">
+                            {% for error in form.edate.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        
                             
                     </div>
                 </div>
@@ -164,7 +217,7 @@
                 <div class="control-group">
                     <div class="controls">
                         <label><h4>Upload logo</h4></label><br>
-                        <input type="text"> <button type="upload" name ="logoUpload">Upload</button>
+                        <input type="text"> <button class="btn" type="upload" name ="logoUpload">Upload</button>
                         
 
                     <!-- upload logo controls class end below-->
@@ -174,7 +227,7 @@
                 </div>
                 
                 <!-- create event button -->
-                <div class="control-group">
+                <div class="form-actions">
                         <div class="controls">
                             <button type="submit" id="event_submit" value"create_event" class="btn btn-primary" data-loading-text="Creating Event..." >Create Event</button><br><br>
                         
@@ -221,10 +274,10 @@
             <div class="control-group">
                 <div class="controls">
                     <label><h4>Address </h4></label><br>
-                    {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}
-                    {% if form.venue.errors %}
+                    {{ form.address(id='eaddress',class='form-control required ',placeholder="Address of the Venue", autocomplete=True )}}
+                    {% if form.address.errors %}
                     <ul class="errors">
-                        {% for error in form.venue.errors %}
+                        {% for error in form.address.errors %}
                         <li>{{ error }}</li>
                         {% endfor %}
                     </ul>
@@ -239,10 +292,10 @@
             <div class="control-group">
                 <div class="controls">
                     <label><h4>City </h4></label><br>
-                    {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}
-                    {% if form.venue.errors %}
+                    {{ form.city(id='ecity',class='form-control required ',placeholder="City Name", autocomplete=True )}}
+                    {% if form.city.errors %}
                     <ul class="errors">
-                        {% for error in form.venue.errors %}
+                        {% for error in form.city.errors %}
                         <li>{{ error }}</li>
                         {% endfor %}
                     </ul>
@@ -257,10 +310,10 @@
             <div class="control-group">
                 <div class="controls">
                     <label><h4>State</h4></label><br>
-                    {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}
-                    {% if form.venue.errors %}
+                    {{ form.state(id='estate',class='form-control required ',placeholder="State", autocomplete=True )}}
+                    {% if form.state.errors %}
                     <ul class="errors">
-                        {% for error in form.venue.errors %}
+                        {% for error in form.state.errors %}
                         <li>{{ error }}</li>
                         {% endfor %}
                     </ul>
@@ -275,10 +328,10 @@
             <div class="control-group">
                 <div class="controls">
                     <label><h4>Country</h4></label><br>
-                    {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}
-                    {% if form.venue.errors %}
+                    {{ form.country(id='ecountry',class='form-control required ',placeholder="Country Name", autocomplete=True )}}
+                    {% if form.country.errors %}
                     <ul class="errors">
-                        {% for error in form.venue.errors %}
+                        {% for error in form.country.errors %}
                         <li>{{ error }}</li>
                         {% endfor %}
                     </ul>
@@ -293,10 +346,10 @@
             <div class="control-group">
                 <div class="controls">
                     <label><h4>Postal Code</h4></label><br>
-                    {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}
-                    {% if form.venue.errors %}
+                    {{ form.postal(id='epostal',class='form-control required ',placeholder="Postal Code", autocomplete=True )}}
+                    {% if form.postal.errors %}
                     <ul class="errors">
-                        {% for error in form.venue.errors %}
+                        {% for error in form.postal.errors %}
                         <li>{{ error }}</li>
                         {% endfor %}
                     </ul>
@@ -308,8 +361,24 @@
             <!-- postal code control-group end below-->
             </div>
 
+            <div class="control-group" >
+                <div class="controls">
+                    <label><h4>Access Type</h4></label><br>
+                    {{ form.access_type(id='eaccess',class='form-control required ',placeholder="Postal Code", autocomplete=True )}}
+                    {% if form.access_type.errors %}
+                    <ul class="errors">
+                        {% for error in form.access_type.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                <!-- poastal code controls class end below-->
+                </div>
 
+            <!-- postal code control-group end below-->
+            </div>
 
+            
 
             <!-- class venue-form div ends below-->
             </div>
@@ -330,55 +399,15 @@
 <script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-select.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-switch.min.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-datepicker.js') }}"></script>
 
 <script type="text/javascript">
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
  // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
 
-
 // Enabling Select Picker custom select fields from Bootstrap
 $('.selectpicker').selectpicker();
-
-function AppViewModel() {
-    this.bodyte = ko.observable();
-    this.bodytext = ko.computed(function(){
-        return this.bodyte();
-
-    }, this);
-    
-}
-
-// Activates knockout.js
-ko.applyBindings(new AppViewModel());
-
-/*
-var FormHelpers = {
-            validate: function (form, evt) {
-                // Form validation for modal dialog
-                var postbody = form.find('#body').val();
-                
-                if (!(postbody)) {
-                    evt.preventDefault();
-                    Utils.renderFieldErrorTooltip('#body', 'Name is required', 'right');
-                }
-                
-            },
-            init: function () {
-                var self = this;
-                var example_form = $('#new_postform');
-                example_form.on('submit', function (evt) {
-                    self.validate(example_form, evt)
-                });
-            }
-        };
-        $(document).ready(function() {
-            FormHelpers.init();
-        });
-
-
-
-*/
 
 /* datepicker validation here from  "" http://www.eyecon.ro/bootstrap-datepicker/ ""  */
 
@@ -415,6 +444,7 @@ $(document).ready(function () {
 
 $('.dpkr').datepicker(); 
 
+
 $('#create_eventform').validate({
     rules: {
         
@@ -426,14 +456,61 @@ $('#create_eventform').validate({
         
     },
     success: function (element) {
-        element.text('OK!').addClass('valid')
+        element.text('').addClass('valid')
             .closest('.control-group').removeClass('error').addClass('success');
     }
 
     
 });
 
+
+
+    
+
 });
+
+function AppViewModel() {
+    this.eventType = ko.observable();
+    this.nTeams = ko.computed(function(){
+        return this.eventType() == 'Team Event';
+
+    }, this);
+    
+}
+
+// Activates knockout.js
+ko.applyBindings(new AppViewModel());
+
+/*
+var FormHelpers = {
+            validate: function (form, evt) {
+                // Form validation for modal dialog
+                var postbody = form.find('#body').val();
+                
+                if (!(postbody)) {
+                    evt.preventDefault();
+                    Utils.renderFieldErrorTooltip('#body', 'Name is required', 'right');
+                }
+                
+            },
+            init: function () {
+                var self = this;
+                var example_form = $('#new_postform');
+                example_form.on('submit', function (evt) {
+                    self.validate(example_form, evt)
+                });
+            }
+        };
+        $(document).ready(function() {
+            FormHelpers.init();
+        });
+
+
+
+*/
+
+
+
 
 
 </script>

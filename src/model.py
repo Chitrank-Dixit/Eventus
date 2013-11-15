@@ -151,18 +151,24 @@ class Event(Base,modelx.EventX):
     customizing to generate team based events performance reports and visualizations 
     '''
     name = ndb.StringProperty(indexed=True,required=True)
-    #logo = ndb.FileProperty(indexed=True)
+    logo = ndb.BlobProperty(indexed=True)
     #creator = ndb.StringProperty(indexed=True, required=True)
     creator = ndb.KeyProperty(kind="User", required=True)
     creator_id = ndb.IntegerProperty(required=True)
     #creator_id = ndb.KeyProperty(kind='User', required=True)
     event_type = ndb.StringProperty(required=True)
     teamSize = ndb.IntegerProperty()
+    noofTeams = ndb.IntegerProperty()
     manager = ndb.StringProperty()
     event_url = ndb.StringProperty()
     description=ndb.StringProperty(default='')
     phone = ndb.IntegerProperty(default=0000000000)
     venue = ndb.StringProperty(required=True)
+    address = ndb.StringProperty()
+    city = ndb.StringProperty()
+    state= ndb.StringProperty()
+    country = ndb.StringProperty()
+    postal = ndb.IntegerProperty()
     sdate = ndb.DateProperty()
     edate = ndb.DateProperty()
     googleplus_page = ndb.StringProperty(default='')
@@ -196,7 +202,7 @@ class EventComments(Base, modelx.EventX):
 class EventInvites(Base, modelx.EventX):
     user_id = ndb.KeyProperty(kind="User", required=True)
     event_id = ndb.KeyProperty(kind="Event", required=True)
-    invited_to = ndb.KeyProperty(kind="Event", required=True)
+    invited_to = ndb.StringProperty(required=True)
     invitation_message = ndb.StringProperty(required=True)
 
 # Team Register Model yet to be made

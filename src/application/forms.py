@@ -52,13 +52,20 @@ class CreateEventForm(wtf.Form):
     # logo = wtf.FileField('logo', )
     #creator = wtf.TextField('creator', validators=[validators.Required()])
     # manager = wtf.TextField('manager', default='')
-    event_type = wtf.SelectField('Event Type', choices=[('Team Event','Team Event'), ('Conference and Workshop','Conference and Workshop'), ('Party','Party')], validators=[validators.Required()])
+    event_type = wtf.SelectField('Event Type', choices=[('Party','Party'),('Team Event','Team Event'), ('Conference and Workshop','Conference and Workshop') ], validators=[validators.Required()])
     event_url = wtf.html5.URLField('URL')
+    teamSize = wtf.TextField()
+    noofTeams = wtf.TextField()
     description = wtf.TextAreaField('Description',default='')
     venue = wtf.TextField('Where', validators=[validators.Required()])
-    sdate= wtf.html5.DateField('From')
-    edate= wtf.html5.DateField('To')
-    access_type = wtf.SelectField('Access Type', choices=[('Public','Public'), ('Private','Private')], validators=[validators.Required()])
+    address = wtf.TextField('Address', validators=[validators.Required()])
+    city = wtf.TextField('City', validators=[validators.Required()])
+    state = wtf.TextField('State', validators=[validators.Required()])
+    country = wtf.TextField('Country',  validators=[validators.Required()])
+    postal = wtf.TextField("Postal Code")
+    sdate= wtf.TextField('From')
+    edate= wtf.TextField('To')
+    access_type = wtf.SelectField('Access Type', choices=[('Public','Public'), ('Private','Private') ], validators=[validators.Required()])
     
     #phone = wtf.IntegerField('phone', default= 0000000000)
     #googleplus_page = wtf.TextField('googleplus_page', default='')
@@ -69,12 +76,12 @@ class CreateEventForm(wtf.Form):
     #private= wtf.BooleanField('private',default=False)
 
 
-class SettingsForm(wtf.Form):
+class UserSettingsForm(wtf.Form):
     location = wtf.TextField('Location')
     about = wtf.TextAreaField('About')
-    google_plus = wtf.TextField('Google +')
-    facebook = wtf.TextField('Facebook')
-    twitter = wtf.TextField('Twitter')
+    google_plusId = wtf.html5.URLField('Google +')
+    facebookId = wtf.html5.URLField('Facebook')
+    twitterId = wtf.html5.URLField('Twitter')
 
 
 
@@ -94,6 +101,7 @@ class CommentForm(wtf.Form):
     
 class InviteUserForm(wtf.Form):
     invite_to = wtf.TextField('Invite User', validators=[validators.Required()])
+    invite_email = wtf.html5.EmailField('Email', validators=[validators.Required()])
     invitation_message =  wtf.TextAreaField('Message', validators=[validators.Required()])
 
 
