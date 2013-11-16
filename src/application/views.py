@@ -788,7 +788,7 @@ def create_event():
 
 @app.route('/events/', methods=['POST','GET'])
 def trending_events():
-  events= model.Event.query(model.Event.event_type == "Public")
+  events= model.Event.query(model.Event.access == "Public")
   return render_template('trending_events.html', events=events)
 
 
