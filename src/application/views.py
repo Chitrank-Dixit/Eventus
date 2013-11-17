@@ -779,6 +779,14 @@ def create_event():
       #msg = Message("Welcome to Eventus <br><br> You have successfully registered to Eventus, Please note down your credentials <br><br> Username: %s <br> Password: %s"  % form.username.data % form.password.data,sender=config.ADMINS[0],recipients=[form.email.data])
       flash(u'Event %s has been created.' % form.name.data, category='success')
       #mail.send(msg)
+     
+      # eventID = model.Event.query()
+      # eventKey = ndb.Key(model.Event, form.name.data )
+      
+
+      # print eventKey
+      
+      #return redirect(url_for('event_profile', ename=form.name.data,eid=itrCid.integer_id()))
       return redirect(url_for('index'))
     except CapabilityDisabledError:
       flash(u'App Engine Datastore is currently in read-only mode.', category='info')
