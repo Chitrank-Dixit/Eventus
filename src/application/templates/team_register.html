@@ -59,30 +59,28 @@
                     
             </div>            
 
-            <div class="control-group">
-                <label>Member</label>
-                  <div class="controls">
-                                                
-                        <p>
-                        {{ form.captain(id='member',class='form-control required ',placeholder="Name of the Captain", autocomplete=True , **{'data-bind': 'value: member } )}}</p>
-                        {% if form.captain.errors %}
-                        <ul class="errors">
-                            {% for error in form.captain.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </div>
-
-                    
-            </div>
-
-            <label>Members({{events.teamSize}}) <button class="btn btn-default" data-bind="click: addMember, enable: members().length  < 17 ">Add Member</button></label>
-
             
+
+            <label>Members(<span data-bind="text: members().length"></span>) <button class="btn btn-default" data-bind="click: addMember, enable: members().length  < {{events.teamSize }} ">Add Member</button></label>
+            <table>
+                <thead>
+                    <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th></th>
+                    </tr>
+                </thead>
+            <tbody data-bind="foreach: members">
+                <tr>
+                <td><input type="text" data-bind="value: member" /></td>
+                <td><input type="text" data-bind="value: email" /></td>
+                <td><a href="#" data-bind="click: $root.removeMember">Remove</a></td>
+                </tr>
+            </tbody>
+            </table>
             <div class="control-group form-actions">
                     <div class="controls" >
-                        <br><input type="submit" id="register" onClick="" name="teamName" value"teamName" class="btn btn-primary" /><br><br>
+                        <br><button type="submit" id="register" onClick="" name="teamName" value"teamName" class="btn btn-primary">Add Team</button><br><br>
                     
                     </div>
             </div>
@@ -98,7 +96,7 @@
 {% block tail_script %}
 <script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script> 
 <script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script> 
-<!-- <script src="{{ url_for('static', filename='bootstrap/js/knockout.validate.js') }}"></script> -->
+<script src="{{ url_for('static', filename='bootstrap/js/knockout.validate.js') }}"></script>
 <script type="text/javascript">
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
  // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
@@ -127,9 +125,14 @@ $('#new_register').validate({
 function Team(data) {
     this.teamName = ko.observable(data.teamName);
     this.captain = ko.observable(data.captain);
-    this.member = ko.observable(data.memberName);
-    
-    
+    // this.member = ko.observable(data.memberName);
+}
+
+function Member(data, name, email) {
+    var self = this;
+
+    self.member = ko.observable(name);
+    self.email = ko.observable(email);
 }
 
 
@@ -140,12 +143,14 @@ function TeamViewModel() {
     self.teamName = ko.observable();
     self.captain = ko.observable();
     self.member = ko.observable();
+    self.email = ko.observable();
     self.members = ko.observableArray([]);
     console.log(self.teamName);
 
     
        
     self.addTeam = function() {
+
         self.save();
         self.teamName("");
         self.members([]);
@@ -153,11 +158,13 @@ function TeamViewModel() {
     };
 
     self.addMember = function() { 
-        self.seats.push(self.member());
+        self.members.push(new Member(self.member(), self.email()));
 
     };
 
-    self.nMembers = function
+    self.removeMember = function(member) { self.members.remove(member) }
+
+    
 
     $.getJSON('/teams', function(teamModels) {
         var t = $.map(teamModels.teams, function(item) {
@@ -188,6 +195,7 @@ function TeamViewModel() {
         });
     };
 }
+
 
 
 ko.applyBindings(new TeamViewModel());
