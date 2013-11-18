@@ -925,6 +925,13 @@ def RegisterTeam(ename, eid):
   form = TeamRegisterForm(request.form)
   event_id = ndb.Key(model.Event, eid)
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+  if request.method == 'POST':
+    team = model.TeamRegister(
+        teamName = form.teamName.data,
+        captain = form.captain.data,
+
+      )
+
   return render_template('team_register.html', ename=ename , eid=eid, form=form, captain=current_user.name, events= events)
 
 

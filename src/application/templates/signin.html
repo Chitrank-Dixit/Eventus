@@ -10,7 +10,7 @@
 	 
 			<h3><center>Sign in Eventus</center></h3><br><br>
 			
-		<div class="span6">
+		<div class="span4">
 			
   			<form name="signin" id="signin_form" class="navbar-form form-inline" action="{{ url_for('signin') }}" method="post" accept-charset="utf-8">
   				{{ form.csrf_token }}
@@ -19,9 +19,10 @@
             {% from "macro/_formhelpers.html" import render_field %}
             
             <div class="control-group">
+              <label>{{ form.name.label }}</label>
               <div class="controls">
-                <label>{{ form.name.label }}</label>
-                {{ form.name(id='name',class='form-control required', placeholder="Enter your name") }}
+                
+                {{ form.name(id='name',class='form-control required span4', placeholder="Enter your name") }}
                 {% if form.name.errors %}
                 <ul class="errors">
                   {% for error in form.name.errors %}
@@ -32,9 +33,10 @@
               </div> 
             </div>
             <div class="control-group">
+              <label>{{ form.password.label }}</label>
               <div class="controls">
-                <label>{{ form.password.label }}</label>
-                {{ form.password(id='password',class='form-control required',placeholder="Enter Password") }}
+                
+                {{ form.password(id='password',class='form-control required span4',placeholder="Enter Password") }}
                 {% if form.password.errors %}
                 <ul class="errors">
                   {% for error in form.password.errors %}
@@ -74,24 +76,25 @@
     				
 		</div>
     
-		<div class="span1">
+		<div class="span3">
+
     </div>
-		<div class="span5">
+		<div class="span5 pull-right">
 			<div class="row">
 			
-        <a class="btn btn-google-plus" href="/signin/google/">
+        <a class="btn btn-large btn-google-plus" href="/signin/google/">
         		<i class="icon-large icon-google-plus"></i> 
         			Sign in with Google
       	</a><br><br>
-      	<a class="btn btn-google-plus" href="/signin/googleoauth/">
+      	<a class="btn btn-large btn-google-plus" href="/signin/googleoauth/">
         		<i class="icon-large icon-google-plus"></i> 
         			Sign in with Google plus
       	</a><br><br>
-			<a class="btn btn-facebook" href="/signin/facebook/">
+			<a class="btn btn-large btn-facebook" href="/signin/facebook/">
         		<i class="icon-large icon-facebook"></i>
         			Sign in with Facebook
       	</a><br><br>
-      	<a class="btn btn-twitter" href="/signin/twitter/">
+      	<a class="btn btn-large btn-twitter" href="/signin/twitter/">
         		<i class="icon-large icon-twitter"></i> 
         			Sign in with Twitter
       	</a>	

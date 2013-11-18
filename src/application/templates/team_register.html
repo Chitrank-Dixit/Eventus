@@ -16,7 +16,7 @@
     
         
     <div class="content">
-    <form id="new_register" data-bind="submit: addTeam" class="navbar-form form-inline" method="post" >
+    <form id="new_register" action="{{ url_for('RegisterTeam', ename=ename, eid=eid ) }}" class="navbar-form form-inline" method="post" >
     {{ form.csrf_token }}
         <fieldset>
           {{ form.hidden_tag() }}
@@ -41,27 +41,13 @@
                     
             </div>
 
-            <div class="control-group">
-                <label>Captain</label>
-                  <div class="controls">
-                                                
-                        <p>
-                        {{ form.captain(id='captain',class='form-control required ',placeholder="Name of the Captain", autocomplete=True , **{'data-bind': 'value: captain'} )}}</p>
-                        {% if form.captain.errors %}
-                        <ul class="errors">
-                            {% for error in form.captain.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </div>
-
-                    
-            </div>            
+                        
 
             
 
             <label>Members(<span data-bind="text: members().length"></span>) <button class="btn btn-default" data-bind="click: addMember, enable: members().length  < {{events.teamSize }} ">Add Member</button></label>
+            <div class="control-group">
+                <div class="controls" >
             <table>
                 <thead>
                     <tr>
@@ -70,6 +56,7 @@
                     <th></th>
                     </tr>
                 </thead>
+
             <tbody data-bind="foreach: members">
                 <tr>
                 <td><input type="text" data-bind="value: member" /></td>
@@ -78,6 +65,8 @@
                 </tr>
             </tbody>
             </table>
+                </div>
+            </div>
             <div class="control-group form-actions">
                     <div class="controls" >
                         <br><button type="submit" id="register" onClick="" name="teamName" value"teamName" class="btn btn-primary">Add Team</button><br><br>
@@ -145,6 +134,7 @@ function TeamViewModel() {
     self.member = ko.observable();
     self.email = ko.observable();
     self.members = ko.observableArray([]);
+    self.members.push(new Member(self.captain(), self.email()))
     console.log(self.teamName);
 
     

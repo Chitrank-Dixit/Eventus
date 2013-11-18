@@ -208,9 +208,10 @@ class EventInvites(Base, modelx.EventX):
 # Team Register Model yet to be made
 class TeamRegister(Base, modelx.TeamRegisterX):
     teamName = ndb.StringProperty("Team Name", required=True)
-    captain = ndb.KeyProperty(kind="User", required= True)
+    captain = ndb.KeyProperty(kind="User")
 
 class TeamMembers(Base, modelx.TeamMembersX):
+    teamId = ndb.KeyProperty(kind="TeamRegister", required=True)
     memberName = ndb.KeyProperty(kind='User')
     memberId = ndb.KeyProperty(kind='User')
 

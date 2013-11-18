@@ -9,17 +9,17 @@
 	<div class="row">
 	       
       <h3><center>Sign Up Eventus</center></h3><br><br>
-		<div class="span6 well-inverse">
+		<div class="span5">
   			<form name="signup" id="signup_form" class="navbar-form form-inline" action="{{ url_for('signup') }}" method="post" accept-charset="utf-8">
 				{{ form.csrf_token }}
 				<fieldset> 
                 {{ form.hidden_tag() }}
                 {% from "macro/_formhelpers.html" import render_field %}
                 <div class="control-group">
-                    <!-- <div class="control-label">{{ form.name.label }}</div> -->
+                    {{ form.name.label }}
                     <div class="controls">
-                        {{ form.name.label }}
-                        {{ form.name(id='name',class='form-control required',placeholder="Enter your Name") }}
+                        
+                        {{ form.name(id='name',class='form-control required span5',placeholder="Enter your Name") }}
                         
                         {% if form.name.errors %}
                         <ul class="errors">
@@ -33,10 +33,10 @@
                 
                 
                 <div class="control-group">
-                    <!--<div class="control-label">{{ form.email.label }}</div> -->
+                    {{ form.email.label }}
                     <div class="controls">
-                        {{ form.email.label }}
-                        {{ form.email(id='email',class='form-control required',placeholder="Enter your Email") }}
+                        
+                        {{ form.email(id='email',class='form-control required span5',placeholder="Enter your Email") }}
                         {% if form.email.errors %}
                         <ul class="errors">
                             {% for error in form.email.errors %}
@@ -47,10 +47,10 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <!-- <div class="control-label">{{ form.password.label }}</div> -->
+                    {{ form.password.label }}
                     <div class="controls">
-                        {{ form.password.label }}
-                        {{ form.password(id='password',class='form-control required',placeholder="Enter Password") }}
+                        
+                        {{ form.password(id='password',class='form-control required span5',placeholder="Enter Password") }}
                         {% if form.password.errors %}
                         <ul class="errors">
                             {% for error in form.password.errors %}
@@ -61,10 +61,10 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <!-- <div class="control-label">{{ form.confirm.label }}</div> -->
+                    {{ form.confirm.label }}
                     <div class="controls">
-                        {{ form.confirm.label }}
-                        {{ form.confirm(id='confirm',class='form-control required',placeholder="Repeat Password") }}
+                        
+                        {{ form.confirm(id='confirm',class='form-control required span5',placeholder="Repeat Password") }}
                         {% if form.confirm.errors %}
                         <ul class="errors">
                             {% for error in form.confirm.errors %}
@@ -77,7 +77,7 @@
                
                <div class="control-group">
                     <div class="controls">
-                        {{ render_field(form.recaptcha, class="form-control") }}
+                        {{ render_field(form.recaptcha, class="form-control span5") }}
                         
                     </div>
               </div>
@@ -102,20 +102,20 @@
 		</div>
 		<div class="span1">
 		</div>
-		<div class="span5 well-inverse">
-			<a class="btn btn-google-plus" href="/signin/google/">
+		<div class="span5 pull-right">
+			<a class="btn btn-large btn-google-plus" href="/signin/google/">
         		<i class="icon icon-google-plus"></i>
         			Sign in with Google
       	</a><br><br>	
-      	<a class="btn btn-google-plus" href="/signin/googleoauth/">
+      	<a class="btn btn-large btn-google-plus" href="/signin/googleoauth/">
         		<i class="icon icon-google-plus"></i>
         			Sign in with Google plus
       	</a><br><br>	
-			<a class="btn btn-facebook" href="/signin/facebook/">
+			<a class="btn btn-large btn-facebook" href="/signin/facebook/">
         		<i class="icon icon-facebook"></i>
         			Sign in with Facebook
       	</a><br><br>	
-      	<a class="btn btn-twitter" href="/signin/twitter/">
+      	<a class="btn btn-large btn-twitter" href="/signin/twitter/">
         		<i class="icon icon-twitter"></i>
         			Sign in with Twitter
       	</a><br><br>	
