@@ -107,6 +107,7 @@ class InviteUserForm(wtf.Form):
 
 class TeamRegisterForm(wtf.Form):
     teamName = wtf.TextField('Team Name', validators=[validators.Required()])
+    captain = wtf.TextField('Captain', validators=[validators.Required()])
 '''     
 No need to make a model that is already made
 

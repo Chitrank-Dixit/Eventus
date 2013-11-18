@@ -32,7 +32,7 @@ from google.appengine.api import mail
 import logging
 import json
 import random
-import string
+import string, time
 from apiclient.discovery import build
 from flask import make_response, request, render_template, flash, url_for, redirect, session,g, jsonify
 # from flask.ext import 
@@ -772,14 +772,24 @@ def create_event():
         edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
         access = form.access_type.data,
       )
-    print current_user.name
+    event_name =  form.name.data
     try:
-      event.put()
+      record = event.put()
+      print "records is:------",record
+      eid=record.integer_id()
+      event_key = ndb.Key(model.Event, eid)
+      print "Key is:",event_key 
+      time.sleep(4)
       #signup_id = .key.id()
       #msg = Message("Welcome to Eventus <br><br> You have successfully registered to Eventus, Please note down your credentials <br><br> Username: %s <br> Password: %s"  % form.username.data % form.password.data,sender=config.ADMINS[0],recipients=[form.email.data])
       flash(u'Event %s has been created.' % form.name.data, category='success')
+
       #mail.send(msg)
-      return redirect(url_for('index'))
+      #current_event = model.Event.retrieve_one_by('name' and 'key' , event_name and event_key )
+      # return redirect(url_for('index'))
+      #print "Hiii",current_event
+
+      return redirect(url_for('event_profile', ename=event_name , eid=record.integer_id()))
     except CapabilityDisabledError:
       flash(u'App Engine Datastore is currently in read-only mode.', category='info')
       return redirect(url_for('index'))
@@ -795,6 +805,7 @@ def trending_events():
 @app.route('/events/<ename>/<int:eid>/', methods=['GET', 'POST'])
 def event_profile(ename,eid):
   event_id = ndb.Key(model.Event, eid)
+  print event_id
   print "TESTING THINGS",eid
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
   # events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
@@ -803,7 +814,7 @@ def event_profile(ename,eid):
   name = ndb.Key(model.User, current_user.name)
   # if comments been posted
   comment_json = request.json
-
+  # print "Here is the list",events.name
   # if user been invited
   invite_json = request.json
 
@@ -847,7 +858,7 @@ def event_profile(ename,eid):
       #return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
-
+    print "Here is the list",events
   return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform)
 
 @app.route('/comments/<int:eid>',methods=['GET'])
@@ -907,12 +918,16 @@ def get_all_users():
   print "Users--------",users
   return jsonify(users=users)  #(all_users =all_users)
 # Event_Type = Team Event Specifying the Teams
-'''
-@app.route('/events/<ename>/<int:eid>/', methods=['POST','GET'])
-@login_required
-def RegisterTeam():
 
-'''
+@app.route('/events/<ename>/<int:eid>/register_team', methods=['POST','GET'])
+@login_required
+def RegisterTeam(ename, eid):
+  form = TeamRegisterForm(request.form)
+  event_id = ndb.Key(model.Event, eid)
+  events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+  return render_template('team_register.html', ename=ename , eid=eid, form=form, captain=current_user.name, events= events)
+
+
 
 
 

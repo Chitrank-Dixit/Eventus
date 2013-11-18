@@ -109,7 +109,7 @@
 					<div class="well-inverse">
 
 			        {% if events.event_type == 'Team Event' %}
-              <a class="btn btn-sidebar btn-block" >Register Your Team</a>
+              <a class="btn btn-sidebar btn-block" href="{{ url_for('RegisterTeam', ename=ename,eid=eid )}}" >Register Your Team</a>
               
 			        <a class="btn btn-sidebar btn-block" href="" >Team Settings</a>
 			        

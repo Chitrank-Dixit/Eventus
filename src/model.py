@@ -210,6 +210,10 @@ class TeamRegister(Base, modelx.TeamRegisterX):
     teamName = ndb.StringProperty("Team Name", required=True)
     captain = ndb.KeyProperty(kind="User", required= True)
 
+class TeamMembers(Base, modelx.TeamMembersX):
+    memberName = ndb.KeyProperty(kind='User')
+    memberId = ndb.KeyProperty(kind='User')
+
 '''
 
 poster_obj = ndb.get(post_key)
