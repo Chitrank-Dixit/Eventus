@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% block title %} Register Your Team | {{ename}} | Eventus {% endblock %}
+{% block style_block %}
+  
+  <style type="text/css">
+    .background {
+       background-color: #F3F3F3;
+      }
+    p.error {
+        color: red;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+    
+        
+    <div class="content">
+    <form id="add_members" action="{{ url_for('add_members', ename=ename, eid=eid, teamName = teamName, tid=tid ) }}" data-bind="submit: addMembers" class="navbar-form form-inline" method="post" >
+    
+        <fieldset>
+          
+            
+
+            {% from "macro/_formhelpers.html" import render_field %}
+                               
+        
+
+            <label>Members(<span data-bind="text: members().length"></span>) <button class="btn btn-default" data-bind="click: addMember, enable: members().length  < {{events.teamSize }} ">Add Member</button></label>
+            <div class="control-group">
+                <div class="controls" >
+            <table>
+                <thead>
+                    <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th></th>
+                    </tr>
+                </thead>
+
+            <tbody data-bind="foreach: members">
+                <tr>
+                <td><input type="text" data-bind="value: member" /></td>
+                <td><input type="text" data-bind="value: email" /></td>
+                <td><a href="#" data-bind="click: $root.removeMember">Remove</a></td>
+                </tr>
+            </tbody>
+            </table>
+                </div>
+            </div>
+            <div class="control-group form-actions">
+                    <div class="controls" >
+                        <br><button type="submit" id="register" onClick="" name="teamName" value"teamName" class="btn btn-primary">Add Members</button><br><br>
+                    
+                    </div>
+            </div>
+          </fieldset>
+    </form>
+    
+
+    
+
+                
+   </div> 
+                
+{% block tail_script %}
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script> 
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script> 
+<script src="{{ url_for('static', filename='bootstrap/js/knockout.validate.js') }}"></script>
+<script type="text/javascript">
+ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+ // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+
+$(document).ready(function () {
+
+
+
+$('#add_members').validate({
+    rules: {
+        
+        
+    },
+    highlight: function (element) {
+        $(element).parent().css('border-color','red');
+        $(element).text('Please type some post').closest('.control-group').removeClass('success').addClass('error');
+        
+    },
+    success: function (element) {
+        element.text('OK!').addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
+    }
+});
+});
+
+
+
+function Member(data, name, email) {
+    var self = this;
+
+    self.member = ko.observable(name);
+    self.email = ko.observable(email);
+}
+
+
+
+function TeamViewModel() {
+    var self = this;
+    self.teams = ko.observableArray([]);
+    self.teamName = ko.observable();
+    self.captain = ko.observable();
+    self.member = ko.observable();
+    self.email = ko.observable();
+    self.members = ko.observableArray([]);
+    self.members.push(new Member(self.captain(), self.email()))
+    console.log(self.teamName);
+
+    
+       
+    self.addMembers = function() {
+        self.save();
+        
+        
+    };
+
+    self.addMember = function() { 
+        self.members.push(new Member(self.member(), self.email()));
+
+    };
+
+    
+
+    self.removeMember = function(member) { self.members.remove(member) }
+
+    
+
+    $.getJSON('/teams', function(teamModels) {
+        var t = $.map(teamModels.teams, function(item) {
+            console.log("Working!!")
+            return new Team(item);
+        });
+        self.teams(t);
+    });
+
+    self.save = function() {
+        return $.ajax({
+            url: '/events/{{ename}}/{{eid}}/teams/{{teamName}}/{{tid}}/addMembers',
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify({
+                'member': self.member(),
+                'email': self.email()
+                
+                
+            }),
+            success: function(data) {
+                console.log("Entered to Flask View");
+                return;
+            },
+            error: function() {
+                return console.log("Failed");
+            }
+        });
+    };
+}
+
+
+
+ko.applyBindings(new TeamViewModel());
+
+
+</script>
+
+{% endblock %}
+
+
+{% endblock %}

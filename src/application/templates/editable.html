@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block style_block %}
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-combined.min.css') }}" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-editable.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<p>X-editable: create editable column in table.<br>
+ As pk is unique in each row, you should put it in data-pk attribute.  
+</p>
+<div style="margin: 150px">
+    <table id="users" class="table table-bordered table-condensed">
+        <tr><th>#</th><th>name</th><th>age</th></tr>
+        <tr>
+            <td>1</td>
+            <td><a href="#" data-pk="1">Mike</a></td>
+            <td>21</td>       
+        </tr>
+        
+        <tr>
+            <td>2</td>
+            <td><a href="#" data-pk="2">John</a></td>
+            <td>28</td>       
+        </tr>        
+        
+        <tr>
+            <td>3</td>
+            <td><a href="#" data-pk="3">Mary</a></td>
+            <td>24</td>       
+        </tr>        
+        
+    </table>    
+</div>
+{% block tail_script %}
+<script src="{{ url_for('static', filename = 'bootstrap/js/mockjax.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-editable.js') }}"></script>
+
+<script type="text/javascript">
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+$.fn.editable.defaults.mode = 'inline';
+
+$(document).ready(function() {
+    $('#username').editable();
+});
+//ajax emulation
+$.mockjax({
+    url: '/post',
+    responseTime: 200
+}); 
+
+$('#users a').editable({
+    type: 'text',
+    name: 'username',
+    url: '/post',
+    title: 'Enter username'
+});
+
+</script>
+{% endblock %}
+{% endblock %}

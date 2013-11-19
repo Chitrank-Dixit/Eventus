@@ -924,7 +924,7 @@ def invite_user(ename,eid):
   return render_template('add_inviteModal.html', inviteform=inviteform)
 
 
-@app.route('/users')
+@app.route('/users', methods=['GET'])
 @login_required
 def get_all_users():
   all_users =  model.User.query()
@@ -957,7 +957,7 @@ def RegisterTeam(ename, eid):
         
 
       )
-
+    
     try:
       team = team.put()
       time.sleep(4)
@@ -966,6 +966,9 @@ def RegisterTeam(ename, eid):
       flash('Something went wrong and your comment has not been posted', category='danger')
 
   return render_template('team_register.html', ename=ename , eid=eid, form=form, captain=current_user.name, events= events)
+
+
+
 
 @app.route('/events/<ename>/<int:eid>/teams/<teamName>/<int:tid>', methods=['GET'])
 @login_required
@@ -1039,6 +1042,28 @@ def Team_Profile(ename, eid, teamName , tid):
   return render_template('team_profile.html', ename=ename , eid=eid, teamName = teamName, tid = tid, teams= teams, events=events, form=form)
 
 
+@app.route('/events/<ename>/<int:eid>/teams/<teamName>/<int:tid>/addMembers', methods=['POST','GET'])
+@login_required
+def add_members(ename, eid, teamName, tid):
+  event_id = ndb.Key(model.Event, eid)
+  team_id = ndb.Key(model.TeamRegister, tid)
+  events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+  if request.method == 'POST':
+    member = model.TeamMembers(
+        eventId = event_id,
+        teamId = team_id,
+        
+        
+      )
+    try:
+      member.put()
+      print "JSON hai ji", request.json
+    except CapabilityDisabledError:
+      flash('Something went wrong and your comment has not been posted', category='danger')
+    
+  return render_template('addTeamMember.html', ename=ename, eid=eid, teamName= teamName, tid=tid, events= events)
+
+
 @app.route('/comments/<int:eid>/<int:tid>',methods=['GET'])
 @login_required
 def all_team_comments(eid, tid):
@@ -1056,7 +1081,9 @@ def all_team_comments(eid, tid):
     first = {}
   return jsonify(comments=comments)
 
-
+@app.route('/editable')
+def edit_it():
+  return render_template('editable.html')
 ####################################################
 # Simple Posters Example Do editing in this as we are using as 
 # a testing view

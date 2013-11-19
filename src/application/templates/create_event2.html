@@ -218,17 +218,17 @@
                     <div class="controls">
                         <label><h4>Upload logo</h4></label><br>
                         <div class="fileupload fileupload-new" data-provides="fileupload">
-                          <div class="fileupload-preview thumbnail" style="width: 80px; height: 80px;"></div>
-                          <div>
-                            <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" /></span>
-                            <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                          </div>
-                        </div>
+  <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
+  <div>
+    <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" /></span>
+    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+  </div>
+</div>
                         
                         
 
                     <!-- upload logo controls class end below-->
-                    </div>
+                </div>
 
                 <!-- upload logo control-group end below-->
                 </div>
@@ -450,6 +450,7 @@
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-switch.min.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-datepicker.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-fileupload.js') }}"></script>
 
 <script type="text/javascript">
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
