@@ -172,12 +172,11 @@
   	<div class="row">
       <h3> Venue </h3>
   		<div class="span3 venue"> <a href="#">
-        {{events.venue}} <br>
+         
 
-      Venue: IIPS-DAVV,
-  		Takshshila Campus, 
-  		Bhawar Kuwa, 452001
-  		Indore, India
+      Venue: {{events.venue}},
+  		{{events.address}}, {{events.postal}}
+  		{{events.city}} ({{events.state}}), {{events.country}}
   	</a>
 
   		</div>
@@ -188,14 +187,14 @@
 
 
         <img src="event_list.creator.string_id().avatar(90)" class="teamPic"> <a href="/user/{{ events.creator.string_id() }}/{{ events.creator_id }}/"> {{events.creator.string_id()}}</a>
-
+        {% if events.event_type == "Team Event" %}
         <h3>Teams</h3>
+        {% for team in teams %}
+          <img src="" class="teamPic"/>
+          <a href="">{{team.teamName}}</a>
 
-        <img src="event_list.creator.string_id().avatar(90)" class="teamPic"> <a href="/user/{{ events.creator.string_id() }}/{{ events.creator_id }}/"> Team1</a>
-        <br>
-
-        <img src="event_list.creator.string_id().avatar(90)" class="teamPic"> <a href="/user/{{ events.creator.string_id() }}/{{ events.creator_id }}/"> Team2</a>
-
+        {% endfor %}
+        {% endif %}
         <div class="tab-pane" id="teamguests">
         <ul class="nav nav-pills">
             <li class="active">

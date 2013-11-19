@@ -217,7 +217,14 @@
                 <div class="control-group">
                     <div class="controls">
                         <label><h4>Upload logo</h4></label><br>
-                        <input type="text"> <button class="btn" type="upload" name ="logoUpload">Upload</button>
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                          <div class="fileupload-preview thumbnail" style="width: 80px; height: 80px;"></div>
+                          <div>
+                            <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" /></span>
+                            <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                          </div>
+                        </div>
+                        
                         
 
                     <!-- upload logo controls class end below-->

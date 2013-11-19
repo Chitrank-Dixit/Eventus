@@ -805,6 +805,7 @@ def trending_events():
 @app.route('/events/<ename>/<int:eid>/', methods=['GET', 'POST'])
 def event_profile(ename,eid):
   event_id = ndb.Key(model.Event, eid)
+  event_name = ndb.Key(model.Event, ename)
   print event_id
   print "TESTING THINGS",eid
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
@@ -817,6 +818,9 @@ def event_profile(ename,eid):
   # print "Here is the list",events.name
   # if user been invited
   invite_json = request.json
+
+  # send all the Teams of an Event
+  teams =  model.TeamRegister.query(model.TeamRegister.eventId == event_id )
 
   form = CommentForm(request.form)
   inviteform = InviteUserForm(request.form)
@@ -859,7 +863,7 @@ def event_profile(ename,eid):
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
     print "Here is the list",events
-  return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform)
+  return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform, teams= teams)
 
 @app.route('/comments/<int:eid>',methods=['GET'])
 @login_required
@@ -924,13 +928,22 @@ def get_all_users():
 def RegisterTeam(ename, eid):
   form = TeamRegisterForm(request.form)
   event_id = ndb.Key(model.Event, eid)
+  event_name = ndb.Key(model.Event, ename)
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
   if request.method == 'POST':
     team = model.TeamRegister(
+        eventId = event_id,
+        eventName = event_name,
         teamName = form.teamName.data,
-        captain = form.captain.data,
+        
 
       )
+
+    try:
+      team.put()
+      return redirect(url_for('event_profile', ename = ename , eid =  eid))
+    except CapabilityDisabledError:
+      flash('Something went wrong and your comment has not been posted', category='danger')
 
   return render_template('team_register.html', ename=ename , eid=eid, form=form, captain=current_user.name, events= events)
 

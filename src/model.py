@@ -176,12 +176,6 @@ class Event(Base,modelx.EventX):
     twitter_id = ndb.StringProperty(default='')
     access = ndb.StringProperty(required=True)
 
-class Teams(Base, modelx.TeamX):
-    event_id = ndb.KeyProperty(kind="Event", required=True)
-    event_name = ndb.KeyProperty(kind="Event", required=True)
-    name = ndb.StringProperty(required= True)
-    captain = ndb.StringProperty(required= True)
-
 # Sample post model for testing purposes    
 class Post(Base, modelx.EventX):
     name = ndb.KeyProperty(kind="User", required=True)
@@ -207,10 +201,13 @@ class EventInvites(Base, modelx.EventX):
 
 # Team Register Model yet to be made
 class TeamRegister(Base, modelx.TeamRegisterX):
+    eventId = ndb.KeyProperty(kind="Event", required=True)
+    eventName = ndb.KeyProperty(kind="Event", required=True)
     teamName = ndb.StringProperty("Team Name", required=True)
     captain = ndb.KeyProperty(kind="User")
 
 class TeamMembers(Base, modelx.TeamMembersX):
+    eventId = ndb.KeyProperty(kind="Event", required = True)
     teamId = ndb.KeyProperty(kind="TeamRegister", required=True)
     memberName = ndb.KeyProperty(kind='User')
     memberId = ndb.KeyProperty(kind='User')
