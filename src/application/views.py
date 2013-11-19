@@ -809,17 +809,20 @@ def event_profile(ename,eid):
   # comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
   user_id = ndb.Key(model.User, current_user.id)
   name = ndb.Key(model.User, current_user.name)
+
   # if comments been posted
   comment_json = request.json
 
   # if user been invited
   invite_json = request.json
+  
 
   form = CommentForm(request.form)
   inviteform = InviteUserForm(request.form)
   # print request.json, type(comment_json)
   if request.method == 'POST' and comment_json:
     print request.json
+    
     comments = model.EventComments(
         name = name,
         user_id = user_id,
@@ -1040,14 +1043,27 @@ def allTeams():
     first = {}
   return jsonify(teams = teams)
 
+@app.route('/team_profile', methods = ['GET'])
+def team_profile():
+  #form = CommentForm(request.form)
+  events = model.Event.query()
+  
 
+
+  return render_template('team_profile.html', events=events)
 
 
 @app.route('/newevents', methods=['GET', 'POST'])
 def newEvents():
   
   print 100* "*" + "  " + " new events"
-  return render_template('create_event2.html')
+  
+  now = datetime.now()
+  now1 = datetime.now()
+  print now1
+  print now
+  
+  return render_template('test.html', date = now)
 
 
 # This url is used to create database entries.
