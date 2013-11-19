@@ -12,9 +12,10 @@
   </style>
 {% endblock %}
 {% block content %}
-    
+    <div class="span3">
+    </div>
         
-    <div class="content">
+    <div class="container span6">
     <form id="add_members" action="{{ url_for('add_members', ename=ename, eid=eid, teamName = teamName, tid=tid ) }}" data-bind="submit: addMembers" class="navbar-form form-inline" method="post" >
     
         <fieldset>
@@ -61,7 +62,10 @@
 
                 
    </div> 
-                
+    
+   <div class="span3">
+   </div>
+
 {% block tail_script %}
 <script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script> 
 <script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script> 
@@ -110,23 +114,25 @@ function TeamViewModel() {
     self.member = ko.observable();
     self.email = ko.observable();
     self.members = ko.observableArray([]);
-    self.members.push(new Member(self.captain(), self.email()))
+    // self.members.push(new Member(self.captain(), self.email()));
     console.log(self.teamName);
 
     
        
     self.addMembers = function() {
         self.save();
+        self.members([]);
         
         
     };
+
 
     self.addMember = function() { 
         self.members.push(new Member(self.member(), self.email()));
-
+        
     };
 
-    
+    console.log(self.member());
 
     self.removeMember = function(member) { self.members.remove(member) }
 
@@ -140,15 +146,17 @@ function TeamViewModel() {
         self.teams(t);
     });
 
+
+
     self.save = function() {
         return $.ajax({
             url: '/events/{{ename}}/{{eid}}/teams/{{teamName}}/{{tid}}/addMembers',
             contentType: 'application/json',
             type: 'POST',
-            data: JSON.stringify({
-                'member': self.member(),
-                'email': self.email()
-                
+            data: ko.toJSON({
+
+                'members': self.members() ,
+                      
                 
             }),
             success: function(data) {

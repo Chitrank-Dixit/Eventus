@@ -861,7 +861,7 @@ def event_profile(ename,eid):
       flash('Something went wrong and your comment has not been posted', category='danger')
       
   elif request.method == 'POST' and inviteform.validate_on_submit():
-    print "HAHAHAHAH"
+    
     invitedUser = model.User.retrieve_one_by('name' and 'email', inviteform.invite_to.data and inviteform.invite_email.data)
     print invitedUser
     invitedUserKey = invitedUser.key
@@ -937,9 +937,9 @@ def get_all_users():
     first['email'] = user.email
     users.append(first)
     first = {}
-  print "Users--------",users
+  
   return jsonify(users=users)  #(all_users =all_users)
-# Event_Type = Team Event Specifying the Teams
+  # Event_Type = Team Event Specifying the Teams
 
 @app.route('/events/<ename>/<int:eid>/register_team', methods=['POST','GET'])
 @login_required
@@ -1049,18 +1049,24 @@ def add_members(ename, eid, teamName, tid):
   team_id = ndb.Key(model.TeamRegister, tid)
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
   if request.method == 'POST':
-    member = model.TeamMembers(
-        eventId = event_id,
-        teamId = team_id,
-        
-        
-      )
-    try:
-      member.put()
-      print "JSON hai ji", request.json
-    except CapabilityDisabledError:
-      flash('Something went wrong and your comment has not been posted', category='danger')
-    
+    entry = []
+    print "JSON hai ji", request.json
+    for queue in request.json['members']:
+      userKey = ndb.Key(model.User, queue['member'])
+      if userKey:
+        member = model.TeamMembers(
+          eventId = event_id,
+          teamId = team_id,
+          memberName = userKey 
+        )
+        try:
+          member.put()
+          for mem in request.json:
+            print mem['member']
+        except CapabilityDisabledError:
+          flash('Something went wrong and your comment has not been posted', category='danger')
+      else:
+        flash("user Does not Exists", category="danger")
   return render_template('addTeamMember.html', ename=ename, eid=eid, teamName= teamName, tid=tid, events= events)
 
 

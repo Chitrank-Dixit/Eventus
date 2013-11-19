@@ -219,7 +219,7 @@ class TeamMembers(Base, modelx.TeamMembersX):
     eventId = ndb.KeyProperty(kind="Event", required = True)
     teamId = ndb.KeyProperty(kind="TeamRegister", required=True)
     memberName = ndb.KeyProperty(kind='User')
-    # memberId = ndb.KeyProperty(kind='User')
+    memberId = ndb.KeyProperty(kind='User')
 
 '''
 

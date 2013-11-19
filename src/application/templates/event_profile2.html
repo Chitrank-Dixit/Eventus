@@ -291,7 +291,7 @@
         {% include 'add_inviteModal.html' %}
       
         <label for="birds">Birds: </label>
-        <input id="birds" data-provide="typeahead" />
+        <input type="text" id="birds" data-provide="typeahead" autocomplete="off" />
       
       <!-- span6 of comments ended -->
       </div>
@@ -315,7 +315,7 @@
 
 <script src="{{ url_for('static', filename = 'bootstrap/js/mockjax.js') }}"></script>
 
-<script src="{{ url_for('static', filename = 'bootstrap/js/typeahead.js') }}"></script>
+<script src="{{ url_for('static', filename = 'bootstrap/js/bootstrap-typeahead.js') }}"></script>
 <script src="{{ url_for('static', filename = 'bootstrap/js/demo.js') }}"></script>
 <script src="{{ url_for('static', filename = 'bootstrap/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ url_for('static', filename = 'bootstrap/js/shCore.js') }}"></script>
@@ -325,62 +325,29 @@
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
 // bootstrap editable inline mode
-$.fn.editable.defaults.mode = 'inline';
+
 
 $(document).ready(function () {
     $('#inviteUser').dataTable();
     
-    $('#invite_to').editable();
-
-    $(function () {
-
-
-    var myjson;
-    $.getJSON("{{ url_for('get_all_users') }}", function(json){
-    myjson = json;
-    });
-
-    console.log(myjson);
     $("#birds").typeahead({
-      
-    
-    ajax: {
-
-
-      
-        url: "/users",
-        timeout: 500,
-        displayField: "uname",
-        triggerLength: 1,
-        method: "get",
-        loadingClass: "loading-circle",
-        preDispatch: function (query) {
-            showLoadingMask(true);
-            return {
-                search: query,
-                otherParam: 123
-            }
-        },
-        preProcess: function (data) {
-            showLoadingMask(false);
-            if (data.success === false) {
-                // Hide the list, there was some error
-                return false;
-            }
-            // We good!
-            return data.mylist;
-        }
-      
+    source: function (query, process) {
+               
+        return $.getJSON("{{ url_for('get_all_users') }}", { query: query },function (data) {
+                    console.log(data);
+                    return process(data);
+          });
+        // This is going to make an HTTP post request to the controller
+        
     }
-    
 });
 
-    });
+
+    
     
     
 
 });
-
 
 
 
