@@ -109,7 +109,7 @@
 					<div class="well-inverse">
 
 			        {% if events.event_type == 'Team Event' %}
-              <a class="btn btn-sidebar btn-block" >Register Your Team</a>
+              <a class="btn btn-sidebar btn-block" href="{{ url_for('RegisterTeam', ename=ename,eid=eid )}}" >Register Your Team</a>
               
 			        <a class="btn btn-sidebar btn-block" href="" >Team Settings</a>
 			        
@@ -290,6 +290,7 @@
 
         {% include 'add_inviteModal.html' %}
       
+      <input type="text" class="input-medium search-query" id="employees" data-provide="typeahead" data-items="4" autocomplete="off" ></input>
       <!-- span6 of comments ended -->
       </div>
 
@@ -307,8 +308,13 @@
 
 
 {% block tail_script %}
+<<<<<<< HEAD
 
+=======
+<script src="{{ url_for('static', filename = 'bootstrap/js/mockjax.js') }}"></script>
+>>>>>>> 929dabb665940dbadb353a9e7bb5962d127e5b97
 <script src="{{ url_for('static', filename = 'bootstrap/js/bootstrap-typeahead.js') }}"></script>
+<script src="{{ url_for('static', filename = 'bootstrap/js/demo.js') }}"></script>
 <script src="{{ url_for('static', filename = 'bootstrap/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ url_for('static', filename = 'bootstrap/js/shCore.js') }}"></script>
 
@@ -319,6 +325,22 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 $(document).ready(function () {
     $('#inviteUser').dataTable();
 
+
+    $(function () {
+
+
+    var myjson;
+    $.getJSON("{{ url_for('get_all_users') }}", function(json){
+    myjson = json;
+    });
+
+    console.log(myjson);
+    // Mock an AJAX request
+
+
+    });
+    
+    
 
 });
 

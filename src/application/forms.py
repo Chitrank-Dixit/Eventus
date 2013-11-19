@@ -41,7 +41,7 @@ class SignupForm(wtf.Form):
  
  
 class SigninForm(wtf.Form):
-    name = wtf.TextField('Name &nbsp&nbsp&nbsp&nbsp&nbsp',validators=[validators.Required()])
+    name = wtf.TextField('Name',validators=[validators.Required()])
     password = wtf.PasswordField('Password',validators=[validators.Required()])
     remember_me = wtf.BooleanField('remember_me', default = False)
     
@@ -107,6 +107,7 @@ class InviteUserForm(wtf.Form):
 
 class TeamRegisterForm(wtf.Form):
     teamName = wtf.TextField('Team Name', validators=[validators.Required()])
+    captain = wtf.TextField('Captain', validators=[validators.Required()])
 '''     
 No need to make a model that is already made
 
