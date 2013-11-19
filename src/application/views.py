@@ -785,11 +785,23 @@ def create_event():
       flash(u'Event %s has been created.' % form.name.data, category='success')
 
       #mail.send(msg)
+<<<<<<< HEAD
+     
+      # eventID = model.Event.query()
+      # eventKey = ndb.Key(model.Event, form.name.data )
+      
+
+      # print eventKey
+      
+      #return redirect(url_for('event_profile', ename=form.name.data,eid=itrCid.integer_id()))
+      return redirect(url_for('index'))
+=======
       #current_event = model.Event.retrieve_one_by('name' and 'key' , event_name and event_key )
       # return redirect(url_for('index'))
       #print "Hiii",current_event
 
       return redirect(url_for('event_profile', ename=event_name , eid=record.integer_id()))
+>>>>>>> 929dabb665940dbadb353a9e7bb5962d127e5b97
     except CapabilityDisabledError:
       flash(u'App Engine Datastore is currently in read-only mode.', category='info')
       return redirect(url_for('index'))
@@ -813,11 +825,13 @@ def event_profile(ename,eid):
   # comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
   user_id = ndb.Key(model.User, current_user.id)
   name = ndb.Key(model.User, current_user.name)
+
   # if comments been posted
   comment_json = request.json
   # print "Here is the list",events.name
   # if user been invited
   invite_json = request.json
+  
 
   # send all the Teams of an Event
   teams =  model.TeamRegister.query(model.TeamRegister.eventId == event_id )
@@ -827,6 +841,7 @@ def event_profile(ename,eid):
   # print request.json, type(comment_json)
   if request.method == 'POST' and comment_json:
     print request.json
+    
     comments = model.EventComments(
         name = name,
         user_id = user_id,
@@ -1067,14 +1082,27 @@ def allTeams():
     first = {}
   return jsonify(teams = teams)
 
+@app.route('/team_profile', methods = ['GET'])
+def team_profile():
+  #form = CommentForm(request.form)
+  events = model.Event.query()
+  
 
+
+  return render_template('team_profile.html', events=events)
 
 
 @app.route('/newevents', methods=['GET', 'POST'])
 def newEvents():
   
   print 100* "*" + "  " + " new events"
-  return render_template('create_event2.html')
+  
+  now = datetime.now()
+  now1 = datetime.now()
+  print now1
+  print now
+  
+  return render_template('test.html', date = now)
 
 
 # This url is used to create database entries.

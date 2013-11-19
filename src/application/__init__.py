@@ -11,7 +11,7 @@ from werkzeug.debug import DebuggedApplication
 import jinja2
 #from flaskext.flask_googlelogin import GoogleLogin
 # import wtforms_json
-
+from momentjs import momentjs
 import os
 
 
@@ -34,6 +34,7 @@ jinja_environment = jinja2.Environment(autoescape=True,
 
 # Enable jinja2 loop controls extension
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
+app.jinja_env.globals['momentjs'] = momentjs
 
 '''
 @app.context_processor

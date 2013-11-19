@@ -273,14 +273,16 @@
         </form>
 
       <ul data-bind="foreach: comments, visible: comments().length > 0">
-            <div class="well-inverse">
+            <div class="well-inverse time-stamp">
                 <!-- data-bind="attr: { href: commentBy , name: name , uid: uid }" -->
 
                 <p data-bind="text: comment"></p>
                 <a data-bind="attr:{ href:  '/user/' + name() + '/' + uid() + '/' }"><p data-bind="text: cname"></p></a>
-                
 
+                
+                
             </div>
+
         </ul>
         
         
@@ -305,11 +307,16 @@
 
 
 {% block tail_script %}
+<<<<<<< HEAD
+
+=======
 <script src="{{ url_for('static', filename = 'bootstrap/js/mockjax.js') }}"></script>
+>>>>>>> 929dabb665940dbadb353a9e7bb5962d127e5b97
 <script src="{{ url_for('static', filename = 'bootstrap/js/bootstrap-typeahead.js') }}"></script>
 <script src="{{ url_for('static', filename = 'bootstrap/js/demo.js') }}"></script>
 <script src="{{ url_for('static', filename = 'bootstrap/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ url_for('static', filename = 'bootstrap/js/shCore.js') }}"></script>
+
 
 <script type="text/javascript">
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -335,6 +342,8 @@ $(document).ready(function () {
     
 
 });
+
+
 
 
 
@@ -437,6 +446,7 @@ function CommentViewModel() {
                 'comment': self.comment(),
                 'name' : "{{current_user.name}}",
                 'uid' : "{{current_user.id}}",
+
             }),
 
 
