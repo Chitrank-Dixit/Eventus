@@ -785,7 +785,7 @@ def create_event():
       flash(u'Event %s has been created.' % form.name.data, category='success')
 
       #mail.send(msg)
-<<<<<<< HEAD
+
      
       # eventID = model.Event.query()
       # eventKey = ndb.Key(model.Event, form.name.data )
@@ -795,13 +795,13 @@ def create_event():
       
       #return redirect(url_for('event_profile', ename=form.name.data,eid=itrCid.integer_id()))
       return redirect(url_for('index'))
-=======
+
       #current_event = model.Event.retrieve_one_by('name' and 'key' , event_name and event_key )
       # return redirect(url_for('index'))
       #print "Hiii",current_event
 
       return redirect(url_for('event_profile', ename=event_name , eid=record.integer_id()))
->>>>>>> 929dabb665940dbadb353a9e7bb5962d127e5b97
+
     except CapabilityDisabledError:
       flash(u'App Engine Datastore is currently in read-only mode.', category='info')
       return redirect(url_for('index'))
@@ -1081,6 +1081,16 @@ def team_profile():
 
 @app.route('/newevents', methods=['GET', 'POST'])
 def newEvents():
+  eventList = model.Event.query()
+  print g.user
+  for event in eventList:
+
+    print 100 * "*"  + event.name + "   "+str(event.creator_id) +"  " + str(g.user.id)
+    #print 100 * "#"
+
+    #y = ndb.Key(model.Event, event.created)
+    
+
   
   print 100* "*" + "  " + " new events"
   
@@ -1089,7 +1099,7 @@ def newEvents():
   print now1
   print now
   
-  return render_template('test.html', date = now)
+  return render_template('scoreboard.html')
 
 
 # This url is used to create database entries.

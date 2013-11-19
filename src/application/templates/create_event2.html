@@ -342,7 +342,7 @@
 
             <!-- Country control-group end below-->
             </div>
->
+
 
             <!-- Country selector end -->
 
@@ -361,9 +361,11 @@
                 <!-- poastal code controls class end below-->
                 </div>
 
+
             <!-- postal code control-group end below-->
             </div>
 
+          
             <div class="control-group" >
                 <div class="controls">
                     <label><h4>Access Type</h4></label><br>
@@ -404,13 +406,21 @@
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-select.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-switch.min.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
 
 <script type="text/javascript">
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
  // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
 
 // Enabling Select Picker custom select fields from Bootstrap
+$('.example-countries .typeahead').typeahead({                                
+  name: 'countries',
+  prefetch: '../countries.json',                                 
+  limit: 10                                                                   
+});
+
 $('.selectpicker').selectpicker();
+
 
 /* datepicker validation here from  "" http://www.eyecon.ro/bootstrap-datepicker/ ""  */
 
