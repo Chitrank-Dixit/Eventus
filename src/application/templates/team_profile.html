@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %} Team Profile | Eventus {% endblock %}
+
+{% block style_block %}
+	
+	<style type="text/css">
+		.background {
+			 background-color: #F3F3F3;
+			}
+	    .modal {
+        /* new custom width */
+            width: 700px;
+            margin-left: -375px;
+         
+		}
+		.eventName{
+		  /* line-height to vertically center: http://phrogz.net/css/vertical-align/index.html */
+		  height: 40px;
+		  line-height: 40px;
+		}
+
+
+		.navigation, .pitch, .section1, .section2, .faq, .footer {
+        padding: 10px 0px 10px 0px;
+      }
+      .video, .eventLogo, .eventName, .social {
+        /*border: 1px dotted;*/
+        text-align: left;
+      }
+      .video {
+        /* Internal beventNames have 1px width, thus need to add 4 x 1px to 120px. */
+        height: 230px;
+        line-height: 124px;
+      }
+      .eventLogo, .eventName, .social {
+        /* line-height to vertically center: http://phrogz.net/css/vertical-align/index.html */
+        height: 115px;
+        line-height: 40px;
+      }
+      .eventContent {
+      	height:auto;
+      }
+      .teamPic {
+      	border-radius: 100%;  	
+      	width: 60px;
+      }
+
+      .event-page-canvas {
+
+      	webkit-box-sizing: border-box;
+      	box-sizing: border-box;
+      	-webkit-box-shadow: 0 1px 2px 1px rgba(0,0,0,0.25);
+      	box-shadow: 0 1px 2px 1px rgba(0,0,0,0.25);;
+      	background-color:#f9faf7; 
+      	border-radius: 1px;
+      	-webkit-border-radius: 1px;
+      	padding: 30px 20px 48px 30px;
+      	width: 100%;
+      	height: 100%;
+
+
+      }
+
+	</style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/data_page.css') }}" /> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/data_table.css') }}" /> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/shCore.css') }}" /> 
+{% endblock %}
+
+{% block content %}
+
+<div id="fullEventPage" class="event-page-canvas">
+<div class = "row">
+  
+    <div class="span6">
+      <div class="eventLogo">
+        <img src="{{ url_for('static', filename='img/celebrate1.jpg') }}" style="width:100px;padding:10px 0px 10px 20px;"> 
+        Logo Title
+      </div>
+      <div class="eventName">
+        <h1> TEAM  NAME</h1>
+        
+        <div style="float:left;"> <h4 class="pull-right"><i class="icon-heart"></i> <i class="icon-facebook-sign"></i> <i class="icon-twitter-sign"></i> <i class="icon-google-plus-sign"></i></h4>
+        </div>
+
+
+      </div>
+     
+    </div>
+    <div class="span1"></div>
+
+    <div class="span5">
+    	<div class="video" >
+        <iframe width="410px" height="230px"
+        src="http://www.youtube.com/embed/RjoSN595F0E" alternate="nothing">
+        </iframe>
+    	
+
+    	 </div>
+    </div>
+</div>
+<hr style="clear:both;">
+<div class="row">
+	<div class="span12">
+  
+		<div class="span3">
+
+					<div class="well-inverse">
+
+			       
+            
+              
+			        <a class="btn btn-sidebar btn-block" href="" >Team Settings</a>
+			        
+			       
+              
+			        <a class="btn btn-sidebar btn-block" href="#add-invite-modal" data-toggle="modal" >Add member</a>
+              
+			        <!-- well inverse end -->
+		      </div>
+          <!-- span3 for buttons end -->
+	  </div>
+    <div class="span2">
+      <div class="well-inverse">
+        <label> From : </label> 
+        <label> To : </label>
+
+      </div>
+
+    </div>
+    <div class="span3">
+      <div class="well-inverse">
+        <h4>Contact Information</h4>
+        Mobile Number: 9809908890
+        Email Id: contactme@gmail.com
+      </div>
+
+    </div>
+
+</div>
+
+<hr style="clear:both;">
+<!-- About event contents -->
+<div class="row eventContent">
+
+  <div class="span6" style="padding-left: 30px;">
+	<h3>About the Team</h3>
+	<p style ="text-align:justify;">
+
+    <br><br>
+
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lacinia euismod elit ut laoreet. Cras ut molestie diam, ut viverra eros. Maecenas et massa ut quam venenatis hendrerit nec accumsan quam. Etiam vel tortor gravida, euismod felis a, pellentesque lectus. Suspendisse potenti. Ut aliquam purus a erat congue rhoncus. Pellentesque at aliquet nisl. Nullam placerat, augue vitae lacinia ullamcorper, eros elit aliquet felis, vel ullamcorper risus lacus ut turpis. Nunc a sagittis odio. Nunc elementum tempus diam et bibendum.
+	</p>
+	<p style ="text-align:justify;">
+
+		Nullam cursus venenatis commodo. Praesent feugiat massa quis neque ullamcorper dictum. Vestibulum feugiat nisl eget lacus imperdiet, quis tincidunt turpis feugiat. Mauris eleifend nisi vitae elit luctus, non dapibus tortor vestibulum. Ut pulvinar pharetra velit et luctus. Etiam magna nulla, interdum eu velit et, vulputate gravida libero. Mauris interdum nulla odio, quis consectetur leo sagittis sit amet. Nulla facilisi.
+	</p>
+	<p style ="text-align:justify; line-height:25px;">
+
+		Nunc sollicitudin pretium risus, sed elementum augue tempor tincidunt. Vivamus eget tellus fermentum, condimentum purus malesuada, rutrum magna. Suspendisse in pellentesque turpis, nec tincidunt ligula. Curabitur erat felis, cursus et lectus nec, rutrum dictum lorem. Maecenas condimentum feugiat elit, non tempor massa ultrices vel. Aliquam lobortis hendrerit iaculis. Fusce aliquet scelerisque aliquet. Pellentesque rutrum eu arcu ut placerat. Sed eleifend sapien in lectus blandit, eget lobortis sem ultrices. Etiam aliquet turpis sit amet fringilla malesuada. Fusce semper nunc non dictum convallis. Phasellus vel porta urna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur lacinia vehicula iaculis. Aenean consectetur sit amet arcu at pharetra.
+
+	</p>
+  </div>
+<!-- span6 ended -->
+
+<!-- extra span1 for space -->
+  <div class="span1"></div>
+
+<!-- span4 for venue and teams  -->
+  <div class="span4" style="padding: 30px 20px 48px 30px;">
+  	<div class="row">
+      <h3> Venue </h3>
+  		<div class="span3 venue"> <a href="#">
+         <br>
+
+      Venue: IIPS-DAVV,
+  		Takshshila Campus, 
+  		Bhawar Kuwa, 452001
+  		Indore, India
+  	</a>
+
+  		</div>
+      <!-- div : span3 venue ended -->
+  		<div class="span3 aboutTeams"> 
+  			<br>
+        <h3> Created By  </h3>
+
+
+        <img src="" class="teamPic"> <a href=""> </a>
+
+        <h3>Teams</h3>
+
+        <img src="" class="teamPic"> <a href=""> Team1</a>
+        <br>
+
+        <img src="" class="teamPic"> <a href=""> Team2</a>
+
+        
+        </div>
+  			<!-- span3 aboutTeams end -->
+  		</div>
+    
+    <!-- span4 inner row ended  -->
+    </div>
+      
+  <!-- span4 ended -->
+  </div>
+
+
+<!-- content, eventContent row end  -->
+</div>
+
+
+
+
+<!-- fullEventPage  div end-->
+</div>
+
+
+{% block tail_script %}
+<script src="{{ url_for('static', filename = 'bootstrap/js/bootstrap-typeahead.js') }}"></script>
+<script src="{{ url_for('static', filename = 'bootstrap/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename = 'bootstrap/js/shCore.js') }}"></script>
+
+<script type="text/javascript">
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+$(document).ready(function () {
+    $('#inviteUser').dataTable();
+
+
+});
+
+
+
+
+</script>
+{% endblock %}
+
+{% endblock %}
