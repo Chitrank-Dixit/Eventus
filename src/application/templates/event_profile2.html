@@ -191,7 +191,7 @@
         <h3>Teams</h3>
         {% for team in teams %}
           <img src="" class="teamPic"/>
-          <a href="">{{team.teamName}}</a>
+          <a href="{{ url_for('Team_Profile', ename = ename , eid= eid, teamName = team.teamName , tid = team.key.id() ) }}">{{team.teamName}}</a>
 
         {% endfor %}
         {% endif %}

@@ -205,6 +205,7 @@ class TeamRegister(Base, modelx.TeamRegisterX):
     eventId = ndb.KeyProperty(kind="Event", required=True)
     eventName = ndb.KeyProperty(kind="Event", required=True)
     teamName = ndb.StringProperty("Team Name", required=True)
+    description = ndb.StringProperty("Message")
     captain = ndb.KeyProperty(kind="User")
 
 class TeamMembers(Base, modelx.TeamMembersX):
