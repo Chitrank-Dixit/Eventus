@@ -217,7 +217,14 @@
                 <div class="control-group">
                     <div class="controls">
                         <label><h4>Upload logo</h4></label><br>
-                        <input type="text"> <button class="btn" type="upload" name ="logoUpload">Upload</button>
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                          <div class="fileupload-preview thumbnail" style="width: 80px; height: 80px;"></div>
+                          <div>
+                            <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" /></span>
+                            <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                          </div>
+                        </div>
+                        
                         
 
                     <!-- upload logo controls class end below-->
@@ -225,6 +232,42 @@
 
                 <!-- upload logo control-group end below-->
                 </div>
+
+                <div class="control-group">
+                <div class="controls">
+                    <label><h4>Contact No</h4></label><br>
+                    {{ form.phone(id='ephone',class='form-control required ',placeholder="Contact No", autocomplete=True )}}
+                    {% if form.phone.errors %}
+                    <ul class="errors">
+                        {% for error in form.phone.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- phone  controls class end below-->
+                </div>
+
+            <!-- phone  control-group end below-->
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>Email</h4></label><br>
+                    {{ form.eventEmail(id='eventEmail',class='form-control required ',placeholder="Postal Code", autocomplete=True )}}
+                    {% if form.eventEmail.errors %}
+                    <ul class="errors">
+                        {% for error in form.eventEmail.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- eventEmail controls class end below-->
+                </div>
+
+            <!-- eventEmail control-group end below-->
+            </div>
                 
                 <!-- create event button -->
                 <div class="form-actions">
@@ -345,6 +388,7 @@
 
 
             <!-- Country selector end -->
+            
 
             <div class="control-group">
                 <div class="controls">
@@ -365,7 +409,6 @@
             <!-- postal code control-group end below-->
             </div>
 
-          
             <div class="control-group" >
                 <div class="controls">
                     <label><h4>Access Type</h4></label><br>

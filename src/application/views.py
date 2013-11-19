@@ -768,6 +768,8 @@ def create_event():
         state = form.state.data,
         country = form.country.data,
         postal = int(form.postal.data),
+        phone =  int(form.phone.data),
+        event_email = form.eventEmail.data,
         sdate= datetime(int(sdate_list[2]),int(sdate_list[0]),int(sdate_list[1])),
         edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
         access = form.access_type.data,
@@ -817,6 +819,7 @@ def trending_events():
 @app.route('/events/<ename>/<int:eid>/', methods=['GET', 'POST'])
 def event_profile(ename,eid):
   event_id = ndb.Key(model.Event, eid)
+  event_name = ndb.Key(model.Event, ename)
   print event_id
   print "TESTING THINGS",eid
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
@@ -832,6 +835,10 @@ def event_profile(ename,eid):
   invite_json = request.json
   
 
+  # send all the Teams of an Event
+  teams =  model.TeamRegister.query(model.TeamRegister.eventId == event_id )
+  for team in teams:
+    print team
   form = CommentForm(request.form)
   inviteform = InviteUserForm(request.form)
   # print request.json, type(comment_json)
@@ -874,7 +881,7 @@ def event_profile(ename,eid):
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
     print "Here is the list",events
-  return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform)
+  return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform, teams= teams)
 
 @app.route('/comments/<int:eid>',methods=['GET'])
 @login_required
@@ -939,18 +946,115 @@ def get_all_users():
 def RegisterTeam(ename, eid):
   form = TeamRegisterForm(request.form)
   event_id = ndb.Key(model.Event, eid)
+  event_name = ndb.Key(model.Event, ename)
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
   if request.method == 'POST':
     team = model.TeamRegister(
+        eventId = event_id,
+        eventName = event_name,
         teamName = form.teamName.data,
-        captain = form.captain.data,
+        description = form.description.data
+        
 
       )
 
+    try:
+      team = team.put()
+      time.sleep(4)
+      return redirect(url_for('Team_Profile', ename = ename , eid =  eid, teamName = form.teamName.data, tid= team.integer_id() ))
+    except CapabilityDisabledError:
+      flash('Something went wrong and your comment has not been posted', category='danger')
+
   return render_template('team_register.html', ename=ename , eid=eid, form=form, captain=current_user.name, events= events)
 
+@app.route('/events/<ename>/<int:eid>/teams/<teamName>/<int:tid>', methods=['GET'])
+@login_required
+def Team_Profile(ename, eid, teamName , tid):
+  event_id = ndb.Key(model.Event, eid)
+  event_name = ndb.Key(model.Event, ename)
+  team_id = ndb.Key(model.TeamRegister, tid)
+  team_name = ndb.Key(model.TeamRegister, teamName)
+  print event_id
+  print "TESTING THINGS",eid
+  events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+  # events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
+  # comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
+  teams = model.TeamRegister.retrieve_one_by('teamName' and 'key', teamName and team_id)
+
+  print "All Teams", teams.teamName
+  user_id = ndb.Key(model.User, current_user.id)
+  name = ndb.Key(model.User, current_user.name)
+
+  # if comments been posted
+  comment_json = request.json
+  # print "Here is the list",events.name
+  # if user been invited
+  invite_json = request.json
+  
+
+  
+  form = CommentForm(request.form)
+  inviteform = InviteUserForm(request.form)
+  # print request.json, type(comment_json)
+  if request.method == 'POST' and comment_json:
+    print request.json
+    
+    comments = model.TeamComments(
+        name = name,
+        user_id = user_id,
+        event_id = event_id,
+        team_id = team_id,
+        comment = request.json['comment'],
+      )
+    try:
+      comments.put()
+      # flash('your comment has been posted', category='info')
+      # mail.send(msg)
+      # print name.string_id() , user_id.integer_id() , event_id
+      return jsonify({ "name": name.string_id(),"uid": user_id.integer_id(), "event_id": event_id.integer_id(),"team_id": team_id.integer_id() , "comment": request.json['comment'] })
+    except CapabilityDisabledError:
+      flash('Something went wrong and your comment has not been posted', category='danger')
+      
+  elif request.method == 'POST' and inviteform.validate_on_submit():
+    print "HAHAHAHAH"
+    invitedUser = model.User.retrieve_one_by('name' and 'email', inviteform.invite_to.data and inviteform.invite_email.data)
+    print invitedUser
+    invitedUserKey = invitedUser.key
+    invites = model.EventInvites(
+        user_id = invitedUserKey ,
+        event_id = event_id ,
+        invited_to = inviteform.invite_to.data ,
+        invitation_message = inviteform.invitation_message.data
+      )
+    try:
+      invites.put()
+      # flash('your comment has been posted', category='info')
+      # mail.send(msg)
+      # print name.string_id() , user_id.integer_id() , event_id
+      return redirect(url_for('index'))
+      #return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
+    except CapabilityDisabledError:
+      flash('Something went wrong and your comment has not been posted', category='danger')
+    
+  return render_template('team_profile.html', ename=ename , eid=eid, teamName = teamName, tid = tid, teams= teams, events=events, form=form)
 
 
+@app.route('/comments/<int:eid>/<int:tid>',methods=['GET'])
+@login_required
+def all_team_comments(eid, tid):
+  event_id = ndb.Key(model.Event, eid)
+  team_id = ndb.Key(model.TeamRegister, tid)
+  comments_store = model.TeamComments.query(model.TeamComments.event_id == event_id and model.TeamComments.team_id == team_id)
+  first = {}; comments = []
+  for comment in comments_store:
+    first['name'] = comment.name.string_id()
+    first['uid'] = comment.user_id.integer_id()
+    first['event_id'] = comment.event_id.integer_id()
+    first['team_id'] = comment.team_id.integer_id()
+    first['comment'] = comment.comment
+    comments.append(first)
+    first = {}
+  return jsonify(comments=comments)
 
 
 ####################################################
