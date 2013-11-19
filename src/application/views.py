@@ -999,10 +999,11 @@ def Team_Profile(ename, eid, teamName , tid):
   if request.method == 'POST' and comment_json:
     print request.json
     
-    comments = model.EventComments(
+    comments = model.TeamComments(
         name = name,
         user_id = user_id,
         event_id = event_id,
+        team_id = team_id,
         comment = request.json['comment'],
       )
     try:
@@ -1010,7 +1011,7 @@ def Team_Profile(ename, eid, teamName , tid):
       # flash('your comment has been posted', category='info')
       # mail.send(msg)
       # print name.string_id() , user_id.integer_id() , event_id
-      return jsonify({ "name": name.string_id(),"uid": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
+      return jsonify({ "name": name.string_id(),"uid": user_id.integer_id(), "event_id": event_id.integer_id(),"team_id": team_id.integer_id() , "comment": request.json['comment'] })
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
       
@@ -1035,9 +1036,25 @@ def Team_Profile(ename, eid, teamName , tid):
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
     
-  return render_template('team_profile.html', ename=ename , eid=eid, teamName = teamName, tid = tid, teams= teams, events=events)
+  return render_template('team_profile.html', ename=ename , eid=eid, teamName = teamName, tid = tid, teams= teams, events=events, form=form)
 
-# 
+
+@app.route('/comments/<int:eid>/<int:tid>',methods=['GET'])
+@login_required
+def all_team_comments(eid, tid):
+  event_id = ndb.Key(model.Event, eid)
+  team_id = ndb.Key(model.TeamRegister, tid)
+  comments_store = model.TeamComments.query(model.TeamComments.event_id == event_id and model.TeamComments.team_id == team_id)
+  first = {}; comments = []
+  for comment in comments_store:
+    first['name'] = comment.name.string_id()
+    first['uid'] = comment.user_id.integer_id()
+    first['event_id'] = comment.event_id.integer_id()
+    first['team_id'] = comment.team_id.integer_id()
+    first['comment'] = comment.comment
+    comments.append(first)
+    first = {}
+  return jsonify(comments=comments)
 
 
 ####################################################

@@ -208,6 +208,13 @@ class TeamRegister(Base, modelx.TeamRegisterX):
     description = ndb.StringProperty("Message")
     captain = ndb.KeyProperty(kind="User")
 
+class TeamComments(Base, modelx.TeamRegisterX):
+    name = ndb.KeyProperty(kind="User", required=True)
+    user_id = ndb.KeyProperty(kind="User", required=True)
+    event_id = ndb.KeyProperty(kind="Event", required=True)
+    team_id = ndb.KeyProperty(kind="TeamRegister", required= True)
+    comment = ndb.StringProperty(required=True)
+
 class TeamMembers(Base, modelx.TeamMembersX):
     eventId = ndb.KeyProperty(kind="Event", required = True)
     teamId = ndb.KeyProperty(kind="TeamRegister", required=True)
