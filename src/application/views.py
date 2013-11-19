@@ -957,15 +957,20 @@ def RegisterTeam(ename, eid):
       )
 
     try:
-      team.put()
-      return redirect(url_for('event_profile', ename = ename , eid =  eid))
+      team = team.put()
+      time.sleep(4)
+      return redirect(url_for('Team_Profile', ename = ename , eid =  eid, teamName = form.teamName.data, tid= team.integer_id() ))
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
 
   return render_template('team_register.html', ename=ename , eid=eid, form=form, captain=current_user.name, events= events)
 
+@app.route('/events/<ename>/<int:eid>/teams/<teamName>/<int:tid>', methods=['GET'])
+@login_required
+def Team_Profile(ename, eid, teamName , tid):
+  return render_template('team_profile.html', ename=ename , eid=eid, teamName = teamName, tid = tid)
 
-
+# 
 
 
 ####################################################
