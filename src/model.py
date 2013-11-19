@@ -162,6 +162,7 @@ class Event(Base,modelx.EventX):
     manager = ndb.StringProperty()
     event_url = ndb.StringProperty()
     description=ndb.StringProperty(default='')
+    event_email = ndb.StringProperty(default='')
     phone = ndb.IntegerProperty(default=0000000000)
     venue = ndb.StringProperty(required=True)
     address = ndb.StringProperty()

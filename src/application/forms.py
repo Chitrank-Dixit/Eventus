@@ -63,6 +63,8 @@ class CreateEventForm(wtf.Form):
     state = wtf.TextField('State', validators=[validators.Required()])
     country = wtf.TextField('Country',  validators=[validators.Required()])
     postal = wtf.TextField("Postal Code")
+    phone = wtf.IntegerField('Phone')
+    eventEmail =  wtf.html5.EmailField('Email')
     sdate= wtf.TextField('From')
     edate= wtf.TextField('To')
     access_type = wtf.SelectField('Access Type', choices=[('Public','Public'), ('Private','Private') ], validators=[validators.Required()])

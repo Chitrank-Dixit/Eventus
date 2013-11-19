@@ -768,6 +768,8 @@ def create_event():
         state = form.state.data,
         country = form.country.data,
         postal = int(form.postal.data),
+        phone =  int(form.phone.data),
+        event_email = form.eventEmail.data,
         sdate= datetime(int(sdate_list[2]),int(sdate_list[0]),int(sdate_list[1])),
         edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
         access = form.access_type.data,
@@ -785,7 +787,7 @@ def create_event():
       flash(u'Event %s has been created.' % form.name.data, category='success')
 
       #mail.send(msg)
-<<<<<<< HEAD
+
      
       # eventID = model.Event.query()
       # eventKey = ndb.Key(model.Event, form.name.data )
@@ -795,13 +797,13 @@ def create_event():
       
       #return redirect(url_for('event_profile', ename=form.name.data,eid=itrCid.integer_id()))
       return redirect(url_for('index'))
-=======
+
       #current_event = model.Event.retrieve_one_by('name' and 'key' , event_name and event_key )
       # return redirect(url_for('index'))
       #print "Hiii",current_event
 
       return redirect(url_for('event_profile', ename=event_name , eid=record.integer_id()))
->>>>>>> 929dabb665940dbadb353a9e7bb5962d127e5b97
+
     except CapabilityDisabledError:
       flash(u'App Engine Datastore is currently in read-only mode.', category='info')
       return redirect(url_for('index'))
