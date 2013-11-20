@@ -381,6 +381,7 @@ def user_notifications(name,uid):
   user_id = ndb.Key(model.User, current_user.id)
   print user_id
   notify = model.EventInvites.query(model.EventInvites.invited_to == current_user.name, model.EventInvites.user_id == user_id)
+
   return render_template('notifications.html', notify=notify)
 
 
@@ -769,10 +770,16 @@ def create_event():
     sdate_list = start_date.split('/')
     end_date = form.edate.data
     edate_list = end_date.split('/')
+<<<<<<< HEAD
     youtube_url_code = crop_youtube_url(form.youtubevideo_url.data)
     print 100 * "@"  + youtube_url_code
 
 
+=======
+
+    uploadLogo = str(form.logo.data)
+    upload_url = blobstore.create_upload_url('/upload/'+uploadLogo)
+>>>>>>> be200b8717b421ccffcd99515a0c95e1f6bde267
     event = model.Event(
         name = form.name.data,
         event_type = form.event_type.data,
@@ -792,7 +799,12 @@ def create_event():
         event_email = form.eventEmail.data,
         facebook_page = form.facebook_url.data,
         twitter_id = form.twitter_url.data,
+<<<<<<< HEAD
         youtubevideo_url = youtube_url_code,
+=======
+        youtubevideo_url = form.youtubevideo_url.data,
+        logo = upload_url,
+>>>>>>> be200b8717b421ccffcd99515a0c95e1f6bde267
         sdate= datetime(int(sdate_list[2]),int(sdate_list[0]),int(sdate_list[1])),
         edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
         access = form.access_type.data,
@@ -857,7 +869,7 @@ def event_profile(ename,eid):
   # if user been invited
   invite_json = request.json
   
-
+  
   # send all the Teams of an Event
   teams =  model.TeamRegister.query(model.TeamRegister.eventId == event_id )
   for team in teams:
@@ -890,6 +902,7 @@ def event_profile(ename,eid):
     invitedUserKey = invitedUser.key
     invites = model.EventInvites(
         user_id = invitedUserKey ,
+        eventName =  ename,
         event_id = event_id ,
         invited_to = inviteform.invite_to.data ,
         invitation_message = inviteform.invitation_message.data
@@ -904,8 +917,7 @@ def event_profile(ename,eid):
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
     print "Here is the list",events
-  return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform, teams= teams)
-
+  return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform, teams= teams )
 @app.route('/comments/<int:eid>',methods=['GET'])
 @login_required
 def all_event_comments(eid):
@@ -1113,6 +1125,25 @@ def all_team_comments(eid, tid):
 @app.route('/editable')
 def edit_it():
   return render_template('editable.html')
+
+@app.route('/events/<ename>/<int:eid>/scoreboard', methods=['POST', 'GET'])
+def event_scoreboard(ename, eid):
+  event_id = ndb.Key(model.Event, eid)
+  events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+  teams = model.TeamRegister.query(model.TeamRegister.eventId == event_id)
+  print g.user
+  
+    
+
+  
+  print 100* "*" + "  " + " new events"
+  
+  now = datetime.now()
+  now1 = datetime.now()
+  print now1
+  print now
+  return render_template('scoreboard.html', events= events, teams=teams)
+
 ####################################################
 # Simple Posters Example Do editing in this as we are using as 
 # a testing view
@@ -1239,27 +1270,6 @@ def team_profile():
   return render_template('team_profile.html', events=events)
 
 
-@app.route('/newevents', methods=['GET', 'POST'])
-def newEvents():
-  eventList = model.Event.query()
-  print g.user
-  for event in eventList:
-
-    print 100 * "*"  + event.name + "   "+str(event.creator_id) +"  " + str(g.user.id)
-    #print 100 * "#"
-
-    #y = ndb.Key(model.Event, event.created)
-    
-
-  
-  print 100* "*" + "  " + " new events"
-  
-  now = datetime.now()
-  now1 = datetime.now()
-  print now1
-  print now
-  
-  return render_template('scoreboard.html')
 
 
 # This url is used to create database entries.

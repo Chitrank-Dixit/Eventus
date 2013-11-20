@@ -16,6 +16,9 @@
         {% for notif in notify %}
 		    <div class="alert alert-info">
           {{ notif.invitation_message }}
+          <div class="pull-right">
+            From: {{notif.eventName}}
+          </a>
         </div>
 				{% endfor %}
 		      

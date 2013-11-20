@@ -77,6 +77,11 @@
       <div class="eventLogo">
         <img src="{{ url_for('static', filename='img/Es3.png') }}" style="width:120px;padding:10px 0px 10px 20px;"> 
         
+
+        <!-- <img src="{{ url_for('static', filename='img/celebrate1.jpg') }}" style="width:100px;padding:10px 0px 10px 20px;"> 
+        
+        <img src="{{events.logo}}" style="width:100px;padding:10px 0px 10px 20px;"> -->
+
       </div>
       <div class="eventName">
         <h1> {{events.name}}</h1>
@@ -162,6 +167,13 @@
       </div>
 
     </div>
+    <div class="span3">
+      <div class="well-inverse">
+        <a href="{{ url_for('event_scoreboard', ename= ename, eid=eid )}}">Scoreboard</a>
+        <br>
+        
+      </div>
+
 
   <div class="span3">
     <h4>Venue</h4>  
@@ -181,6 +193,9 @@
 
 
 
+
+
+    </div>
 
 </div>
 <div class="span12"><br></div>
@@ -327,6 +342,7 @@
         {% include 'add_inviteModal.html' %}
       
         
+
       <!-- span6 of comments ended -->
       </div>
 

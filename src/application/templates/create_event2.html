@@ -289,7 +289,15 @@
                     <div style="position:relative;">
                     <a class='btn btn-info' href='javascript:;'>
                         Choose File...
-                        <input type="file" class="fileButton" name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val());'>
+                        
+                        {{ form.logo(id='logo', class="form-control required fileButton",  size="40" , onchange='$("#upload-file-info").html($(this).val());', autocomplete=True, **{'data-bind' : 'value: youtubeURL'} ) }}
+                        {% if form.youtubevideo_url.errors %}
+                        <ul class="errors">
+                            {% for error in form.youtubevideo_url.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     </a>
                     &nbsp;
                     <span class='label-info' id="upload-file-info"></span>

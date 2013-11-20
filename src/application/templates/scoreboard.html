@@ -1,8 +1,10 @@
 {% extends "base.html" %}
-{% block title %} Score Board | Eventus {% endblock %}
+{% block title %} {{events.name}} ScoreBoard | Eventus {% endblock %}
 
 {% block style_block %}
+<link href="{{ url_for('static', filename='bootstrap/css/bootstrap-combined.min.css') }}" rel="stylesheet">
 
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-editable.css') }}" rel="stylesheet">
 
 
 {% endblock %}
@@ -13,11 +15,11 @@
  <div class= "span12">
         <div class="panel panel-primary">
                <div class="panel-heading">
-                 <h3 class="panel-title" style ="color:white;padding :3px 5px 3px 10px;"> Your ScoreBoard</h3>
+                 <h3 class="panel-title" style ="color:white;padding :3px 5px 3px 10px;"> {{events.name}} ScoreBoard</h3>
                </div>
                <div class="panel-body">
 
-                <table class="table table-striped table-hover .table-bordered ">
+                <table id="events" class="table table-striped table-hover .table-bordered ">
 
                 	<caption> Scoreboard for all teams in this event </caption>
                   
@@ -39,46 +41,30 @@
 
                    </thead>
 
+                   {% for team in teams %}
 
                   <tr >
-                    <td>Team 1 </td>
-                    <td>10</td>
-                    <td>3 </td>
-                    <td>14</td>
-                    <td>15</td>
-                    <td>12</td>
+                    <td>{{team.teamName}} </td>
+                    <td><a href="#" data-pk="1">10</a></td>
+                    <td><a href="#" data-pk="1">3 </a></td>
+                    <td><a href="#" data-pk="1">14</a></td>
+                    <td><a href="#" data-pk="1">15</a></td>
+                    <td><a href="#" data-pk="1">12</a></td>
 
                   </tr>
-
-                   <tr >
-                    <td >Team 2 </td>
-                    <td>30</td>
-                    <td>12 </td>
-                    <td>1</td>
-                    <td>11</td>
-                    <td>5</td>
-
-                  </tr>
-                   <tr>
-                    <td>Team 3 </td>
-                    <td>12</td>
-                    <td>15 </td>
-                    <td>14</td>
-                    <td>16</td>
-                    <td>3</td>
-
-                  </tr>
+                  {% endfor %}
+                   
 
                 </tbody>
 
                 <tr class="success" >
                       <td> Total Scores </td>
 
-                      <td>10</td>
-                      <td>3 </td>
-                      <td>14</td>
-                      <td>15</td>
-                      <td>12</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
 
                 </tr>
 
@@ -91,5 +77,32 @@
 
 
  </div>
+{% block tail_script %}
+  
+<script src="{{ url_for('static', filename = 'bootstrap/js/mockjax.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-editable.js') }}"></script>
 
+<script type="text/javascript">
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+$.fn.editable.defaults.mode = 'inline';
+
+$(document).ready(function() {
+    $('#scores').editable();
+});
+//ajax emulation
+$.mockjax({
+    url: '/post',
+    responseTime: 200
+}); 
+
+$('#events a').editable({
+    type: 'number',
+    name: 'scores',
+    url: '/post',
+    title: 'Enter username'
+});
+
+</script>
+
+{% endblock %}
 {% endblock %}
