@@ -1139,6 +1139,10 @@ def event_scoreboard(ename, eid):
   print now
   return render_template('scoreboard.html', events= events, teams=teams)
 
+@app.route('/help', methods=['GET'])
+def help():
+  return render_template('help.html')
+
 ####################################################
 # Simple Posters Example Do editing in this as we are using as 
 # a testing view
