@@ -95,9 +95,10 @@
         <iframe width="410px" height="230px"
         src="http://www.youtube.com/embed/RjoSN595F0E" alternate="nothing">
         </iframe>
-    	
+    	   
 
     	 </div>
+       Enhancement: Team Video to be updated
     </div>
 </div>
 <hr style="clear:both;">
@@ -106,7 +107,7 @@
   
 		<div class="span3">
 
-					<div class="well-inverse">
+					<div class="">
 
 			       
             
@@ -120,7 +121,7 @@
           <!-- span3 for buttons end -->
 	  </div>
     <div class="span2">
-      <div class="well-inverse">
+      <div class="">
         <label> From : </label> 
         <label> To : </label>
 
@@ -128,16 +129,30 @@
 
     </div>
     <div class="span3">
-      <div class="well-inverse">
+      <div class="">
         <h4>Contact Information</h4>
         Phone: {{events.phone}}<br>
         Email: {{events.event_email}}
       </div>
 
     </div>
+    <div class="span3">
+        
+        <h4>Venue</h4>  
+
+      <div class="venue "> <a href="#">
+      {{events.venue}} <br> 
+      {{events.address}},<br>
+      {{events.city}},   {{events.postal}} <br>
+      ({{events.state}}), {{events.country}}
+
+    </a>
+
+      </div>
+    </div>
 
 </div>
-
+<div class="span12"><br></div>
 <hr style="clear:both;">
 <!-- About event contents -->
 <div class="row eventContent">
@@ -216,14 +231,9 @@
 <!-- span4 for venue and teams  -->
   <div class="span4" style="padding: 30px 20px 48px 30px;">
   	<div class="row">
-      <h3> Venue </h3>
+      
   		<div class="span3 venue"> <a href="#">
-         <br>
-
-      {{events.venue}}, <br>
-      {{events.address}} {{events.postal}} <br>
-  		{{events.city}}, {{events.country}}
-  	</a>
+         <a href="{{  url_for('event_scoreboard', ename=ename, eid=eid)}}">Scoreboard</a>
 
   		</div>
       <!-- div : span3 venue ended -->

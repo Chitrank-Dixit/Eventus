@@ -227,7 +227,12 @@
   <div class="span4" style="padding: 30px 20px 48px 30px;">
   	<div class="row">
       
-      
+      {% if events.event_type == "Team Event" %}
+
+      <div class="span3">
+        <a href="{{  url_for('event_scoreboard', ename=ename, eid=eid)}}">Scoreboard</a>
+      </div>
+      {% endif %}
   		<div class="span3 aboutTeams"> 
   			<br>
         <h3> Created By  </h3>

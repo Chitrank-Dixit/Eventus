@@ -728,22 +728,6 @@ def signin_user_db(user_db):
 logger = logging.getLogger(__name__)
 
 
-def crop_youtube_url(url):
-  '''helper function to crop the end of a youtube url video
-  >> crop_youtube_url("http://www.youtube.com/watch?feature=player_embedded&v=RjoSN595F0E")
-  >> 'RjoSN595F0Eh'
-  '''
-  code =""
-  for i in range(1,25):
-    if url[-i] != "=":
-          code = url[-i] + code
-    else :
-      break
-  return code
-
-
-
-
 
 #################################################################
 # Create an Event
@@ -770,15 +754,9 @@ def create_event():
     sdate_list = start_date.split('/')
     end_date = form.edate.data
     edate_list = end_date.split('/')
-    youtube_url_code = crop_youtube_url(form.youtubevideo_url.data)
-    print 100 * "@"  + youtube_url_code
-
-
-
 
     uploadLogo = str(form.logo.data)
     upload_url = blobstore.create_upload_url('/upload/'+uploadLogo)
-
     event = model.Event(
         name = form.name.data,
         event_type = form.event_type.data,
@@ -798,7 +776,7 @@ def create_event():
         event_email = form.eventEmail.data,
         facebook_page = form.facebook_url.data,
         twitter_id = form.twitter_url.data,
-        youtubevideo_url = youtube_url_code,
+        youtubevideo_url = form.youtubevideo_url.data,
         logo = upload_url,
         sdate= datetime(int(sdate_list[2]),int(sdate_list[0]),int(sdate_list[1])),
         edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
@@ -913,6 +891,7 @@ def event_profile(ename,eid):
       flash('Something went wrong and your comment has not been posted', category='danger')
     print "Here is the list",events
   return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform, teams= teams )
+
 @app.route('/comments/<int:eid>',methods=['GET'])
 @login_required
 def all_event_comments(eid):
@@ -930,6 +909,7 @@ def all_event_comments(eid):
 
 
 @app.route('/events/<ename>/<int:eid>/invite/', methods=['POST','GET'])
+@login_required
 def invite_user(ename,eid):
   event_id = ndb.Key(model.Event, eid)
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
@@ -1122,26 +1102,18 @@ def edit_it():
   return render_template('editable.html')
 
 @app.route('/events/<ename>/<int:eid>/scoreboard', methods=['POST', 'GET'])
+@login_required
 def event_scoreboard(ename, eid):
   event_id = ndb.Key(model.Event, eid)
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
   teams = model.TeamRegister.query(model.TeamRegister.eventId == event_id)
   print g.user
   
-    
-
-  
-  print 100* "*" + "  " + " new events"
-  
   now = datetime.now()
   now1 = datetime.now()
   print now1
   print now
-  return render_template('scoreboard.html', events= events, teams=teams)
-
-@app.route('/help', methods=['GET'])
-def help():
-  return render_template('help.html')
+  return render_template('scoreboard.html', events = events, teams=teams)
 
 ####################################################
 # Simple Posters Example Do editing in this as we are using as 
