@@ -82,7 +82,7 @@
                 <div class="control-group">
                     <!-- Event Name -->
                     <div class="controls" >
-                        <label> <h5>Event Name</h5> </label><br>
+                        <label> <h5>Event Name <font color="#C43F2C">*</font></h5> </label><br>
                         {{ form.name(id='ename', class='form-control required ', placeholder="Event name here", style="width:50%", autocomplete=True, autocomplete=True)}}
                         {% if form.name.errors %}
                         <ul class="errors">
@@ -100,7 +100,7 @@
                 <!-- type of event control started -->
                 <div class="control-group">
                     <div class="controls">
-                        <label><h5>Type of Event</h5></label><br>
+                        <label><h5>Type of Event <font color="#C43F2C">*</font></h5></label><br>
                         {{ form.event_type(id='evtype', class='selectpicker required', placeholder="Event Name", autocomplete=True , **{'data-bind': 'value: eventType', 'data-required' : 'true'} )}}
                         {% if form.event_type.errors %}
                         <ul class="errors">
@@ -118,7 +118,7 @@
                 
                 <div data-bind="visible: nTeams, valueUpdate: 'afterkeydown' " class="control-group">
                     <div class="controls">
-                        <label><h5>No of Teams</h5></label><br>
+                        <label><h5>No of Teams <font color="#C43F2C">*</font></h5></label><br>
                         {{ form.noofTeams(id='evtype', class='selectpicker', placeholder="No of Teams", autocomplete=True )}}
                         {% if form.noofTeams.errors %}
                         <ul class="errors">
@@ -135,7 +135,7 @@
 
                 <div data-bind="visible: nTeams, valueUpdate: 'afterkeydown'" class="control-group">
                     <div class="controls">
-                        <label><h5>Team Size</h5></label><br>
+                        <label><h5>Team Size <font color="#C43F2C">*</font></h5></label><br>
                         {{ form.teamSize(id='teamSize', class='selectpicker', placeholder="No of Team Members", autocomplete=True )}}
                         {% if form.teamSize.errors %}
                         <ul class="errors">
@@ -157,8 +157,8 @@
                 <!-- Wsyiwyg editor control started -->
                 <div class="control-group">
                     <div class="controls">
-                        <label><h4>  About the event</h4></label><br>
-                        {{ form.description(id='edescription',class='form-control required ',placeholder="Describe your Event", style="width:80%; height:140px;", autocomplete=True )}}
+                        <label><h4>  About the event <font color="#C43F2C">*</font></h4></label><br>
+                        {{ form.description(id='edescription',class='form-control required ',placeholder="Describe your Event", style="width:80%; height:140px;", autocomplete=True, **{'data-bind' : 'value: demoText'} )}}
                         {% if form.description.errors %}
                         <ul class="errors">
                             {% for error in form.description.errors %}
@@ -179,7 +179,7 @@
                         <!-- Downloaded datepicker from 
                         http://www.eyecon.ro/bootstrap-datepicker/
                          -->
-                        <label><h4>  From </h4></label><br>
+                        <label><h4>  From <font color="#C43F2C">*</font> </h4></label><br>
                         {{ form.sdate(id='start_date',class='form-control required ', autocomplete=True )}}
                         {% if form.sdate.errors %}
                         <ul class="errors">
@@ -196,7 +196,7 @@
 
                 <div class="control-group">
                     <div class="controls">
-                        <label><h4> To </h4></label><br>
+                        <label><h4> To <font color="#C43F2C">*</font> </h4></label><br>
                         {{ form.edate(id='end_date',class='form-control required ', autocomplete=True )}}
                         {% if form.edate.errors %}
                         <ul class="errors">
@@ -217,7 +217,7 @@
                     <div class="controls">
                         <label><h5> URL of event at G+ </h5></label><br>
 
-                        {{ form.event_url(id='eurl', class="form-control required", placeholder="Enter the google+ url of the event",style="width:50%", autocomplete=True, **{'data-bind' : 'value: googleplusURL'}) }}
+                        {{ form.event_url(id='eurl', class="form-control", placeholder="Enter the google+ url of the event",style="width:50%", autocomplete=True, **{'data-bind' : 'value: googleplusURL'}) }}
                         {% if form.event_url.errors %}
                         <ul class="errors">
                             {% for error in form.event_url.errors %}
@@ -234,7 +234,7 @@
                     <div class="controls">
                         <label><h5> Facebook Url (if any) </h5></label><br>
 
-                        {{ form.facebook_url(id='fburl', class="form-control required", placeholder="Enter the facebook url event",style="width:50%", autocomplete=True , **{'data-bind' : 'value: facebookURL'}) }}
+                        {{ form.facebook_url(id='fburl', class="form-control", placeholder="Enter the facebook url event",style="width:50%", autocomplete=True , **{'data-bind' : 'value: facebookURL'}) }}
                         {% if form.facebook_url.errors %}
                         <ul class="errors">
                             {% for error in form.facebook_url.errors %}
@@ -251,7 +251,7 @@
                     <div class="controls">
                         <label><h5> Twitter (if any) </h5></label><br>
 
-                        {{ form.twitter_url(id='twurl', class="form-control required", placeholder="Enter the twitter username",style="width:50%", autocomplete=True, **{'data-bind' : 'value: twitterURL'} ) }}
+                        {{ form.twitter_url(id='twurl', class="form-control", placeholder="Enter the twitter username",style="width:50%", autocomplete=True, **{'data-bind' : 'value: twitterURL'} ) }}
                         {% if form.twitter_url.errors %}
                         <ul class="errors">
                             {% for error in form.twitter_url.errors %}
@@ -281,8 +281,8 @@
                 <!-- video url  control-group end -->
                 </div>
 
-
-                <div class="control-group">
+                <!-- upload logo controls -->
+                <!-- <div class="control-group">
                     <div class="controls">
                         <label><h4>Upload logo</h4></label><br>
                         
@@ -295,12 +295,12 @@
                     <span class='label-info' id="upload-file-info"></span>
             </div>  
                         
-
+ -->
                     <!-- upload logo controls class end below-->
-                </div>
-
+                <!-- </div>
+ -->
                 <!-- upload logo control-group end below-->
-                </div>
+               <!--  </div> -->
 
                 
                 
@@ -335,7 +335,7 @@
             <!--venue control-group started -->
             <div class="control-group">
                 <div class="controls">
-                    <label><h4>Venue </h4></label><br>
+                    <label><h4>Venue <font color="#C43F2C">*</font></h4></label><br>
                     {{ form.venue(id='evenue',class='form-control required ',placeholder="Location of your Event", autocomplete=True )}}
                     {% if form.venue.errors %}
                     <ul class="errors">
@@ -353,7 +353,7 @@
 
             <div class="control-group">
                 <div class="controls">
-                    <label><h4>Address </h4></label><br>
+                    <label><h4>Address <font color="#C43F2C">*</font></h4></label><br>
                     {{ form.address(id='eaddress',class='form-control required ',placeholder="Address of the Venue", autocomplete=True )}}
                     {% if form.address.errors %}
                     <ul class="errors">
@@ -371,7 +371,7 @@
 
             <div class="control-group">
                 <div class="controls">
-                    <label><h4>City </h4></label><br>
+                    <label><h4>City <font color="#C43F2C">*</font></h4></label><br>
                     {{ form.city(id='ecity',class='form-control required ',placeholder="City Name", autocomplete=True )}}
                     {% if form.city.errors %}
                     <ul class="errors">
@@ -389,7 +389,7 @@
 
             <div class="control-group">
                 <div class="controls">
-                    <label><h4>State</h4></label><br>
+                    <label><h4>State <font color="#C43F2C">*</font></h4></label><br>
                     {{ form.state(id='estate',class='form-control required ',placeholder="State", autocomplete=True )}}
                     {% if form.state.errors %}
                     <ul class="errors">
@@ -407,7 +407,7 @@
 
             <div class="control-group">
                 <div class="controls">
-                    <label><h4>Country</h4></label><br>
+                    <label><h4>Country <font color="#C43F2C">*</font></h4></label><br>
                     {{ form.country(id='ecountry',class='form-control required ',placeholder="Country Name", autocomplete=True )}}
                     {% if form.country.errors %}
                     <ul class="errors">
@@ -429,7 +429,7 @@
 
             <div class="control-group">
                 <div class="controls">
-                    <label><h4>Postal Code</h4></label><br>
+                    <label><h4>Postal Code <font color="#C43F2C">*</font></h4></label><br>
                     {{ form.postal(id='epostal',class='form-control required ',placeholder="Postal Code", autocomplete=True )}}
                     {% if form.postal.errors %}
                     <ul class="errors">
@@ -448,7 +448,7 @@
 
                 <div class="control-group">
                 <div class="controls">
-                    <label><h4>Contact No</h4></label><br>
+                    <label><h4>Contact No <font color="#C43F2C">*</font></h4></label><br>
                     {{ form.phone(id='ephone',class='form-control required ',placeholder="Contact No", autocomplete=True )}}
                     {% if form.phone.errors %}
                     <ul class="errors">
@@ -466,7 +466,7 @@
 
             <div class="control-group">
                 <div class="controls">
-                    <label><h4>Email</h4></label><br>
+                    <label><h4>Email <font color="#C43F2C">*</font></h4></label><br>
                     {{ form.eventEmail(id='eventEmail',class='form-control required ',placeholder="Postal Code", autocomplete=True )}}
                     {% if form.eventEmail.errors %}
                     <ul class="errors">
@@ -484,7 +484,7 @@
 
             <div class="control-group" >
                 <div class="controls">
-                    <label><h4>Access Type</h4></label><br>
+                    <label><h4>Access Type <font color="#C43F2C">*</font></h4></label><br>
                     {{ form.access_type(id='eaccess',class='form-control required ',placeholder="Postal Code", autocomplete=True )}}
                     {% if form.access_type.errors %}
                     <ul class="errors">
@@ -599,7 +599,7 @@ $('#create_eventform').validate({
 
 });
 
-function AppViewModel(googleplusURL1, facebookURL1, twitterURL1, youtubeURL1) {
+function AppViewModel(googleplusURL1, facebookURL1, twitterURL1) {
     this.eventType = ko.observable();
     this.nTeams = ko.computed(function(){
         return this.eventType() == 'Team Event';
@@ -609,7 +609,8 @@ function AppViewModel(googleplusURL1, facebookURL1, twitterURL1, youtubeURL1) {
     this.googleplusURL = ko.observable(googleplusURL1);
     this.facebookURL = ko.observable(facebookURL1);
     this.twitterURL = ko.observable(twitterURL1);
-    this.youtubeURL = ko.observable(youtubeURL1);
+    this.demoText =  ko.observable("EDIT THE BELOW DEMO TEXT AS YOU WISH(500 CHARACTERS ONLY)                                                  . Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lacinia euismod elit ut laoreet. Cras ut molestie diam, ut viverra eros. Maecenas et massa ut quam venenatis hendrerit nec accumsan quam.venenatis hendrerit nec accumsan quam. Etiam vel tortor gravida, euismod felis a, pellentesque lectus. Suspendisse potenti. Ut aliquam purus a erat congue rhoncus. Pellentesque at aliquet nisl");
+
 
     
 
@@ -623,7 +624,7 @@ function AppViewModel(googleplusURL1, facebookURL1, twitterURL1, youtubeURL1) {
 }
 
 // Activates knockout.js
-ko.applyBindings(new AppViewModel( "https://plus.google.com/u/0/events/", "https://www.facebook.com/", "https://www.twitter.com/", "https://youtube.com/embed/"));
+ko.applyBindings(new AppViewModel( "https://plus.google.com/u/0/events/", "https://www.facebook.com/events/", "https://www.twitter.com/"));
 
 /*
 var FormHelpers = {

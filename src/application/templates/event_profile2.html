@@ -75,17 +75,41 @@
   
     <div class="span6">
       <div class="eventLogo">
-        <img src="{{ url_for('static', filename='img/celebrate1.jpg') }}" style="width:100px;padding:10px 0px 10px 20px;"> 
-        Logo Title
+        <img src="{{ url_for('static', filename='img/Es3.png') }}" style="width:120px;padding:10px 0px 10px 20px;"> 
+        
       </div>
       <div class="eventName">
         <h1> {{events.name}}</h1>
         
-        <div style="float:left;"> <h4 class="pull-right"><i class="icon-heart"></i> <i class="icon-facebook-sign"></i> <i class="icon-twitter-sign"></i> <i class="icon-google-plus-sign"></i></h4>
+        <div style="float:left;"> <h4 class="pull-right">
+          <!-- <i class="icon-heart"></i> -->
+          {% if events.facebook_page != ""%}
+          <a href="{{events.facebook_page }}"><i class="icon-facebook-sign"></i> </a>   
+          {% endif %}
+          {% if events.twitter_id != "" %}
+          <a href="{{ events.twitter_id }}"><i class="icon-twitter-sign"></i></a>
+          {% endif %}
+          {% if events.event_url %}
+          <a href="{{events.event_url}}"><i class="icon-google-plus-sign"></i></h4></a> 
+          {% endif %}
+
+           
         </div>
 
 
+
+
       </div>
+      <!-- AddThis Button BEGIN -->
+      <div class="addthis_toolbox addthis_default_style ">
+      <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+      <a class="addthis_button_tweet"></a>
+      <a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal"></a>
+      <a class="addthis_counter addthis_pill_style"></a>
+      </div>
+      <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+      <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-528cc507784ed290"></script>
+      <!-- AddThis Button END -->
      
     </div>
     <div class="span1"></div>
@@ -93,7 +117,7 @@
     <div class="span5">
     	<div class="video" >
         <iframe width="410px" height="230px"
-        src="http://www.youtube.com/embed/RjoSN595F0E" alternate="nothing">
+        src="http://www.youtube.com/embed/{{ events.youtubevideo_url }}" alternate="nothing">
         </iframe>
     	
 
@@ -106,7 +130,7 @@
   
 		<div class="span3">
 
-					<div class="well-inverse">
+					<div class="">
 
 			        {% if events.event_type == 'Team Event' %}
               <a class="btn btn-sidebar btn-block" href="{{ url_for('RegisterTeam', ename=ename,eid=eid )}}" >Register Your Team</a>
@@ -122,7 +146,8 @@
           <!-- span3 for buttons end -->
 	  </div>
     <div class="span2">
-      <div class="well-inverse">
+      <div class="">
+        <h4>Event Duration</h4>
         <label> From : {{events.sdate}} </label> 
         <label> To : {{ events.edate }}</label>
 
@@ -130,7 +155,7 @@
 
     </div>
     <div class="span3">
-      <div class="well-inverse">
+      <div class="">
         <h4>Contact Information</h4>
         Phone : {{events.phone}}<br>
         Email : {{events.event_email}}
@@ -138,7 +163,27 @@
 
     </div>
 
+  <div class="span3">
+    <h4>Venue</h4>  
+
+      <div class="venue "> <a href="#">
+      {{events.venue}} <br> 
+      {{events.address}},<br>
+      {{events.city}},   {{events.postal}} <br>
+      ({{events.state}}), {{events.country}}
+
+    </a>
+
+      </div>
+
+
+  </div>
+
+
+
+
 </div>
+<div class="span12"><br></div>
 
 <hr style="clear:both;">
 <!-- About event contents -->
@@ -170,17 +215,8 @@
 <!-- span4 for venue and teams  -->
   <div class="span4" style="padding: 30px 20px 48px 30px;">
   	<div class="row">
-      <h3> Venue </h3>
-  		<div class="span3 venue"> <a href="#">
-         
-
-      Venue: {{events.venue}},
-  		{{events.address}}, {{events.postal}}
-  		{{events.city}} ({{events.state}}), {{events.country}}
-  	</a>
-
-  		</div>
-      <!-- div : span3 venue ended -->
+      
+      
   		<div class="span3 aboutTeams"> 
   			<br>
         <h3> Created By  </h3>
@@ -290,9 +326,7 @@
 
         {% include 'add_inviteModal.html' %}
       
-        <label for="birds">Birds: </label>
-        <input type="text" id="birds" data-provide="typeahead" autocomplete="off" />
-      
+        
       <!-- span6 of comments ended -->
       </div>
 
