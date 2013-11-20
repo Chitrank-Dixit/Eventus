@@ -198,6 +198,7 @@ class EventComments(Base, modelx.EventX):
 class EventInvites(Base, modelx.EventX):
     user_id = ndb.KeyProperty(kind="User", required=True)
     event_id = ndb.KeyProperty(kind="Event", required=True)
+    eventName = ndb.StringProperty(required=True)
     invited_to = ndb.StringProperty(required=True)
     invitation_message = ndb.StringProperty(required=True)
 

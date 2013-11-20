@@ -381,6 +381,7 @@ def user_notifications(name,uid):
   user_id = ndb.Key(model.User, current_user.id)
   print user_id
   notify = model.EventInvites.query(model.EventInvites.invited_to == current_user.name, model.EventInvites.user_id == user_id)
+
   return render_template('notifications.html', notify=notify)
 
 
@@ -841,7 +842,7 @@ def event_profile(ename,eid):
   # if user been invited
   invite_json = request.json
   
-
+  
   # send all the Teams of an Event
   teams =  model.TeamRegister.query(model.TeamRegister.eventId == event_id )
   for team in teams:
@@ -874,6 +875,7 @@ def event_profile(ename,eid):
     invitedUserKey = invitedUser.key
     invites = model.EventInvites(
         user_id = invitedUserKey ,
+        eventName =  ename,
         event_id = event_id ,
         invited_to = inviteform.invite_to.data ,
         invitation_message = inviteform.invitation_message.data
@@ -888,8 +890,7 @@ def event_profile(ename,eid):
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
     print "Here is the list",events
-  return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform, teams= teams)
-
+  return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform, teams= teams )
 @app.route('/comments/<int:eid>',methods=['GET'])
 @login_required
 def all_event_comments(eid):
