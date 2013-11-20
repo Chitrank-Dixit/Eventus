@@ -312,7 +312,6 @@
 {% block tail_script %}
 
 
-
 <script src="{{ url_for('static', filename = 'bootstrap/js/mockjax.js') }}"></script>
 
 <script src="{{ url_for('static', filename = 'bootstrap/js/bootstrap-typeahead.js') }}"></script>
@@ -330,7 +329,7 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 $(document).ready(function () {
     $('#inviteUser').dataTable();
     
-    $("#birds").typeahead({
+    $("#invite_to").typeahead({
     source: function (query, process) {
                
         return $.getJSON("{{ url_for('get_all_users') }}", { query: query },function (data) {
@@ -339,7 +338,8 @@ $(document).ready(function () {
           });
         // This is going to make an HTTP post request to the controller
         
-    }
+    },
+    
 });
 
 
