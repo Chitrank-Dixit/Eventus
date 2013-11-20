@@ -8,6 +8,7 @@ Documentation: https://developers.google.com/appengine/docs/python/ndb/entities
 
 
 from google.appengine.ext import ndb
+from google.appengine.ext import blobstore
 from google.appengine.api import users
 
 import functools

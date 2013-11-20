@@ -49,7 +49,7 @@ class SigninForm(wtf.Form):
 
 class CreateEventForm(wtf.Form):
     name = wtf.TextField('Name', validators=[validators.Required()])
-    # logo = wtf.FileField('logo', )
+    logo = wtf.FileField('logo')
     #creator = wtf.TextField('creator', validators=[validators.Required()])
     # manager = wtf.TextField('manager', default='')
     event_type = wtf.SelectField('Event Type', choices=[('Party','Party'),('Team Event','Team Event'), ('Conference and Workshop','Conference and Workshop') ], validators=[validators.Required()])

@@ -753,6 +753,9 @@ def create_event():
     sdate_list = start_date.split('/')
     end_date = form.edate.data
     edate_list = end_date.split('/')
+
+    uploadLogo = str(form.logo.data)
+    upload_url = blobstore.create_upload_url('/upload/'+uploadLogo)
     event = model.Event(
         name = form.name.data,
         event_type = form.event_type.data,
@@ -773,6 +776,7 @@ def create_event():
         facebook_page = form.facebook_url.data,
         twitter_id = form.twitter_url.data,
         youtubevideo_url = form.youtubevideo_url.data,
+        logo = upload_url,
         sdate= datetime(int(sdate_list[2]),int(sdate_list[0]),int(sdate_list[1])),
         edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
         access = form.access_type.data,
@@ -1093,6 +1097,25 @@ def all_team_comments(eid, tid):
 @app.route('/editable')
 def edit_it():
   return render_template('editable.html')
+
+@app.route('/events/<ename>/<int:eid>/scoreboard', methods=['POST', 'GET'])
+def event_scoreboard(ename, eid):
+  event_id = ndb.Key(model.Event, eid)
+  events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+  teams = model.TeamRegister.query(model.TeamRegister.eventId == event_id)
+  print g.user
+  
+    
+
+  
+  print 100* "*" + "  " + " new events"
+  
+  now = datetime.now()
+  now1 = datetime.now()
+  print now1
+  print now
+  return render_template('scoreboard.html', events= events, teams=teams)
+
 ####################################################
 # Simple Posters Example Do editing in this as we are using as 
 # a testing view
@@ -1219,27 +1242,6 @@ def team_profile():
   return render_template('team_profile.html', events=events)
 
 
-@app.route('/newevents', methods=['GET', 'POST'])
-def newEvents():
-  eventList = model.Event.query()
-  print g.user
-  for event in eventList:
-
-    print 100 * "*"  + event.name + "   "+str(event.creator_id) +"  " + str(g.user.id)
-    #print 100 * "#"
-
-    #y = ndb.Key(model.Event, event.created)
-    
-
-  
-  print 100* "*" + "  " + " new events"
-  
-  now = datetime.now()
-  now1 = datetime.now()
-  print now1
-  print now
-  
-  return render_template('scoreboard.html')
 
 
 # This url is used to create database entries.

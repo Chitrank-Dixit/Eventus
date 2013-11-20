@@ -130,8 +130,8 @@
     <div class="span3">
       <div class="well-inverse">
         <h4>Contact Information</h4>
-        Mobile Number: 9809908890
-        Email Id: contactme@gmail.com
+        Phone: {{events.phone}}<br>
+        Email: {{events.event_email}}
       </div>
 
     </div>
@@ -236,7 +236,7 @@
 
         <h3>Members</h3>
         {% for member in members %}
-          {{member.memberName}}<br>
+          {{member.memberName}}
         {% endfor %}
         
         
