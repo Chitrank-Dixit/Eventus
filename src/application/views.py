@@ -987,6 +987,8 @@ def Team_Profile(ename, eid, teamName , tid):
   # comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
   teams = model.TeamRegister.retrieve_one_by('teamName' and 'key', teamName and team_id)
 
+  members = model.TeamMembers.query(model.TeamMembers.teamId == team_id)
+
   print "All Teams", teams.teamName
   user_id = ndb.Key(model.User, current_user.id)
   name = ndb.Key(model.User, current_user.name)
@@ -1042,7 +1044,7 @@ def Team_Profile(ename, eid, teamName , tid):
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
     
-  return render_template('team_profile.html', ename=ename , eid=eid, teamName = teamName, tid = tid, teams= teams, events=events, form=form)
+  return render_template('team_profile.html', ename=ename , eid=eid, teamName = teamName, tid = tid, teams= teams, events=events, form=form, members = members)
 
 
 @app.route('/events/<ename>/<int:eid>/teams/<teamName>/<int:tid>/addMembers', methods=['POST','GET'])
@@ -1055,21 +1057,19 @@ def add_members(ename, eid, teamName, tid):
     entry = []
     print "JSON hai ji", request.json
     for queue in request.json['members']:
-      userKey = ndb.Key(model.User, queue['member'])
-      if userKey:
-        member = model.TeamMembers(
-          eventId = event_id,
-          teamId = team_id,
-          memberName = userKey 
-        )
-        try:
-          member.put()
-          for mem in request.json:
-            print mem['member']
-        except CapabilityDisabledError:
-          flash('Something went wrong and your comment has not been posted', category='danger')
-      else:
-        flash("user Does not Exists", category="danger")
+      member =  queue['member']
+      # userKey = ndb.Key(model.User, queue['member'])
+      member = model.TeamMembers(
+        eventId = event_id,
+        teamId = team_id,
+        memberName = member,
+      )
+      try:
+        member.put()
+          
+      except CapabilityDisabledError:
+        flash('Something went wrong and your comment has not been posted', category='danger')
+      
   return render_template('addTeamMember.html', ename=ename, eid=eid, teamName= teamName, tid=tid, events= events)
 
 
