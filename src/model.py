@@ -173,6 +173,7 @@ class Event(Base,modelx.EventX):
     sdate = ndb.DateProperty()
     edate = ndb.DateProperty()
     googleplus_page = ndb.StringProperty(default='')
+    youtubevideo_url = ndb.StringProperty(default='')
     facebook_page = ndb.StringProperty(default='')
     twitter_id = ndb.StringProperty(default='')
     access = ndb.StringProperty(required=True)

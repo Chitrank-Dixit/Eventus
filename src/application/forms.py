@@ -54,6 +54,9 @@ class CreateEventForm(wtf.Form):
     # manager = wtf.TextField('manager', default='')
     event_type = wtf.SelectField('Event Type', choices=[('Party','Party'),('Team Event','Team Event'), ('Conference and Workshop','Conference and Workshop') ], validators=[validators.Required()])
     event_url = wtf.html5.URLField('URL')
+    facebook_url =  wtf.html5.URLField('URL')
+    twitter_url  = wtf.html5.URLField('URL')
+    youtubevideo_url = wtf.html5.URLField('URL')
     teamSize = wtf.TextField()
     noofTeams = wtf.TextField()
     description = wtf.TextAreaField('Description',default='')
@@ -68,6 +71,7 @@ class CreateEventForm(wtf.Form):
     sdate= wtf.TextField('From')
     edate= wtf.TextField('To')
     access_type = wtf.SelectField('Access Type', choices=[('Public','Public'), ('Private','Private') ], validators=[validators.Required()])
+
     
     #phone = wtf.IntegerField('phone', default= 0000000000)
     #googleplus_page = wtf.TextField('googleplus_page', default='')
