@@ -770,16 +770,15 @@ def create_event():
     sdate_list = start_date.split('/')
     end_date = form.edate.data
     edate_list = end_date.split('/')
-<<<<<<< HEAD
     youtube_url_code = crop_youtube_url(form.youtubevideo_url.data)
     print 100 * "@"  + youtube_url_code
 
 
-=======
+
 
     uploadLogo = str(form.logo.data)
     upload_url = blobstore.create_upload_url('/upload/'+uploadLogo)
->>>>>>> be200b8717b421ccffcd99515a0c95e1f6bde267
+
     event = model.Event(
         name = form.name.data,
         event_type = form.event_type.data,
@@ -799,12 +798,8 @@ def create_event():
         event_email = form.eventEmail.data,
         facebook_page = form.facebook_url.data,
         twitter_id = form.twitter_url.data,
-<<<<<<< HEAD
         youtubevideo_url = youtube_url_code,
-=======
-        youtubevideo_url = form.youtubevideo_url.data,
         logo = upload_url,
->>>>>>> be200b8717b421ccffcd99515a0c95e1f6bde267
         sdate= datetime(int(sdate_list[2]),int(sdate_list[0]),int(sdate_list[1])),
         edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
         access = form.access_type.data,
