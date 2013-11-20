@@ -16,6 +16,16 @@
     p.error {
         color: red;
     }
+    .fileButton {
+
+        position:absolute;
+        z-index:2;
+        top:0;
+        left:0;
+        filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+        opacity:0;background-color:transparent;
+        color:transparent;
+    }
 
     .venue-form {
         background-color: #f9faf7;
@@ -142,23 +152,6 @@
 
                 
 
-                <!-- google plus url control started -->
-                <div class="control-group">
-                    <div class="controls">
-                        <label><h5> URL of event at G+ </h5></label><br>
-
-                        {{ form.event_url(id='eurl', class="form-control required", placeholder="Enter the google+ url of the event",style="width:50%", autocomplete=True ) }}
-                        {% if form.event_url.errors %}
-                        <ul class="errors">
-                            {% for error in form.event_url.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    <!-- google plus url controls class end -->
-                    </div>
-                <!-- google plus url  control-group end -->
-                </div>
 
 
                 <!-- Wsyiwyg editor control started -->
@@ -177,6 +170,9 @@
                     </div>
                 <!-- Wsyiwyg editor control-group end below-->
                 </div>
+
+
+
 
                 <div class="control-group">
                     <div class="controls">
@@ -214,17 +210,90 @@
                     </div>
                 </div>
 
+
+
+                <!-- google plus url control started -->
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h5> URL of event at G+ </h5></label><br>
+
+                        {{ form.event_url(id='eurl', class="form-control required", placeholder="Enter the google+ url of the event",style="width:50%", autocomplete=True, **{'data-bind' : 'value: googleplusURL'}) }}
+                        {% if form.event_url.errors %}
+                        <ul class="errors">
+                            {% for error in form.event_url.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    <!-- google plus url controls class end -->
+                    </div>
+                <!-- google plus url  control-group end -->
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h5> Facebook Url (if any) </h5></label><br>
+
+                        {{ form.facebook_url(id='fburl', class="form-control required", placeholder="Enter the facebook url event",style="width:50%", autocomplete=True , **{'data-bind' : 'value: facebookURL'}) }}
+                        {% if form.facebook_url.errors %}
+                        <ul class="errors">
+                            {% for error in form.facebook_url.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    <!-- facebook url controls class end -->
+                    </div>
+                <!-- facebook url  control-group end -->
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h5> Twitter (if any) </h5></label><br>
+
+                        {{ form.twitter_url(id='twurl', class="form-control required", placeholder="Enter the twitter username",style="width:50%", autocomplete=True, **{'data-bind' : 'value: twitterURL'} ) }}
+                        {% if form.twitter_url.errors %}
+                        <ul class="errors">
+                            {% for error in form.twitter_url.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    <!-- twitter url controls class end -->
+                    </div>
+                <!-- twitter url  control-group end -->
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h5> Youtube URL (if any) </h5></label><br>
+
+                        {{ form.youtubevideo_url(id='yurl', class="form-control required", placeholder="Enter the twitter username",style="width:50%", autocomplete=True, **{'data-bind' : 'value: youtubeURL'} ) }}
+                        {% if form.youtubevideo_url.errors %}
+                        <ul class="errors">
+                            {% for error in form.youtubevideo_url.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    <!-- video url controls class end -->
+                    </div>
+                <!-- video url  control-group end -->
+                </div>
+
+
                 <div class="control-group">
                     <div class="controls">
                         <label><h4>Upload logo</h4></label><br>
-                        <div class="fileupload fileupload-new" data-provides="fileupload">
-  <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
-  <div>
-    <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" /></span>
-    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-  </div>
-</div>
                         
+                    <div style="position:relative;">
+                    <a class='btn btn-info' href='javascript:;'>
+                        Choose File...
+                        <input type="file" class="fileButton" name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val());'>
+                    </a>
+                    &nbsp;
+                    <span class='label-info' id="upload-file-info"></span>
+            </div>  
                         
 
                     <!-- upload logo controls class end below-->
@@ -233,47 +302,15 @@
                 <!-- upload logo control-group end below-->
                 </div>
 
-                <div class="control-group">
-                <div class="controls">
-                    <label><h4>Contact No</h4></label><br>
-                    {{ form.phone(id='ephone',class='form-control required ',placeholder="Contact No", autocomplete=True )}}
-                    {% if form.phone.errors %}
-                    <ul class="errors">
-                        {% for error in form.phone.errors %}
-                        <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-
-                <!-- phone  controls class end below-->
-                </div>
-
-            <!-- phone  control-group end below-->
-            </div>
-
-            <div class="control-group">
-                <div class="controls">
-                    <label><h4>Email</h4></label><br>
-                    {{ form.eventEmail(id='eventEmail',class='form-control required ',placeholder="Postal Code", autocomplete=True )}}
-                    {% if form.eventEmail.errors %}
-                    <ul class="errors">
-                        {% for error in form.eventEmail.errors %}
-                        <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-
-                <!-- eventEmail controls class end below-->
-                </div>
-
-            <!-- eventEmail control-group end below-->
-            </div>
+                
                 
                 <!-- create event button -->
                 <div class="form-actions">
-                        <div class="controls">
+
+                        <div class="controls ">
+                            <center>
                             <button type="submit" id="event_submit" value"create_event" class="btn btn-primary" data-loading-text="Creating Event..." >Create Event</button><br><br>
-                        
+                            </center>
                         </div>
                 </div>
 
@@ -409,6 +446,42 @@
             <!-- postal code control-group end below-->
             </div>
 
+                <div class="control-group">
+                <div class="controls">
+                    <label><h4>Contact No</h4></label><br>
+                    {{ form.phone(id='ephone',class='form-control required ',placeholder="Contact No", autocomplete=True )}}
+                    {% if form.phone.errors %}
+                    <ul class="errors">
+                        {% for error in form.phone.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- phone  controls class end below-->
+                </div>
+
+            <!-- phone  control-group end below-->
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>Email</h4></label><br>
+                    {{ form.eventEmail(id='eventEmail',class='form-control required ',placeholder="Postal Code", autocomplete=True )}}
+                    {% if form.eventEmail.errors %}
+                    <ul class="errors">
+                        {% for error in form.eventEmail.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- eventEmail controls class end below-->
+                </div>
+
+            <!-- eventEmail control-group end below-->
+            </div>
+
             <div class="control-group" >
                 <div class="controls">
                     <label><h4>Access Type</h4></label><br>
@@ -526,17 +599,31 @@ $('#create_eventform').validate({
 
 });
 
-function AppViewModel() {
+function AppViewModel(googleplusURL1, facebookURL1, twitterURL1, youtubeURL1) {
     this.eventType = ko.observable();
     this.nTeams = ko.computed(function(){
         return this.eventType() == 'Team Event';
 
     }, this);
+       
+    this.googleplusURL = ko.observable(googleplusURL1);
+    this.facebookURL = ko.observable(facebookURL1);
+    this.twitterURL = ko.observable(twitterURL1);
+    this.youtubeURL = ko.observable(youtubeURL1);
+
+    
+
+    
+ 
+
+
+
+
     
 }
 
 // Activates knockout.js
-ko.applyBindings(new AppViewModel());
+ko.applyBindings(new AppViewModel( "https://plus.google.com/u/0/events/", "https://www.facebook.com/", "https://www.twitter.com/", "https://youtube.com/embed/"));
 
 /*
 var FormHelpers = {
