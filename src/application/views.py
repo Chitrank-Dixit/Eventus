@@ -975,6 +975,12 @@ def RegisterTeam(ename, eid):
   event_id = ndb.Key(model.Event, eid)
   event_name = ndb.Key(model.Event, ename)
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+  form.teamVideoURL.data = "http://www.youtube.com/watch?v=PocfpmK458o"
+  
+
+  #team_url_code = crop_youtube_url(form.teamVideoURL.data)
+
+
   if request.method == 'POST':
     team = model.TeamRegister(
         eventId = event_id,
@@ -985,6 +991,8 @@ def RegisterTeam(ename, eid):
 
       )
     
+
+
     try:
       team = team.put()
       time.sleep(4)
