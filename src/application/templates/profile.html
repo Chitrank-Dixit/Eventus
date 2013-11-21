@@ -48,7 +48,7 @@
 		<div class="span9">
 		<ul class="nav nav-tabs">
   				<li class="active">
-    				<a href="#posts" data-toggle="tab">Posts</a>
+    				<a href="#posts" data-toggle="tab">Comments</a>
   		</li>
  	 	<li><a href="#favourites" data-toggle="tab">Favourites</a></li>
   		<li><a href="#events" data-toggle="tab">Events</a></li>
@@ -61,7 +61,18 @@
 		</ul>
 		<div class="tab-content">
 		<div class="tab-pane active" id="posts">
-      {% for com in comments %}
+      <ul class="nav nav-pills">
+            <li class="active">
+            <a href="#events" data-toggle="tab">Event Comments</a>
+            </li>
+            <li>
+            <a href="#teams" data-toggle="tab">Team Comments</a>
+            </li>
+            
+      </ul>
+      <div class="tab-content">
+      <div class="tab-pane active" id="events">
+        {% for com in comments %}
 
         <div class="well-inverse">
           <div class="alert alert-success">{{com.event_name.string_id()}}</div>
@@ -69,7 +80,19 @@
           
         </div>
       {% endfor %}
+      </div>
 
+      <div class="tab-pane" id="teams">
+        {% for tcom in teamcomments %}
+
+        <div class="well-inverse">
+          <div class="alert alert-success">{{tcom.teamName.string_id()}}</div>
+          {{tcom.comment}}
+          
+        </div>
+      {% endfor %}
+      </div>
+      </div>
     </div>
 		<div class="tab-pane" id="favourites">Be Strong </div>
 		<div class="tab-pane" id="events">

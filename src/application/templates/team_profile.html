@@ -188,7 +188,7 @@
                       <div class="controls">
 
                             <p>
-                            {{ form.comment(id='comment',class='form-horizontal full-width required ',placeholder="Please post your Comment Here", style="width: 500px;", autocomplete=True, **{'data-bind': 'value:  comment', 'data-required' : 'true' })}}</p>
+                            {{ form.comment(id='comment',class='form-horizontal span5 required ',placeholder="Please post your Comment Here", autocomplete=True, **{'data-bind': 'value:  comment', 'data-required' : 'true' })}}</p>
                             {% if form.comment.errors %}
                             <ul class="errors">
                                 {% for error in form.comment.errors %}
@@ -280,11 +280,7 @@
 <script type="text/javascript">
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
-$(document).ready(function () {
-    $('#inviteUser').dataTable();
 
-
-});
 
 // Knockoutjs Comment Code
 
@@ -307,7 +303,7 @@ function Comment(data) {
 }
 
 
-function TeamCommentViewModel() {
+function CommentViewModel() {
     var self = this;
     self.users = ko.observableArray([]);
     self.userInfo = ko.observableArray([]);
@@ -323,7 +319,7 @@ function TeamCommentViewModel() {
            user.isSelected(!all); 
         });
         return true;
-    }       
+    };       
     
     self.inviteUser = function() {
         self.invites.push(new AddInvite({ title: this.newTaskText() }));
@@ -360,8 +356,9 @@ function TeamCommentViewModel() {
     
 
     self.save = function() {
+        console.log("Yahan Toh AAYA");
         return $.ajax({
-            url: "{{ url_for('event_profile', ename = ename , eid = eid ) }}",
+            url: "{{ url_for('Team_Profile', ename=ename, eid = eid , teamName= teamName, tid = tid ) }}",
             contentType: 'application/json',
             type: 'POST',
             data: JSON.stringify({
@@ -378,7 +375,7 @@ function TeamCommentViewModel() {
                 return;
             },
             error: function() {
-              console.log(ename);
+                
                 return console.log("Failed");
             }
         });
@@ -391,7 +388,7 @@ function TeamCommentViewModel() {
 // ko.validation.init();
 
 // Activates knockout.js
-ko.applyBindings(new TeamCommentViewModel());
+ko.applyBindings(new CommentViewModel());
 
 
 

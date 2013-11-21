@@ -225,6 +225,9 @@ def user_profile(name,uid):  #
     
     user_key = ndb.Key(model.User, uid)
     comments = model.EventComments.query(model.EventComments.user_id == user_key)
+
+    teamcomments = model.TeamComments.query(model.TeamComments.user_id == user_key)
+
     print user_key
     
     for res in user_in:
@@ -285,7 +288,7 @@ def user_profile(name,uid):  #
 
     return flask.render_template('profile.html',results= results,
      user = user, euid= euid, followers = followers, form=form, inbox=inbox,
-     user_in = user_in , comments= comments
+     user_in = user_in , comments= comments, teamcomments = teamcomments
      )
 
 
@@ -994,7 +997,7 @@ def RegisterTeam(ename, eid):
 
 
 
-@app.route('/events/<ename>/<int:eid>/teams/<teamName>/<int:tid>', methods=['GET'])
+@app.route('/events/<ename>/<int:eid>/teams/<teamName>/<int:tid>', methods=['GET', 'POST'])
 @login_required
 def Team_Profile(ename, eid, teamName , tid):
   event_id = ndb.Key(model.Event, eid)
@@ -1018,21 +1021,23 @@ def Team_Profile(ename, eid, teamName , tid):
   comment_json = request.json
   # print "Here is the list",events.name
   # if user been invited
-  invite_json = request.json
+  # invite_json = request.json
   
 
   
   form = CommentForm(request.form)
   inviteform = InviteUserForm(request.form)
   # print request.json, type(comment_json)
+  
   if request.method == 'POST' and comment_json:
     print request.json
-    
+    print "What the heck"
     comments = model.TeamComments(
         name = name,
         user_id = user_id,
         event_id = event_id,
         team_id = team_id,
+        teamName = team_name,
         comment = request.json['comment'],
       )
     try:
@@ -1102,11 +1107,11 @@ def all_team_comments(eid, tid):
   comments_store = model.TeamComments.query(model.TeamComments.event_id == event_id and model.TeamComments.team_id == team_id)
   first = {}; comments = []
   for comment in comments_store:
-    first['name'] = comment.name.string_id()
-    first['uid'] = comment.user_id.integer_id()
+    first['tname'] = comment.name.string_id()
+    first['tuid'] = comment.user_id.integer_id()
     first['event_id'] = comment.event_id.integer_id()
     first['team_id'] = comment.team_id.integer_id()
-    first['comment'] = comment.comment
+    first['tcomment'] = comment.comment
     comments.append(first)
     first = {}
   return jsonify(comments=comments)
