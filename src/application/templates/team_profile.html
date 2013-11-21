@@ -75,24 +75,14 @@
   
     <div class="span6">
       <div class="eventLogo">
-        <img src="{{ url_for('static', filename='img/Es3.png') }}" style="width:100px;padding:10px 0px 10px 20px;"> 
+        <img src="{{ url_for('static', filename='img/celebrate1.jpg') }}" style="width:100px;padding:10px 0px 10px 20px;"> 
         Logo Title
       </div>
       <div class="eventName">
         <h1> <a href="/events/{{ename}}/{{eid}}/">{{events.name}}</a>  / {{teams.teamName}} </h1>
         
-        <!-- AddThis Button BEGIN -->
-        <div class="addthis_toolbox addthis_default_style ">
-        <a class="addthis_button_preferred_1"></a>
-        <a class="addthis_button_preferred_2"></a>
-        <a class="addthis_button_preferred_3"></a>
-        <a class="addthis_button_preferred_4"></a>
-        <a class="addthis_button_compact"></a>
-        <a class="addthis_counter addthis_bubble_style"></a>
+        <div style="float:left;"> <h4 class="pull-right"><i class="icon-heart"></i> <i class="icon-facebook-sign"></i> <i class="icon-twitter-sign"></i> <i class="icon-google-plus-sign"></i></h4>
         </div>
-        <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
-        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=chitrank"></script>
-        <!-- AddThis Button END -->
 
 
       </div>
@@ -102,16 +92,9 @@
 
     <div class="span5">
     	<div class="video" >
-        {% if teams.teamVideoURL !=  "" %}
         <iframe width="410px" height="230px"
         src="http://www.youtube.com/embed/{{ teams.teamVideoURL }}" alternate="nothing">
         </iframe>
-        {% else %}
-        <iframe width="410px" height="230px"
-        src="http://www.youtube.com/embed/{{ events.youtubevideo_url }}" alternate="nothing">
-        {% endif %}
-
-
     	   
 
     	 </div>
@@ -233,7 +216,7 @@
                 <!-- data-bind="attr: { href: commentBy , name: name , uid: uid }" -->
 
                 <p data-bind="text: comment"></p>
-                <a data-bind="attr:{ href:  '/user/' + name() + '/' + uid() + '/' }"><p data-bind="text: cname"></p></a>
+                <a data-bind="attr:{ href:  '/user/' + name() + '/' + uid() + '/' }"><p data-bind="text: name"></p></a>
 
                 
                 
@@ -297,7 +280,11 @@
 <script type="text/javascript">
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
-
+$(document).ready(function () {
+    $('#inviteUser').dataTable();
+  
+  
+});
 
 // Knockoutjs Comment Code
 
@@ -358,8 +345,9 @@ function CommentViewModel() {
             return new Comment(item);
 
         });
-        self.comments(t);
 
+        self.comments(t);
+        console.log(self.comments());
     });
 
     $.getJSON('/users', function(invitationModels) {
@@ -375,7 +363,7 @@ function CommentViewModel() {
     self.save = function() {
         console.log("Yahan Toh AAYA");
         return $.ajax({
-            url: "{{ url_for('Team_Profile', ename=ename, eid = eid , teamName= teamName, tid = tid ) }}",
+            url: "{{ url_for('Team_Profile', ename=ename, eid=eid , teamName=teamName, tid=tid ) }}",
             contentType: 'application/json',
             type: 'POST',
             data: JSON.stringify({

@@ -820,7 +820,7 @@ def create_event():
       # print eventKey
       
       #return redirect(url_for('event_profile', ename=form.name.data,eid=itrCid.integer_id()))
-      return redirect(url_for('index'))
+      # return redirect(url_for('index'))
 
       #current_event = model.Event.retrieve_one_by('name' and 'key' , event_name and event_key )
       # return redirect(url_for('index'))
@@ -1115,11 +1115,11 @@ def all_team_comments(eid, tid):
   comments_store = model.TeamComments.query(model.TeamComments.event_id == event_id and model.TeamComments.team_id == team_id)
   first = {}; comments = []
   for comment in comments_store:
-    first['tname'] = comment.name.string_id()
-    first['tuid'] = comment.user_id.integer_id()
+    first['name'] = comment.name.string_id()
+    first['uid'] = comment.user_id.integer_id()
     first['event_id'] = comment.event_id.integer_id()
     first['team_id'] = comment.team_id.integer_id()
-    first['tcomment'] = comment.comment
+    first['comment'] = comment.comment
     comments.append(first)
     first = {}
   return jsonify(comments=comments)
