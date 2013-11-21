@@ -63,15 +63,15 @@
 		<div class="tab-pane active" id="posts">
       <ul class="nav nav-pills">
             <li class="active">
-            <a href="#events" data-toggle="tab">Event Comments</a>
+            <a href="#eventscomments" data-toggle="tab">Event Comments</a>
             </li>
             <li>
-            <a href="#teams" data-toggle="tab">Team Comments</a>
+            <a href="#teamscomments" data-toggle="tab">Team Comments</a>
             </li>
             
       </ul>
       <div class="tab-content">
-      <div class="tab-pane active" id="events">
+      <div class="tab-pane active" id="eventscomments">
         {% for com in comments %}
 
         <div class="well-inverse">
@@ -82,7 +82,7 @@
       {% endfor %}
       </div>
 
-      <div class="tab-pane" id="teams">
+      <div class="tab-pane" id="teamscomments">
         {% for tcom in teamcomments %}
 
         <div class="well-inverse">
