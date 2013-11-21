@@ -60,7 +60,17 @@
 
 		</ul>
 		<div class="tab-content">
-		<div class="tab-pane active" id="posts">Heheh</div>
+		<div class="tab-pane active" id="posts">
+      {% for com in comments %}
+
+        <div class="well-inverse">
+          <div class="alert alert-success">{{com.event_name.string_id()}}</div>
+          {{com.comment}}
+          
+        </div>
+      {% endfor %}
+
+    </div>
 		<div class="tab-pane" id="favourites">Be Strong </div>
 		<div class="tab-pane" id="events">
 			{% if not results %}

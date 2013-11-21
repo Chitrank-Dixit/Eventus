@@ -192,6 +192,7 @@ class EventComments(Base, modelx.EventX):
     name = ndb.KeyProperty(kind="User", required=True)
     user_id = ndb.KeyProperty(kind="User", required=True)
     event_id = ndb.KeyProperty(kind="Event", required=True)
+    event_name = ndb.KeyProperty(kind="Event", required=True)
     comment = ndb.StringProperty(required=True)
 
 # Event Invites model to invite site users to attend the Event

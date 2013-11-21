@@ -217,12 +217,14 @@ def signup():
 @login_required
 def user_profile(name,uid):  #
     euid= uid
+    
     user_is = model.User.query()
     usered = user_is.filter(model.User.name == name , model.User.id == uid)
     user_in = user_is.fetch()
     # user = 'Initialized'
-
+    
     user_key = ndb.Key(model.User, uid)
+    comments = model.EventComments.query(model.EventComments.user_id == user_key)
     print user_key
     
     for res in user_in:
@@ -283,7 +285,7 @@ def user_profile(name,uid):  #
 
     return flask.render_template('profile.html',results= results,
      user = user, euid= euid, followers = followers, form=form, inbox=inbox,
-     user_in = user_in
+     user_in = user_in , comments= comments
      )
 
 
@@ -868,6 +870,7 @@ def event_profile(ename,eid):
         name = name,
         user_id = user_id,
         event_id = event_id,
+        event_name = event_name,
         comment = request.json['comment'],
       )
     try:
