@@ -128,9 +128,16 @@
 
     <div class="span5">
     	<div class="video" >
+        {% if events.youtubevideo_url != "" %}
         <iframe width="410px" height="230px"
         src="http://www.youtube.com/embed/{{ events.youtubevideo_url }}" alternate="nothing">
         </iframe>
+        
+        {% else %}
+        <iframe width="410px" height="230px"
+        src="https://www.youtube.com/embed/PglfPO9QbRc" alternate="nothing">
+        </iframe>
+        {% endif %}
     	
 
     	 </div>
