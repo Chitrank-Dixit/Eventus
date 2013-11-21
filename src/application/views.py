@@ -727,7 +727,18 @@ def signin_user_db(user_db):
 
 logger = logging.getLogger(__name__)
 
-
+def crop_youtube_url(url):
+  '''helper function to crop the end of a youtube url video
+  >> crop_youtube_url("http://www.youtube.com/watch?feature=player_embedded&v=RjoSN595F0E")
+  >> 'RjoSN595F0Eh'
+  '''
+  code =""
+  for i in range(1,25):
+    if url[-i] != "=":
+          code = url[-i] + code
+    else :
+      break
+  return code
 
 #################################################################
 # Create an Event
@@ -754,7 +765,7 @@ def create_event():
     sdate_list = start_date.split('/')
     end_date = form.edate.data
     edate_list = end_date.split('/')
-
+    youtube_url_code = crop_youtube_url(form.youtubevideo_url.data)
     uploadLogo = str(form.logo.data)
     upload_url = blobstore.create_upload_url('/upload/'+uploadLogo)
     event = model.Event(
@@ -776,7 +787,7 @@ def create_event():
         event_email = form.eventEmail.data,
         facebook_page = form.facebook_url.data,
         twitter_id = form.twitter_url.data,
-        youtubevideo_url = form.youtubevideo_url.data,
+        youtubevideo_url = youtube_url_code,
         logo = upload_url,
         sdate= datetime(int(sdate_list[2]),int(sdate_list[0]),int(sdate_list[1])),
         edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
