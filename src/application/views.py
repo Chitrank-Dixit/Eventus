@@ -963,8 +963,8 @@ def RegisterTeam(ename, eid):
         eventId = event_id,
         eventName = event_name,
         teamName = form.teamName.data,
-        description = form.description.data
-        
+        description = form.description.data,
+        teamVideoURL = form.teamVideoURL.data
 
       )
     

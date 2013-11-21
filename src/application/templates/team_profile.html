@@ -93,17 +93,17 @@
     <div class="span5">
     	<div class="video" >
         <iframe width="410px" height="230px"
-        src="http://www.youtube.com/embed/RjoSN595F0E" alternate="nothing">
+        src="http://www.youtube.com/embed/{{ teams.teamVideoURL }}" alternate="nothing">
         </iframe>
     	   
 
     	 </div>
-       Enhancement: Team Video to be updated
+       
     </div>
 </div>
 <hr style="clear:both;">
 <div class="row">
-	<div class="span12">
+	
   
 		<div class="span3">
 
@@ -122,8 +122,9 @@
 	  </div>
     <div class="span2">
       <div class="">
-        <label> From : </label> 
-        <label> To : </label>
+        <h4>Event Duration</h4>
+        <label> From : {{events.sdate}} </label> 
+        <label> To : {{events.edate}}</label>
 
       </div>
 
@@ -160,7 +161,7 @@
   <div class="span6" style="padding-left: 30px;">
 	<h3>About the Team</h3>
 	<p style ="text-align:justify;">
-    {{teams.teamName}}
+    {{teams.description}}
 
     <br><br>
 

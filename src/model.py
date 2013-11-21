@@ -208,6 +208,7 @@ class TeamRegister(Base, modelx.TeamRegisterX):
     eventName = ndb.KeyProperty(kind="Event", required=True)
     teamName = ndb.StringProperty("Team Name", required=True)
     description = ndb.StringProperty("Message")
+    teamVideoURL = ndb.StringProperty("Team Video URL")
     captain = ndb.KeyProperty(kind="User")
 
 class TeamComments(Base, modelx.TeamRegisterX):
@@ -220,6 +221,7 @@ class TeamComments(Base, modelx.TeamRegisterX):
 class TeamMembers(Base, modelx.TeamMembersX):
     eventId = ndb.KeyProperty(kind="Event", required = True)
     teamId = ndb.KeyProperty(kind="TeamRegister", required=True)
+
     # memberName = ndb.KeyProperty(kind='User')
     # memberId = ndb.KeyProperty(kind='User')
     memberName = ndb.StringProperty("Member Name")
