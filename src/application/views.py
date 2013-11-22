@@ -167,6 +167,18 @@ def signup():
     form = SignupForm(request.form)
     #next = request.args.get('next')
     if form.validate_on_submit() and request.method=='POST':
+        user_db = model.User.retrieve_one_by('name' and 'email' and 'password' , form.name.data and form.email.data and form.password.data)
+
+        
+        if user_db != None:
+          if user_db.name != None and user_db.email != None and user_db.password != None:
+            flash(u'User already registered with this %s email or %s name, Please choose different name and email ' % (form.email.data,form.name.data),category='error')
+            return redirect(url_for('signup'))
+
+          if user_db.name == form.name.data:
+            flash('Username already taken', category='warning')
+            return redirect(url_for('signup'))
+        
         signup = model.User(
             name = form.name.data,
             username = form.name.data,
@@ -177,26 +189,39 @@ def signup():
         #session['remember_me'] = form.remeber_me.data
         #passwd = model.User.retrieve_one_by('password',form.password.data)
         # user = model.User.retrieve_one_by('email', form.email.data)
-        user_db = model.User.retrieve_one_by('name' and 'email' and 'password' , form.name.data and form.email.data and form.password.data)
-
         
-        if user_db != None:
-          if user_db.name != None and user_db.email != None and user_db.password != None:
-            flash(u'User already registered with this %s email and %s name, Please choose different name and email ' % (form.email.data,form.name.data),category='error')
-            return redirect(url_for('signup'))
-
-          if user_db.name == form.name.data:
-            flash('Username already taken', category='warning')
-            return redirect(url_for('signup'))
 
 
 
         try:
             signup.put()
             #signup_id = .key.id()
-            message = mail.EmailMessage(sender='chitrankdixit1@gmail.com',subject="Welcome to Eventus")
+            message = mail.EmailMessage(sender='chitrankdixit@gmail.com',subject="Welcome to Eventus")
             message.to=form.email.data
-            message.body="Congratulations You have been registered to Eventus"
+            message.body = """
+            Dear %s:
+
+            Your example.com account has been approved.  You can now visit
+            %s and access our application's services and features.
+
+            Please let us know if you have any questions.
+
+            The Eventus Team
+            """ % (form.name.data, "http://www.gcdc2013-eventus.appspot.com/")
+
+            message.html = """
+            <html><head></head><body>
+            Dear %s:
+
+            Your example.com account has been approved.  You can now visit
+            %s and access our application's services and features.
+
+            Please let us know if you have any questions.
+
+            The Eventus Team
+            </body></html>
+            """ % (form.name.data, "http://www.gcdc2013-eventus.appspot.com/")
+            
             message.send()
 
             #msg = Message("You have been Registered to Eventus ",sender=config.ADMINS[0],recipients=[form.email.data])
