@@ -217,6 +217,7 @@ class TeamComments(Base, modelx.TeamRegisterX):
     user_id = ndb.KeyProperty(kind="User", required=True)
     event_id = ndb.KeyProperty(kind="Event", required=True)
     team_id = ndb.KeyProperty(kind="TeamRegister", required= True)
+    teamName = ndb.KeyProperty(kind="TeamRegister", required= True)
     comment = ndb.StringProperty(required=True)
 
 class TeamMembers(Base, modelx.TeamMembersX):
