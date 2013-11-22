@@ -27,10 +27,10 @@
                 {% if g.user.is_authenticated() %}    
                   Welcome
                 {% else %}
-                <p><a href="#" class="btn btn-default btn-lg" role="button">Learn more &raquo;</a> <a href="{{ url_for('signin') }}" class="btn btn-success btn-lg" role="button">Sign in &raquo;</a></p>
+                <p><a href="/help" class="btn btn-default btn-lg" role="button">Learn more &raquo;</a> <a href="{{ url_for('signin') }}" class="btn btn-success btn-lg" role="button">Sign in &raquo;</a></p>
                 {% endif %}
               </center>
-              <a href="#about" class="btn btn-primary btn-lg">Go to your event</a>
+              <a href="/events" class="btn btn-primary btn-lg">Go to your event</a>
             </div>
             </div>
             </div>
