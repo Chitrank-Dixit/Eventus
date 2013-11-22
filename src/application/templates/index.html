@@ -1,5 +1,5 @@
 <title>Eventus | Events Never been so Interesting</title>
-{% extends "base.html" %}
+{% extends "base_index.html" %}
 {% block style_block %}
  <link href="{{ url_for('static', filename='bootstrap/css/stylish-portfolio.css') }}" rel="stylesheet">
   <style type="text/css">
@@ -16,28 +16,27 @@
       <!-- Full Page Image Header Area -->
           <div id="top" class="header">
             <div class="vert-text">
-                    <center>
-                      {% if g.user.is_authenticated() %}    
-                        Welcome
-                      {% else %}
-                      <p><a href="#" class="btn btn-default btn-lg" role="button">Learn more &raquo;</a> <a href="{{ url_for('signin') }}" class="btn btn-success btn-lg" role="button">Sign in &raquo;</a></p>
-                      {% endif %}
-                      </center>
+              <div class="span12">
+                <div class="span3"></div>
 
-
-
-
+              <div class="span7"style="width:100%;background:#c1c1c1;opacity:.9;padding:10px 10px 10px 10px;">
               <h1>Eventus </h1>
-              <h3><em>We</em> Help To make Great Events, <em>You</em> Make Them Better</h3>
-              <a href="#about" class="btn btn-default btn-lg">Singup</a>
-              <a href="#about" class="btn btn-default btn-lg">Signin</a> <br><br>
-              <a href="#about" class="btn btn-default btn-lg">Go to your event</a>
+
+              <h3 style ="color:purple;background-color:"><em>We</em> Help To make Great Events, <em>You</em> Make Them Better</h3>
+              <center>
+                {% if g.user.is_authenticated() %}    
+                  Welcome
+                {% else %}
+                <p><a href="#" class="btn btn-default btn-lg" role="button">Learn more &raquo;</a> <a href="{{ url_for('signin') }}" class="btn btn-success btn-lg" role="button">Sign in &raquo;</a></p>
+                {% endif %}
+              </center>
+              <a href="#about" class="btn btn-primary btn-lg">Go to your event</a>
+            </div>
+            </div>
             </div>
           </div>
           <!-- /Full Page Image Header Area -->
-        
-
-        <h1>Eventus - Events never been so Interesting</h1>
+      
         <p></p>
 			
 
@@ -128,41 +127,40 @@
               <div class="row">
                 <div class="span4 offset4 text-center">
                   <h2>Our Work</h2>
+                  <center>
+                  <h5 class="vert-text" > A short youtube video what the app do </h5>
+                  </center>
                   <hr>
+
                 </div>
               </div>
               <div class="row">
-                <div class="span4 offset2 text-center">
-                  <div class="portfolio-item">
-                    <a href="#"><img class="img-portfolio img-responsive" src="{{ url_for('static', filename='img/portfolio-1.jpg') }}g"></a>
-                    <h4>Cityscape</h4>
-                  </div>
-                </div>
-                <div class="span4 text-center">
-                  <div class="portfolio-item">
-                    <a href="#"><img class="img-portfolio img-responsive" src="{{ url_for('static', filename='img/portfolio-2.jpg') }}"></a>
-                    <h4>Is That On Fire?</h4>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="span4 offset2 text-center">
-                  <div class="portfolio-item">
-                    <a href="#"><img class="img-portfolio img-responsive" src="{{ url_for('static', filename='img/portfolio-3.jpg') }}"></a>
-                    <h4>Stop Sign</h4>
-                  </div>
-                </div>
-                <div class="span4 text-center">
-                  <div class="portfolio-item">
-                    <a href="#"><img class="img-portfolio img-responsive" src="{{ url_for('static', filename='img/portfolio-4.jpg') }}"></a>
-                    <h4>Narrow Focus</h4>
-                  </div>
-                </div>
+                
+    
+            <div class="span3"> </div>
+            <div class="span6">
+              <iframe width="540px" height="300px"
+          src="http://www.youtube.com/embed/" alternate="nothing">
+              </iframe>
+
+
+            </div>
+
+          </div>
               </div>
             </div>
             </div>
           </div>
           <!-- /Portfolio -->
+
+           <!-- Callout1 -->
+          <div class="callout1">
+            <div class="vert-text">
+              
+              
+            </div>
+          </div>
+          <!-- /Callout1 -->
 
     
   
