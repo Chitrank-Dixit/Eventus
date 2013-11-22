@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <!--
+		{% set bootstrap_version = '2.3.1' %}
+		{% set modernizer_version = '2.6.2' %}
+		{% set jquery_version = '1.9.1' %} -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <title>{% block title%}Flask on App Engine{% endblock %}</title>
+    <link rel="favicon" href="{{ url_for('static', filename='static/img/favicon.ico') }} " />
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap2.3.2.css') }}" rel="stylesheet" />
+
+
+    <!-- Bootstrap theme -->
+    <style type="text/css">
+        body { padding-top: 40px; }
+        @media screen and (max-width: 768px) {
+        body { padding-top: 0px; }
+        }
+    </style>
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-responsive.min.css') }}" rel="stylesheet">
+    
+    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+    
+    <link href="{{ url_for('static', filename='bootstrap/css/fixed-footer.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+   
+    <!-- <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet"> -->
+    <style> body { padding-top: 90px; } </style> <!-- Bootstrap -->
+     <!-- <link href="/static/css/main.css" rel="stylesheet" /> --> 
+    
+    {% block style_block %}{# page-specific CSS #}{% endblock %}
+    
+    {% block head_script %}{# defer-incapable JS block #}{% endblock %} 
+</head>
+<body>
+<div id="wrap">
+    <div id="header">
+        {% include 'addables/header.html' %} {# pull in navbar #}
+    </div>
+    <div class="" id="maincontent" style="margin-top:-50px;">
+        {% include 'addables/flash_message.html' %} {# page-level feedback notices #}
+        <div id="body_content">
+            {% block content %}{# main content area #}{% endblock %}
+        </div>
+    </div><!-- /container -->
+    </div>
+    <div id="footer">
+        {% include 'addables/footer.html' %}
+    </div><!-- /footer -->
+    
+    <script src="{{ url_for('static', filename='bootstrap/js/json2.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/jquery-1.10.2.min.js') }}"></script>
+    
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    
+    <script src="{{ url_for('static', filename='bootstrap/js/holder.js') }}"></script>
+
+    <!--  library for parsing and manipulating dates -->
+    <script src="{{ url_for('static', filename = 'bootstrap/js/moment.min.js') }}"></script>
+    
+    <script src="{{ url_for('static', filename='bootstrap/js/knockout-2.3.0.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='bootstrap/js/sammy.js') }}"></script>
+    
+
+
+    <!-- <script src="/static/js/main.js"></script> -->
+    {% block tail_script %}{# defer-capable JS block #}{% endblock %}
+    {{ profiler_includes|safe }}
+
+</body>
+</html>
