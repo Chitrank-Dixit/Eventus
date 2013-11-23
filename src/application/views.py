@@ -1106,6 +1106,10 @@ def Team_Profile(ename, eid, teamName , tid):
   return render_template('team_profile.html', ename=ename , eid=eid, teamName = teamName, tid = tid, teams= teams, events=events, form=form, members = members)
 
 
+@app.route('/event/invites', methods=['GET'])
+def invite_people():
+  return render_template('inviteUsers.html')
+
 @app.route('/events/<ename>/<int:eid>/teams/<teamName>/<int:tid>/addMembers', methods=['POST','GET'])
 @login_required
 def add_members(ename, eid, teamName, tid):
@@ -1170,6 +1174,8 @@ def event_scoreboard(ename, eid):
 @app.route('/help', methods=['GET'])
 def help():
   return render_template('help.html')
+
+
 
 ####################################################
 # Simple Posters Example Do editing in this as we are using as 

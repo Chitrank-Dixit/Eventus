@@ -493,7 +493,7 @@
             <div class="control-group" >
                 <div class="controls">
                     <label><h4>Access Type <font color="#C43F2C">*</font></h4></label><br>
-                    {{ form.access_type(id='eaccess',class='form-control required ',placeholder="Postal Code", autocomplete=True )}}
+                    {{ form.access_type(id='eaccess',class='selectpicker  required ',placeholder="Postal Code", autocomplete=True )}}
                     {% if form.access_type.errors %}
                     <ul class="errors">
                         {% for error in form.access_type.errors %}

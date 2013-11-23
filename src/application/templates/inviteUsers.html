@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% block style_block %}
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-combined.min.css') }}" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-editable.css') }}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/demo_page.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/demo_table.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/shCore.css') }}" />
+{% endblock %}
+{% block content %}
+<div id="dt_example">
+      <form name="invite">
+
+      <div class="container span4" id="demo">
+      <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="inviteUser" width="100%" >
+        <thead>
+          <tr>
+            
+            <th width="50%">Name</th>
+            <th width="50%">Email</th>
+            <!-- <th>About User</th> -->
+            
+          </tr>
+        </thead>
+        <tbody data-bind="foreach: users, visible: users().length > 0">
+                  
+                    <tr>
+                    
+                    <td data-bind="text: uname"></td> 
+                    <td data-bind="text: email"></td> 
+                    <!-- <td data-bind="text: about_me"></td> -->
+                    </tr>
+        </tbody>
+        
+        <tfoot>
+          <tr>
+            
+            <th width="50%">Name</th>
+            <th width="50%">Email</th>
+            <!-- <th>About User</th> -->
+            
+          </tr>
+          </tfoot>
+        </table>
+      </div>
+          </div>
+
+      
+      </form>
+</div>
+
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example" width="100%">
+    <thead>
+        <tr>
+            <th width="30%">About Me</th>
+            <th width="26%">Email</th>
+            <th width="18%">Name</th>
+            <th width="26%">UID</th>
+            
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th width="30%">About Me</th>
+            <th width="26%">Email</th>
+            <th width="18%">Name</th>
+            <th width="26%">UID</th>
+        </tr>
+    </tfoot>
+    <tbody>
+        
+    </tbody>
+</table>
+
+
+            
+{% block tail_script %}
+<script src="{{ url_for('static', filename = 'bootstrap/js/mockjax.js') }}"></script>
+
+<script src="{{ url_for('static', filename = 'bootstrap/js/bootstrap-typeahead.js') }}"></script
+<script src="{{ url_for('static', filename = 'bootstrap/js/demo.js') }}"></script>
+<script src="{{ url_for('static', filename = 'bootstrap/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename = 'bootstrap/js/shCore.js') }}"></script>
+
+<script type="text/javascript">
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+
+ 
+$(document).ready(function() {
+    
+    $('#inviteUser').dataTable();
+
+    $('#example').dataTable({
+        "sAjaxSource": '/users'
+    });
+
+    
+});
+
+
+// Knockoutjs Comment Code
+
+
+function Invite(data) {
+    this.uname = ko.observable(data.uname);
+    this.uuid = ko.observable(data.uuid);
+    this.about_me = ko.observable(data.about_me);
+    this.email = ko.observable(data.email);
+    
+    
+}
+
+function AddInvite(data) {
+    this.inviteName = ko.observable(data.inviteName);
+    this.inviteId = ko.observable(data.inviteId);
+    this.inviteAbout_me = ko.observable(data.inviteAbout_me);
+    this.inviteEmail = ko.observable(data.inviteEmail);
+    
+    
+}
+
+function InviteViewModel() {
+    var self = this;
+    self.users = ko.observableArray([]);
+    self.userInfo = ko.observableArray([]);
+    self.invites = ko.observableArray([]);
+    self.comments = ko.observableArray([]);
+    self.comment = ko.observable();
+    self.allSelected= ko.observable(false);
+    
+    
+    self.selectAll = function() {
+        var all = self.allSelected();
+        ko.utils.arrayForEach(self.users(), function(user) {
+           user.isSelected(!all); 
+        });
+        return true;
+    }       
+    
+    self.inviteUser = function() {
+        self.invites.push(new AddInvite({ title: this.newTaskText() }));
+               
+        
+    };
+       
+      
+
+    $.getJSON('/users', function(invitationModels) {
+        var t = $.map(invitationModels.users, function(item) {
+            console.log("Something",item);
+            return new Invite(item);
+        });
+        self.users(t);
+    });
+
+    
+
+    
+}
+
+
+
+// enable validation
+// ko.validation.init();
+
+// Activates knockout.js
+ko.applyBindings(new InviteViewModel());
+
+
+</script>
+{% endblock %}
+{% endblock %}
