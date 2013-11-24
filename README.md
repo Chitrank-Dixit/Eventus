@@ -149,6 +149,8 @@ Ajax with Python Flask
 List_of_JavaScript Libraries
 ------------------------------------------------
 - http://en.wikipedia.org/wiki/List_of_JavaScript_libraries
+- For autocomplete while searching (http://complete-ly.appspot.com/).
+
 
 Backbone.js Tutorials
 ------------------------------------------------
@@ -202,7 +204,11 @@ Font Awesome (Icon package for bootstrap)
 
 JavaScript , JSON , AJAX, Jquery
 -----------------------------------------
-- refer w3schools.com and thenewboston videos at youtube
+- refer w3schools.com and thenewboston videos at youtube, practice at Codeacademy.com
+- jquery (http://api.jquery.com/), at W3schools and Head First JavaScript book
+- AJAX:- at W3schools and Head First AJAX book
+- JSON:- at jquery Documentation and 
+- JavaScript ( Douglouas Crockford : JavaScript the Good Parts), https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide, Head First JavaScript
 
 
 Tech Stack

@@ -11,6 +11,7 @@
         color: red;
     }
   </style>
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-formhelpers.css') }}" rel="stylesheet" />
 {% endblock %}
 {% block content %}
     
@@ -24,11 +25,11 @@
 
             {% from "macro/_formhelpers.html" import render_field %}
             <div class="control-group">
-                <p>Post</p>
+                <label for="post">Post</label>
                   <div class="controls">
                                                 
                         <p>
-                        {{ form.poster(id='post',class='form-control required ',placeholder="My Post", autocomplete=True , size=3,**{'data-bind': 'value: post', 'data-required' : 'true'})}}</p>
+                        {{ form.poster(id='postit',class='form-control required ',placeholder="My Post", autocomplete=True , size=3,**{'data-bind': 'value: post', 'data-required' : 'true'})}}</p>
                         {% if form.poster.errors %}
                         <ul class="errors">
                             {% for error in form.poster.errors %}
@@ -45,7 +46,7 @@
                   <div class="controls">
                                                 
                         
-                        <p>{{ form.postbody(id='postbody',class='form-control required ',placeholder="Post Description", autocomplete=True , size=3, **{'data-bind': 'value: postbody, valueUpdate: "afterkeydown" '} )}}</p>
+                        <p>{{ form.postbody(id='postbody',class='form-control required ',placeholder="Post Description", autocomplete=True , size=3, **{'data-bind': 'value: postbody, valueUpdate: "afterkeydown" ' , 'data-provide' : 'typeahead'} )}}</p>
                         
                     </div>
 
@@ -78,68 +79,181 @@
           </fieldset>
     </form>
     <ul data-bind="foreach: posts, visible: posts().length > 0">
-        <div class="well" data-bind="css: {active: $root.currentView() == $data}"> >
+        <div class="well" >
             <p data-bind="text: post"></p>
             <p data-bind="text: postbody"></p>
             <p data-bind="text: posturl"></p>
-            <a data-bind="text:$data, attr:{ href:  '{{ url_for('get_posts_json', name=current_user.name) }}' + $data }"></a>><p data-bind="text: name"></p></a>
+            <p data-bind="text: name"></p></a>
         </div>
     </ul>
+
+    <ul data-bind="foreach: allusers, visible: allusers().length > 0">
+        <div class="well" >
+            <p data-bind="text: uname"></p>
+            
+        </div>
+    </ul>
+
     
+    <div id="ie" class="bfh-selectbox" data-name="selectbox3" data-value="1" data-filter="true" data-bind="foreach: allusers, visible: allusers().length > 0">
+        <div><li data-bind="text: uname"></div>
+       
+    </div>
         
- 
+    <div style="margin: 50px 50px">
+    <label for="product_search">Product Search: </label>
+    <input id="product_search" type="text" data-provide="typeahead" >
+    </div>
+    
+    <div id="iv" class="bfh-selectbox" data-name="selectbox3" data-value="12" data-filter="true">
+        <div data-value="1">1</div>
+        <div data-value="2">Option 2</div>
+        <div data-value="3">Option 3</div>
+        <div data-value="4">Option 4</div>
+        <div data-value="5">Option 5</div>
+      <div data-value="6">Option 6</div>
+      <div data-value="7">Option 7</div>
+      <div data-value="8">Option 8</div>
+      <div data-value="9">Option 9</div>
+      <div data-value="10">Option 10</div>
+      <div data-value="11">Option 11</div>
+      <div data-value="12">Option 12</div>
+      <div data-value="13">Option 13</div>
+      <div data-value="14">Option 14</div>
+      <div data-value="15">Option 15</div>
+    </div>
+
     
 
                 
     <p>BodyText: <strong data-bind="text: bodytext" /></strong></p>
                 
 {% block tail_script %}
-<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
-<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script> 
+<!-- <script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script> -->
+<!-- <script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script> -->
 <script src="{{ url_for('static', filename='bootstrap/js/knockout.validation.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-formhelpers.min.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='bootstrap/js/underscore.js') }}"></script> -->
 <script type="text/javascript"> 
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
  // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+
+
+
   
 $(document).ready(function () {
-    $('#new_postform').validate({
-        
-        rules: {
-            post: {
-                required: true,
-                minlength: 2
-                
+    /*
+    $.fn.typeahead.Constructor.prototype.blur = function() {
+            var that = this;
+            setTimeout(function () { that.hide() }, 250);
+    };
+    
+
+    
+ 
+        var products = [
+            {
+                id: 0,
+                name: "Deluxe Bicycle",
+                price: 499.98
             },
-            postbody: {
-                required: true,
-                minlength: 2
-                
+            {
+                id: 1,
+                name: "Super Deluxe Trampoline",
+                price: 134.99
             },
-            posturl: {
-                required: true,
-                minlength: 16
-                
+            {
+                id: 2,
+                name: "Super Duper Scooter",
+                price: 49.95
             }
-        },
+        ];
+        
+        var that = this; 
 
+        $('#search').typeahead({
+            source: function(query, process) {
+                var results = _.map(products, function(product) {
+                   return product.name;
+                });
+                process(results);
+            },
+ 
+            highlighter: function(item) {
+                return "==>" + item + "<==";
+            },
+ 
+            updater: function(item) {
+                console.log("'" + item + "' selected.");
+                return item;
+            }
+ 
+        });
+    
+    */
+    $('#iv').bfhselectbox('toggle');
+
+    // $('#ie').bfhselectbox('toggle');
+
+    $('#postit').typeahead({
+        source: [
+            { id: 1, name: 'Toronto' },
+            { id: 2, name: 'Montreal' },
+            { id: 3, name: 'New York' },
+            { id: 4, name: 'Buffalo' },
+            { id: 5, name: 'Boston' },
+            { id: 6, name: 'Columbus' },
+            { id: 7, name: 'Dallas' },
+            { id: 8, name: 'Vancouver' },
+            { id: 9, name: 'Seattle' },
+            { id: 10, name: 'Los Angeles' }
+        ]
+        
+        });
+
+    function AllUsers(data){
+        this.about_me = data.about_me;
+        this.email = data.email;
+        this.uname = data.uname;
+        this.uuid = data.uuid;
+
+    }
+
+    var allusers = new Array();
+    var usering = new Array();
+
+    $.getJSON('/users', function (json) {
+        var t = $.map(json.users, function(item) {
+            console.log("Something",item);
+            usering.push(item);
+            return new AllUsers(item);
+        });
+
+        allusers(t);
         
 
-        submitHandler: function(form) {
-            $(form).ajaxSubmit();
-            PostViewModel.addPost();
-        },
+        /*
+        var about_me = json.users[i].about_me;
+        console.log('about_me : ', about_me);
+            
+        var email = json.users[i].email;
+        console.log('email : ', email);
+        
+        var uname = json.users[i].uname;
+        console.log('uname : ', uname);
 
-        highlight: function (element) {
-            $(element).parent().css('border-color','red');
-            $(element).text('').closest('.control-group').removeClass('success').addClass('error');
-        },
-
-        success: function (element) {
-            element.text('').addClass('valid')
-            .closest('.control-group').removeClass('error').addClass('success');
-        }
+        var uuid = json.users[i].uuid;
+        console.log('uuid : ', uuid);
+        */
+        
     });
 
+
+
+    $('#posturl').typeahead({
+        ajax: usering
+    });
     
 });
 
@@ -152,7 +266,13 @@ function Post(data) {
     this.posturl = ko.observable(data.posturl);
 }
 
+function AllUsers(data){
+        this.about_me = data.about_me;
+        this.email = data.email;
+        this.uname = data.uname;
+        this.uuid = data.uuid;
 
+}
 
 function PostViewModel() {
     var self = this;
@@ -161,7 +281,7 @@ function PostViewModel() {
     self.post = ko.observable().extend({required: true});
     self.postbody = ko.observable().extend({required: true});
     self.posturl = ko.observable().extend({required: true});
-    
+    self.allusers= ko.observableArray([]);
     
 
 
@@ -182,6 +302,14 @@ function PostViewModel() {
         
     };
 
+    $.getJSON('/users', function (json) {
+        var t = $.map(json.users, function(item) {
+            console.log("Something",item);
+            
+            return new AllUsers(item);
+        });
+        self.allusers(t);
+    });
     
     $.getJSON('/posts', function(postModels) {
         var t = $.map(postModels.posts, function(item) {

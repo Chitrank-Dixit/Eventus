@@ -10,6 +10,7 @@
   <form name="send_message" id="send_message" action="{{ url_for('user_profile', name=user.name, uid=euid) }}" class="navbar-form form-inline" method="Post">
       {{ form.csrt_token }}
   <div class="modal-body">
+
     
       <fieldset>
         {{ form.hidden_tag() }}
@@ -21,7 +22,7 @@
                   <div class="controls">
                          {{ form.message_title.label }}                       
                         
-                        {{ form.message_title(id='title',class='form-control required',placeholder="Subject", autocomplete=True ) }}
+                        {{ form.message_title(id='title',class='form-control required span5',placeholder="Subject", autocomplete=True ) }}
                         {% if form.message_title.errors %}
                         <ul class="errors">
                             {% for error in form.message_title.errors %}
@@ -36,7 +37,7 @@
                   <div class="controls">
                         {{ form.message_title.label }}                        
                         
-                        {{ form.message_body(id='body',class='form-control required ',placeholder="Your Message", autocomplete=True ) }}
+                        {{ form.message_body(id='body',class='form-control required span5',placeholder="Your Message", autocomplete=True , style="height: 150px;") }}
                         {% if form.message_body.errors %}
                         <ul class="errors">
                             {% for error in form.message_body.errors %}
