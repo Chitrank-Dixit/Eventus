@@ -14,7 +14,7 @@
 
 	* i18n and l10n issues of date and time.
 	* Add a UTC time zone selector.
-	* Add the youtube video link.
+	
 
 #15 Show event profile page
 
