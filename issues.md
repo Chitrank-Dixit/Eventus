@@ -28,7 +28,7 @@
 
 #17 Popularity Scores
 
-	Add the plopularity Scores
+	Add the plopularity Scores(Currently Addthis toolbar)
 
 	* For Event
 		* Take the likes of the events from:
