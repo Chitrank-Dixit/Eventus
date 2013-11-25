@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% import 'macro/error.html' as forms %}
+{% block title %} Post Something | Eventus {% endblock %}
+{% block style_block %}
+  
+  <style type="text/css">
+    .background {
+       background-color: #F3F3F3;
+      }
+    p.error {
+        color: red;
+    }
+  </style>
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-select.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-formhelpers.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+    
+        
+    
+    
+
+<h2>Your seat reservations (<span data-bind="text: seats().length"></span>)</h2>
+<button class="btn btn-deffault" data-bind="click: addSeat, enable: seats().length < 5">Reserve another seat</button>
+<table>
+    <thead><tr>
+        <th>Passenger name</th><th>Meal</th><th>Surcharge</th><th></th>
+    </tr></thead>
+    <!-- Todo: Generate table body -->
+    <tbody data-bind="foreach: seats">
+        <tr>
+            <td><input data-bind="value: name" /></td>
+            <td><select data-bind="options: $root.availableUsers, value: meal, optionsText: 'Name'" data-live-search="true"></select></td>
+            <td><input data-bind="value: formattedPrice"></td>
+            <td><a href="#" data-bind="click: $root.removeSeat">Remove</a></td>
+        </tr>
+    </tbody>
+</table>
+<h3 data-bind="visible: totalSurcharge() > 0">
+    Total surcharge: $<span data-bind="text: totalSurcharge().toFixed(2)"></span>
+</h3>
+
+
+    
+    <select class="selectpicker" data-live-search="true">
+        <option>Mustard</option>
+        <option>Ketchup</option>
+        <option>Relish</option>
+        </ul>
+    </select>
+    
+   
+<ul data-bind="foreach: allusers, visible: allusers().length > 0">
+        <div class="well" >
+            <p data-bind="text: about_me"></p>
+            <p data-bind="text: email"></p>
+            <p data-bind="text: uname"></p>
+            <p data-bind="text: uuid"></p></a>
+        </div>
+    </ul>
+    
+<select data-bind="options: allusers,  optionsText: 'uname' " data-live-search="true"></select>
+    
+                
+{% block tail_script %}
+
+<script src="{{ url_for('static', filename='bootstrap/js/knockout.validation.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-formhelpers.min.js') }}"></script>
+
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-buttons.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-select.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-switch.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-fileupload.js') }}"></script>
+
+<!-- <script src="{{ url_for('static', filename='bootstrap/js/underscore.js') }}"></script> -->
+<script type="text/javascript"> 
+ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+ // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+
+
+
+  
+function AllUsers(data){
+        this.about_me = ko.observable(data.about_me);
+        this.email = ko.observable(data.email);
+        this.uname = ko.observable(data.uname);
+        this.uuid = ko.observable(data.uuid);
+        this.everyuser = [
+        {aboutMe: this.about_me(), email: this.email(), name: this.uname, id: this.uuid()}
+        ]
+
+}
+
+// Class to represent a row in the seat reservations grid
+function SeatReservation(name, initialMeal) {
+    var self = this;
+    self.name = name;
+    self.meal = ko.observable(initialMeal);
+    
+    
+    self.formattedPrice = ko.computed(function() {
+        var uid = self.meal().uid;
+        return uid ? "$" + uid.toFixed(2) : "None";        
+    });
+    
+    self.formatPrice = ko.observable(self.formattedPrice());
+}
+
+// Overall viewmodel for this screen, along with initial state
+function ReservationsViewModel() {
+    var self = this;
+    self.allusers = ko.observableArray([]);
+
+    // Non-editable catalog data - would come from the server
+    self.availableUsers = [
+        { Name: "Test", uid: 5629499534213120 },
+        { Name: "Premium (lobster)", uid: 34.95 },
+        { Name: "Ultimate (whole zebra)", uid: 290 }
+    ];    
+
+    
+
+
+
+    // Editable data
+    self.seats = ko.observableArray([
+        new SeatReservation("Steve", self.availableUsers[0]),
+        new SeatReservation("Bert", self.availableUsers[0])
+    ]);
+    
+    self.addSeat = function() {
+        self.seats.push(new SeatReservation("",self.availableUsers[0]));
+    }
+    
+    self.removeSeat = function(seat) { self.seats.remove(seat) }
+    
+    self.totalSurcharge = ko.computed(function() {
+       var total = 0;
+       for (var i = 0; i < self.seats().length; i++)
+           total += self.seats()[i].meal().uid;
+       return total;
+    });
+
+    $.getJSON('/users', function (json) {
+        var t = $.map(json.users, function(item) {
+            console.log("Something",item);
+            
+            return new AllUsers(item);
+        });
+        self.allusers(t);
+    });
+}
+
+
+
+
+ko.applyBindings(new ReservationsViewModel());
+
+
+$(document).ready(function () {
+    
+    $('.selectpicker').selectpicker();
+
+    
+    
+});
+
+
+
+</script>
+
+{% endblock %}
+
+
+{% endblock %}

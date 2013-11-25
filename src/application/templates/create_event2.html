@@ -101,7 +101,7 @@
                 <div class="control-group">
                     <div class="controls">
                         <label><h5>Type of Event <font color="#C43F2C">*</font></h5></label><br>
-                        {{ form.event_type(id='evtype', class='selectpicker required', placeholder="Event Name", autocomplete=True , **{'data-bind': 'value: eventType', 'data-required' : 'true'} )}}
+                        {{ form.event_type(id='evtype', class='selectpicker required show-tick', placeholder="Event Name", autocomplete=True , **{'data-bind': 'value: eventType', 'data-required' : 'true' , 'data-live-search': 'true' } )}}
                         {% if form.event_type.errors %}
                         <ul class="errors">
                             {% for error in form.event_type.errors %}
@@ -493,7 +493,7 @@
             <div class="control-group" >
                 <div class="controls">
                     <label><h4>Access Type <font color="#C43F2C">*</font></h4></label><br>
-                    {{ form.access_type(id='eaccess',class='selectpicker  required ',placeholder="Postal Code", autocomplete=True )}}
+                    {{ form.access_type(id='eaccess',class='selectpicker  required show-tick',placeholder="Postal Code", autocomplete=True, **{'data-live-search': 'true'} )}}
                     {% if form.access_type.errors %}
                     <ul class="errors">
                         {% for error in form.access_type.errors %}
@@ -522,6 +522,7 @@
 
 <!-- container ends below -->
 </div>
+
 
 {% block tail_script %}
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-buttons.js') }}"></script>

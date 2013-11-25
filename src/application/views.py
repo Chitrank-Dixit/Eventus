@@ -1262,6 +1262,50 @@ def get_posts_json(name):
   
   return jsonify(posts=posts)
 
+@app.route('/knockout',methods=['POST','GET'])
+def knock_it():
+  form = CreatePost(request.form)
+  # = ndb.Key(model.User, current_user.id)
+  #user_db = model.User.retrieve_one_by('id',current_user.id)
+  #flaks_user =  FlaskUser(user_db)
+  #use_db = ndb.Key(urlsafe=current_user.get_id())
+  post_db = model.Post.query()
+  
+  #pos = jsonify(model.Post.query())
+  #print "----------",pos
+
+  
+  use_db = ndb.Key(model.User, current_user.name)
+  if request.method == 'POST':
+    print request.json
+    posting = model.Post(
+        name = use_db,
+        poster = request.json['post'],
+        postbody = request.json['postbody'],
+        posturl = request.json['posturl'],
+        
+      )
+    try:
+      
+      posting.put()
+      #flash("Poster has been populated", category='info')
+      return jsonify({ "name": current_user.name, "post": request.json['post'],"postbody": request.json['postbody'], "posturl": request.json['posturl'] })
+      #data = [current_user.name , form.poster.data, form.postbody.data, form.posturl.data]
+      #response = make_response(json.dumps(data))
+      #response.content_type = 'application/json'
+      #return redirect(url_for('post_it'))
+      
+      
+      
+    except CapabilityDisabledError:
+      flash('Error Occured while posting')
+      return redirect(url_for('post_it'))
+  return render_template('knockout.html', form=form, use_db = use_db, post_db = post_db)
+
+
+
+
+
 @app.route('/team_register/', methods=['POST','GET'])
 def team_register():
   form = TeamRegisterForm(request.form)

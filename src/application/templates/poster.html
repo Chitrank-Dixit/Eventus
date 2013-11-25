@@ -11,6 +11,7 @@
         color: red;
     }
   </style>
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-select.css') }}" rel="stylesheet" />
   <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-formhelpers.css') }}" rel="stylesheet" />
 {% endblock %}
 {% block content %}
@@ -92,48 +93,80 @@
             <p data-bind="text: uname"></p>
             
         </div>
+    
     </ul>
 
+    <select class="selectpicker">
+        <ul data-bind="foreach: allusers, visible: allusers().length > 0">
+            <option><p data-bind="text: uname"></p></option>
+        <option>Mustard</option>
+        <option>Ketchup</option>
+        <option>Relish</option>
+        </ul>
+    </select>
     
-    <div id="ie" class="bfh-selectbox" data-name="selectbox3" data-value="1" data-filter="true" data-bind="foreach: allusers, visible: allusers().length > 0">
-        <div><li data-bind="text: uname"></div>
-       
-    </div>
+    <select class="selectpicker" data-live-search="true">
+        <option>Mustard</option>
+        <option>Ketchup</option>
+        <option>Relish</option>
+        </ul>
+    </select>
+    
+    
         
     <div style="margin: 50px 50px">
     <label for="product_search">Product Search: </label>
     <input id="product_search" type="text" data-provide="typeahead" >
     </div>
     
-    <div id="iv" class="bfh-selectbox" data-name="selectbox3" data-value="12" data-filter="true">
-        <div data-value="1">1</div>
-        <div data-value="2">Option 2</div>
-        <div data-value="3">Option 3</div>
-        <div data-value="4">Option 4</div>
-        <div data-value="5">Option 5</div>
-      <div data-value="6">Option 6</div>
-      <div data-value="7">Option 7</div>
-      <div data-value="8">Option 8</div>
-      <div data-value="9">Option 9</div>
-      <div data-value="10">Option 10</div>
-      <div data-value="11">Option 11</div>
-      <div data-value="12">Option 12</div>
-      <div data-value="13">Option 13</div>
-      <div data-value="14">Option 14</div>
-      <div data-value="15">Option 15</div>
+    <!-- <div id="iv" class="bfh-selectbox" data-name="selectbox3" data-value="12" data-filter="true" >
+            <div data-value="1">Option 1</div>
+            <div data-value="2">Option 2</div>
+            <div data-value="3">Option 3</div>
+            <div data-value="4">Option 4</div>
+            <div data-value="5">Option 5</div>
+          <div data-value="6">Option 6</div>
+          <div data-value="7">Option 7</div>
+          <div data-value="8">Option 8</div>
+          <div data-value="9">Option 9</div>
+          <div data-value="10">Option 10</div>
+          <div data-value="11">Option 11</div>
+          <div data-value="12">Option 12</div>
+          <div data-value="13">Option 13</div>
+          <div data-value="14">Option 14</div>
+          <div data-value="15">Option 15</div>
     </div>
 
-    
+   
+    <div id="ie" class="bfh-selectbox" data-name="selectbox3" data-value="1" data-filter="true" data-bind="foreach: allusers, visible: allusers().length > 0">
+        <div><li data-bind="text: uname"></div>
+       
+    </div> -->
 
+    <select data-bind="dropdown: value, dropdownOptions: { data-width: '100%', 'data-size': 5 }">
+    </select>
+
+    <select class="selectpicker" data-bind="selectPicker: true, selectPickerOptions: { options: everyuser, optionsText: 'name', optionsValue: 'id', optionsCaption: 'Please select...' } " data-live-search="true">
+        <option>Option 1</option>
+        <option>Option 2</option>
+    </select>
                 
     <p>BodyText: <strong data-bind="text: bodytext" /></strong></p>
                 
 {% block tail_script %}
-<!-- <script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script> -->
-<!-- <script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script> -->
+
 <script src="{{ url_for('static', filename='bootstrap/js/knockout.validation.js') }}"></script>
-<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-formhelpers.min.js') }}"></script>
+
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-buttons.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-select.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-switch.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-fileupload.js') }}"></script>
+
 <!-- <script src="{{ url_for('static', filename='bootstrap/js/underscore.js') }}"></script> -->
 <script type="text/javascript"> 
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -192,7 +225,10 @@ $(document).ready(function () {
         });
     
     */
+    $('.selectpicker').selectpicker();
+
     $('#iv').bfhselectbox('toggle');
+
 
     // $('#ie').bfhselectbox('toggle');
 
@@ -267,10 +303,13 @@ function Post(data) {
 }
 
 function AllUsers(data){
-        this.about_me = data.about_me;
-        this.email = data.email;
-        this.uname = data.uname;
-        this.uuid = data.uuid;
+        this.about_me = ko.observable(data.about_me);
+        this.email = ko.observable(data.email);
+        this.uname = ko.observable(data.uname);
+        this.uuid = ko.observable(data.uuid);
+        this.everyuser = [
+        {aboutMe: this.about_me(), email: this.email(), name: this.uname, id: this.uuid()}
+        ]
 
 }
 
@@ -283,7 +322,11 @@ function PostViewModel() {
     self.posturl = ko.observable().extend({required: true});
     self.allusers= ko.observableArray([]);
     
-
+    self.gert = [
+        { mealName: "Standard (sandwich)", price: 0 },
+        { mealName: "Premium (lobster)", price: 34.95 },
+        { mealName: "Ultimate (whole zebra)", price: 290 }
+    ];    
 
     console.log(self.post);
        
@@ -348,6 +391,56 @@ var vm = new PostViewModel();
 
 // enable validation
 ko.validation.init();
+
+ko.bindingHandlers.dropdown = {
+    init: function (element, valueAccessor, allBindingsAccessor) {
+       var options = allBindingsAccessor().dropdownOptions|| {};
+
+       $(element).selectpicker(options);
+
+        ko.utils.registerEventHandler(element, "change", function () {
+            $(element).selectpicker('refresh');
+        });
+
+        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+              // TODO: destroy method for selectpicker
+              //$(element).selectpicker("destroy");
+        });
+    },
+    update: function (element, valueAccessor) {
+        $(element).selectpicker('refresh');
+    }
+};
+
+
+ko.bindingHandlers.selectPicker = {
+        init: function (element, valueAccessor, allBindingsAccessor) {
+            if ($(element).is('select')) {
+                if (ko.isObservable(valueAccessor())) {
+                    ko.bindingHandlers.value.init(element, valueAccessor, allBindingsAccessor);
+                }
+                $(element).selectpicker();
+            }
+        },
+        update: function (element, valueAccessor, allBindingsAccessor) {
+            if ($(element).is('select')) {
+                var selectPickerOptions = allBindingsAccessor().selectPickerOptions;
+                if (typeof selectPickerOptions !== 'undefined' && selectPickerOptions !== null) {
+                    var options = selectPickerOptions.options,
+                        optionsText = selectPickerOptions.optionsText,
+                        optionsValue = selectPickerOptions.optionsValue,
+                        optionsCaption = selectPickerOptions.optionsCaption;
+                    if (ko.utils.unwrapObservable(options).length > 0) {
+                        ko.bindingHandlers.options.update(element, options, ko.observable({ optionsText: optionsText, optionsValue: optionsValue, optionsCaption: optionsCaption }));
+                    }
+                }
+                if (ko.isObservable(valueAccessor())) {
+                    ko.bindingHandlers.value.update(element, valueAccessor);
+                }
+                $(element).selectpicker('refresh');
+            }
+        }
+    };
 
 // Activates knockout.js
 ko.applyBindings(new PostViewModel());
