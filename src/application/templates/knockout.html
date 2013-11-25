@@ -45,6 +45,7 @@
 </h3>
 
 
+
     
     <select class="selectpicker" data-live-search="true" multiple>
         <option>Mustard</option>
@@ -85,7 +86,7 @@
 
     
 
-<select data-bind="selectPickerOptions: { options: allusers, optionsText: 'uname', optionsValue: 'uuid' }"></select>
+<select data-bind="selectPicker: selectPicking, selectPickerOptions: { options: allusers, optionsText: 'uname', optionsValue: 'uuid' }" data-live-search="true"></select>
 
 <select class="combobox">
     {% for post in post_db %}
@@ -116,27 +117,12 @@
 
 $(document).ready(function () {
     
-    $('.selectpicker').selectpicker();
+    // $('.selectpicker').selectpicker();
 
     $('bfh-selectbox').bfhselectbox('toggle');
     $('.combobox').combobox();
 
-    /*(function () {
-        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
-        if (!MutationObserver) return;
-        console.log ("running select picker init");
-        $('.selectpicker').selectpicker();
-        var observer = new MutationObserver(function (mutation, observer) {
-            console.log("In mutation observer:",mutation,observer);
-            $('.selectpicker').selectpicker('refresh');
-        });
-        observer.observe($(".selectpicker")[0], 
-                         {
-                             subtree:true,
-                             attributes:true,
-                             attributeFilter: ['value', 'disabled']
-                         });
-    })();*/
+    
 
     /*ko.bindingHandlers.dropdown = {
     init: function (element, valueAccessor, allBindingsAccessor) {
@@ -247,6 +233,8 @@ ko.bindingHandlers.selectPicker = {
     };
 
 
+
+
 function AllUsers(data){
         this.about_me = ko.observable(data.about_me);
         this.email = ko.observable(data.email);
@@ -276,6 +264,7 @@ function SeatReservation(name, initialMeal) {
 // Overall viewmodel for this screen, along with initial state
 function ReservationsViewModel() {
     var self = this;
+    self.selectPicking = ko.observableArray([]);
     self.allusers = ko.observableArray([]);
 
     // Non-editable catalog data - would come from the server
