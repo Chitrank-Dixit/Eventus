@@ -13,6 +13,10 @@
   </style>
   <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-select.css') }}" rel="stylesheet" />
   <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-formhelpers.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-combobox.css') }}" rel="stylesheet" />
+  <script type="text/javascript">
+    
+  </script>
 {% endblock %}
 {% block content %}
     
@@ -42,14 +46,28 @@
 
 
     
-    <select class="selectpicker" data-live-search="true">
+    <select class="selectpicker" data-live-search="true" multiple>
         <option>Mustard</option>
         <option>Ketchup</option>
         <option>Relish</option>
-        </ul>
+        
     </select>
+
+    <select class="selectpicker" data-live-search="true" multiple>
+        {% for post in post_db %}
+        <option>{{post.poster}}</option>
+        {% endfor %}
+        
+    </select>
+
+    <select data-bind="selectPicker: true">
+    <option>Option 1</option>
+    <option>Option 2</option>
+    </select>
+
+
     
-   
+    
 <ul data-bind="foreach: allusers, visible: allusers().length > 0">
         <div class="well" >
             <p data-bind="text: about_me"></p>
@@ -59,8 +77,21 @@
         </div>
     </ul>
     
-<select data-bind="options: allusers,  optionsText: 'uname' " data-live-search="true"></select>
+<select data-bind="options: allusers,  optionsText: 'uname' " data-live-search="true" multiple></select>
+
+<select  class="selectpicker" data-bind="options: allusers,  optionsText: 'uname' "  data-live-search="true"></select>
+
+<select data-bind="options: allusers,  optionsText: 'uname', optionsValue: 'uuid' " ></select>
+
     
+
+<select data-bind="selectPickerOptions: { options: allusers, optionsText: 'uname', optionsValue: 'uuid' }"></select>
+
+<select class="combobox">
+    {% for post in post_db %}
+        <option>{{post.poster}}</option>
+        {% endfor %}
+</select>
                 
 {% block tail_script %}
 
@@ -75,15 +106,147 @@
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-datepicker.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-fileupload.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-combobox.js') }}"></script>
+
 
 <!-- <script src="{{ url_for('static', filename='bootstrap/js/underscore.js') }}"></script> -->
 <script type="text/javascript"> 
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
  // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
 
+$(document).ready(function () {
+    
+    $('.selectpicker').selectpicker();
 
+    $('bfh-selectbox').bfhselectbox('toggle');
+    $('.combobox').combobox();
+
+    /*(function () {
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+        if (!MutationObserver) return;
+        console.log ("running select picker init");
+        $('.selectpicker').selectpicker();
+        var observer = new MutationObserver(function (mutation, observer) {
+            console.log("In mutation observer:",mutation,observer);
+            $('.selectpicker').selectpicker('refresh');
+        });
+        observer.observe($(".selectpicker")[0], 
+                         {
+                             subtree:true,
+                             attributes:true,
+                             attributeFilter: ['value', 'disabled']
+                         });
+    })();*/
+
+    /*ko.bindingHandlers.dropdown = {
+    init: function (element, valueAccessor, allBindingsAccessor) {
+       var options = allBindingsAccessor().dropdownOptions|| {};
+
+       $(element).selectpicker(options);
+
+        ko.utils.registerEventHandler(element, "change", function () {
+            $(element).selectpicker('refresh');
+        });
+
+        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+              // TODO: destroy method for selectpicker
+              //$(element).selectpicker("destroy");
+        });
+    },
+    update: function (element, valueAccessor) {
+        $(element).selectpicker('refresh');
+    }
+    };
+
+    ko.bindingHandlers.selectPicker = {
+        init: function (element, valueAccessor, allBindingsAccessor) {
+            if ($(element).is('select')) {
+                if (ko.isObservable(valueAccessor())) {
+                    ko.bindingHandlers.value.init(element, valueAccessor, allBindingsAccessor);
+                }
+                $(element).selectpicker();
+            }
+        },
+        update: function (element, valueAccessor, allBindingsAccessor) {
+            if ($(element).is('select')) {
+                var selectPickerOptions = allBindingsAccessor().selectPickerOptions;
+                if (typeof selectPickerOptions !== 'undefined' && selectPickerOptions !== null) {
+                    var options = selectPickerOptions.options,
+                        optionsText = selectPickerOptions.optionsText,
+                        optionsValue = selectPickerOptions.optionsValue,
+                        optionsCaption = selectPickerOptions.optionsCaption;
+                    if (ko.utils.unwrapObservable(options).length > 0) {
+                        ko.bindingHandlers.options.update(element, options, ko.observable({ optionsText: optionsText, optionsValue: optionsValue, optionsCaption: optionsCaption }));
+                    }
+                }
+                if (ko.isObservable(valueAccessor())) {
+                    ko.bindingHandlers.value.update(element, valueAccessor);
+                }
+                $(element).selectpicker('refresh');
+            }
+        }
+    };
+    */
+
+
+
+    
+});
 
   
+ko.bindingHandlers.selectPicker = {
+        init: function (element, valueAccessor, allBindingsAccessor) {
+            if ($(element).is('select')) {
+                if (ko.isObservable(valueAccessor())) {
+                    if ($(element).prop('multiple') && $.isArray(ko.utils.unwrapObservable(valueAccessor()))) {
+                        // in the case of a multiple select where the valueAccessor() is an observableArray, call the default Knockout selectedOptions binding
+                        ko.bindingHandlers.selectedOptions.init(element, valueAccessor, allBindingsAccessor);
+                    }
+                    else {
+                        // regular select and observable so call the default value binding
+                        ko.bindingHandlers.value.init(element, valueAccessor, allBindingsAccessor);
+                    }
+                }
+                $(element).addClass('selectpicker').selectpicker();
+            }
+        },
+        update: function (element, valueAccessor, allBindingsAccessor) {
+            if ($(element).is('select')) {
+                var selectPickerOptions = allBindingsAccessor().selectPickerOptions;
+                if (typeof selectPickerOptions !== 'undefined' && selectPickerOptions !== null) {
+                    var options = selectPickerOptions.options,
+                        optionsText = selectPickerOptions.optionsText,
+                        optionsValue = selectPickerOptions.optionsValue,
+                        optionsCaption = selectPickerOptions.optionsCaption,
+                        isDisabled = selectPickerOptions.disabledCondition || false,
+                        resetOnDisabled = selectPickerOptions.resetOnDisabled || false;
+                    if (ko.utils.unwrapObservable(options).length > 0) {
+                        // call the default Knockout options binding
+                        ko.bindingHandlers.options.update(element, options, ko.observable({ optionsText: optionsText, optionsValue: optionsValue, optionsCaption: optionsCaption }));
+                    }
+                    if (isDisabled && resetOnDisabled) {
+                        // the dropdown is disabled and we need to reset it to its first option
+                        $(element).selectpicker('val', $(element).children('option:first').val());
+                    }
+                    $(element).prop('disabled', isDisabled);
+                }
+                if (ko.isObservable(valueAccessor())) {
+                    if ($(element).prop('multiple') && $.isArray(ko.utils.unwrapObservable(valueAccessor()))) {
+                        // in the case of a multiple select where the valueAccessor() is an observableArray, call the default Knockout selectedOptions binding
+                        ko.bindingHandlers.selectedOptions.update(element, valueAccessor);
+                    }
+                    else {
+                        // call the default Knockout value binding
+                        ko.bindingHandlers.value.update(element, valueAccessor);
+                    }
+                }
+
+                $(element).selectpicker('refresh');
+            }
+        }
+    };
+
+
 function AllUsers(data){
         this.about_me = ko.observable(data.about_me);
         this.email = ko.observable(data.email);
@@ -153,6 +316,9 @@ function ReservationsViewModel() {
         });
         self.allusers(t);
     });
+
+
+
 }
 
 
@@ -161,13 +327,7 @@ function ReservationsViewModel() {
 ko.applyBindings(new ReservationsViewModel());
 
 
-$(document).ready(function () {
-    
-    $('.selectpicker').selectpicker();
 
-    
-    
-});
 
 
 

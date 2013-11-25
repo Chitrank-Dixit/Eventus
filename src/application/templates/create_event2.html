@@ -539,11 +539,6 @@
  // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
 
 // Enabling Select Picker custom select fields from Bootstrap
-$('.example-countries .typeahead').typeahead({                                
-  name: 'countries',
-  prefetch: '../countries.json',                                 
-  limit: 10                                                                   
-});
 
 $('.selectpicker').selectpicker();
 
@@ -602,6 +597,14 @@ $('#create_eventform').validate({
     
 });
 
+/*$('#event_submit')
+    .click(function () {
+        var btn = $(this)
+        btn.button('loading')
+        setTimeout(function () {
+            btn.button('reset')
+        }, 5000)
+    });*/
 
 
     

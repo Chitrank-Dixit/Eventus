@@ -329,7 +329,7 @@
                 </div>
                 <div class="control-group">
                         <div class="controls">
-                            <button type="submit" id="event_comment" value="event_comment" class="btn btn-success" data-loading-text="Posting Comment...." >Add Comment</button><br><br>
+                            <button type="submit" id="event_comment" value="event_comment" class="btn btn-success" data-loading-text="Commenting...." >Add Comment</button><br><br>
                         
                         </div>
                 </div>
@@ -392,6 +392,15 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
 $(document).ready(function () {
     $('#inviteUser').dataTable();
+
+    $('#event_comment')
+    .click(function () {
+        var btn = $(this)
+        btn.button('loading')
+        setTimeout(function () {
+            btn.button('reset')
+        }, 300)
+    });
     
     $("#invite_to").typeahead({
     source: function (query, process) {
@@ -403,6 +412,8 @@ $(document).ready(function () {
         // This is going to make an HTTP post request to the controller
         
     },
+
+
     
 });
 
