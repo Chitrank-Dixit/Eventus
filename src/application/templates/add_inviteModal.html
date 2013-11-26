@@ -1,110 +1,47 @@
 {% import 'macro/error.html' as forms %}
 
+{% block style_block %}
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-select.css') }}" rel="stylesheet" />
+{% endblock %}
+
 <!-- Send Message Modal -->
 <div class="modal hide fade" id="add-invite-modal">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h3>  </h3>
   </div>
-  <div class="modal-body" id="dt_example">
+  <div class="modal-body">
 
-    
-    
-  <ul class="nav nav-pills">
-    <li class="active"><a href="#inviteall" data-toggle="tab">Invite All</a></li>
-    <li><a href="#addindividual" data-toggle="tab">Invite Individual</a></li>
-  </ul>
-    
-  <div class="tab-content">
-    <div class="tab-pane active" id="inviteall">
-      <form name="invite" data-bind="submit: inviteUser">
-
-      <div class="container span4" id="demo">
-      <table cellpadding="0" cellspacing="0" border="0" class="table table-striped" id="inviteUser" >
-        <thead>
-          <tr>
-            <th><input type="checkbox" data-bind="checked: allSelected" /> Select</th>
-            <th>Name</th>
-            <th>Email</th>
-            <!-- <th>About User</th> -->
-            
-          </tr>
-        </thead>
-        <tbody data-bind="foreach: users, visible: users().length > 0">
-                  
-                    <tr>
-                    <td><input type="checkbox" /></td>
-                    <td data-bind="text: uname"></td> 
-                    <td data-bind="text: email"></td> 
-                    <!-- <td data-bind="text: about_me"></td> -->
-                    </tr>
-        </tbody>
+      <select class="selectpicker" data-live-search="true" multiple>
+        <option>Mustard</option>
+        <option>Ketchup</option>
+        <option>Relish</option>
         
-        <tfoot>
-          <tr>
-            <th><input type="checkbox" data-bind="checked: allSelected" /> Select</th>
-            <th>Name</th>
-            <th>Email</th>
-            <!-- <th>About User</th> -->
-            
-          </tr>
-          </tfoot>
-        </table>
-      </div>
-          </div>
-
+    </select>
       
-      </form>
-    <div class="tab-pane" id="addindividual">
-      <form  action="{{ url_for('event_profile', ename=events.name , eid= eid) }}" class="navbar-form form-inline" method="post" id="invite_individualform">
-    {{ inviteform.csrf_token }}
+      <form  name="invite" data-bind="submit: inviteUser" method="post">
         <fieldset>
           {{ inviteform.hidden_tag() }}
             
 
             {% from "macro/_formhelpers.html" import render_field %}
             <div class="control-group">
-                
-                  <div class="controls">
-                        {{ inviteform.invite_to.label }}
-                        
-                        {{ inviteform.invite_to(id='invite_to',class='form-control required ',placeholder="Event Name", autocomplete=True, **{'data-provide': 'typeahead'} )}}
-                        {% if inviteform.invite_to.errors %}
-                        <ul class="errors">
-                            {% for error in inviteform.invite_to.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </div>
+                  
+                  <div class="controls" align="center">
+                        <select class="span6" data-bind="selectPicker: selectPicking, selectPickerOptions: { options: users, optionsText: 'uname', value: selectedUser, optionsValue: 'uuid'  }" data-live-search="true" multiple="true"></select>
+                  </div>
 
                     
             </div>
 
-            <div class="control-group">
-                
-                  <div class="controls">
-                        {{ inviteform.invite_email.label }}                        
-                        
-                        {{ inviteform.invite_email(id='invite_email',class=' required ',placeholder="Email", autocomplete=True )}}
-                        {% if inviteform.invite_email.errors %}
-                        <ul class="errors">
-                            {% for error in inviteform.invite_email.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </div>
-
-                    
-            </div>
+            
 
             <div class="control-group">
                 
-                  <div class="controls">
+                  <div class="controls" align="center">
                                                 
-                        {{ inviteform.invitation_message.label }}
-                        {{ inviteform.invitation_message(id='invitation_message',class='form-control required ',placeholder="Your Message", autocomplete=True )}}
+                        
+                        {{ inviteform.invitation_message(id='invitation_message',class='form-control span6 required ',placeholder="Your Message", autocomplete=True )}}
                         {% if inviteform.invitation_message.errors %}
                         <ul class="errors">
                             {% for error in inviteform.invitation_message.errors %}
@@ -118,19 +55,23 @@
             </div>
 
             <div class="control-group">
-              <div class="controls">
+              <div class="controls" align="center">
                 <a href="#" class="btn" class="close" data-dismiss="modal">Close</a>
                 <button type="submit" id="send_message" class="btn btn-primary" data-loading-text="Sending...">Send Invite</button>
               </div>
             </div>
           </fieldset>
-        </form>
+      
+        
+      
+      </form>
+    
 
-    </div>
-  </div>
+    
+  
 
 
-  </div>
+  
   <div class="modal-footer">
     
     
@@ -141,4 +82,15 @@
 
 <div>
 
+{% block tail_script %}
 
+  <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-buttons.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-select.js') }}"></script>
+  <script type="text/javascript">
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  $(document).ready(function () {
+    $('.selectpicker').selectpicker();
+  });
+  </script>
+
+{% endblock %}

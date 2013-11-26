@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% import 'macro/error.html' as forms %}
+{% block title %} Add Subevent | {{ename}} | Eventus {% endblock %}
+{% block style_block %}
+  <!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-22043294-2', 'gcdc2013-eventus.appspot.com');
+      ga('send', 'pageview');
+
+    </script>
+    <!-- End Google Analytics -->
+  <style type="text/css">
+    .background {
+       background-color: #F3F3F3;
+      }
+    p.error {
+        color: red;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+    
+    <div class="span3">
+    </div>
+        
+    <div class="container span5">
+    <form id="new_register" action="{{ url_for('RegisterTeam', ename=ename, eid=eid ) }}" class="navbar-form form-inline" method="post" >
+    {{ form.csrf_token }}
+        <fieldset>
+          {{ form.hidden_tag() }}
+            
+
+            {% from "macro/_formhelpers.html" import render_field %}
+            <div class="control-group">
+                <label>Team Name</label>
+                  <div class="controls">
+                                                
+                        <p>
+                        {{ form.teamName(id='teamName',class='form-control required span5',placeholder="Your Unique Team Name", autocomplete=True , **{'data-bind': 'value: teamName'} )}}</p>
+                        {% if form.teamName.errors %}
+                        <ul class="errors">
+                            {% for error in form.teamName.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+            </div>
+
+            <div class="control-group">
+                <label>Description</label>
+                  <div class="controls">
+                                                
+                        <p>
+                        {{ form.description(id='description',class='form-control required span5',placeholder="Your Team Description or Message or Slogan", autocomplete=True  )}}</p>
+                        {% if form.description.errors %}
+                        <ul class="errors">
+                            {% for error in form.description.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+            </div>
+
+            <div class="control-group">
+                <label>Team Video URL</label>
+                  <div class="controls">
+                                                
+                        <p>
+                        {{ form.teamVideoURL(id='videoURL',class='form-control required span5',placeholder="Your Team Video URL", autocomplete=True  )}}</p>
+                        {% if form.teamVideoURL.errors %}
+                        <ul class="errors">
+                            {% for error in form.teamVideoURL.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+
+                    
+            </div>
+                        
+
+            <div class="control-group form-actions">
+                    <div class="controls" >
+                        <br><button type="submit" id="register" onClick="" name="teamName" value"teamName" class="btn btn-primary">Add Team</button><br><br>
+                    
+                    </div>
+            </div>
+          </fieldset>
+    </form>
+    
+
+    
+
+                
+   </div> 
+   <div class="span4">
+    </div>
+                
+{% block tail_script %}
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script> 
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script> 
+<script src="{{ url_for('static', filename='bootstrap/js/knockout.validate.js') }}"></script>
+<script type="text/javascript">
+ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+ // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+
+$(document).ready(function () {
+
+
+
+$('#new_register').validate({
+    rules: {
+        
+        
+    },
+    highlight: function (element) {
+        $(element).parent().css('border-color','red');
+        $(element).text('Please type some post').closest('.control-group').removeClass('success').addClass('error');
+        
+    },
+    success: function (element) {
+        element.addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
+    }
+});
+});
+
+function Team(data) {
+    this.teamName = ko.observable(data.teamName);
+    this.captain = ko.observable(data.captain);
+    // this.member = ko.observable(data.memberName);
+}
+
+function Member(data, name, email) {
+    var self = this;
+
+    self.member = ko.observable(name);
+    self.email = ko.observable(email);
+}
+
+
+
+function TeamViewModel() {
+    var self = this;
+    self.teams = ko.observableArray([]);
+    self.teamName = ko.observable();
+    self.captain = ko.observable();
+    self.member = ko.observable();
+    self.email = ko.observable();
+    self.members = ko.observableArray([]);
+    self.members.push(new Member(self.captain(), self.email()))
+    console.log(self.teamName);
+
+    
+       
+    self.addTeam = function() {
+
+        self.save();
+        self.teamName("");
+        self.members([]);
+        
+    };
+
+    self.addMember = function() { 
+        self.members.push(new Member(self.member(), self.email()));
+
+    };
+
+    self.removeMember = function(member) { self.members.remove(member) }
+
+    
+
+    $.getJSON('/teams', function(teamModels) {
+        var t = $.map(teamModels.teams, function(item) {
+            console.log("Working!!")
+            return new Team(item);
+        });
+        self.teams(t);
+    });
+
+    self.save = function() {
+        return $.ajax({
+            url: '/events/{{ename}}/{{eid}}/register_team',
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify({
+                'teamName': self.teamName(),
+                'captain' : self.captain(),
+                
+            }),
+            success: function(data) {
+                console.log("Pushing to post array");
+                self.teams.push(new Team({ teamName: data.teamName }));
+                return;
+            },
+            error: function() {
+                return console.log("Failed");
+            }
+        });
+    };
+}
+
+
+
+ko.applyBindings(new TeamViewModel());
+
+
+</script>
+
+{% endblock %}
+
+
+{% endblock %}

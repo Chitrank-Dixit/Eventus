@@ -20,7 +20,7 @@
     
     <form id="add_members" action="{{ url_for('add_members', ename=ename, eid=eid, teamName = teamName, tid=tid ) }}" data-bind="submit: addTeamMembers" class="navbar-form form-inline" method="post" >
 
-    <select data-bind="selectPicker: selectPicking, selectPickerOptions: { options: allusers, optionsText: 'uname', value: selectedUser, optionsValue: 'uuid' ,enable: selectPicking().length < {{ events.teamSize }} }" data-live-search="true" multiple="true"></select>
+    <select data-bind="selectPicker: selectPicking, selectPickerOptions: { options: allusers, optionsText: 'uname', value: selectedUser, optionsValue: 'uuid'  }" data-live-search="true" multiple="true"></select>
 
     <div class="control-group form-actions">
         <div class="controls" >

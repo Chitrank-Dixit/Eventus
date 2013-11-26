@@ -74,6 +74,11 @@ class TeamRegisterX(object):
   def get_master_db(cls):
       return cls.get_or_insert('master')
 
+class SubEventX(object):
+  @classmethod
+  def get_master_db(cls):
+      return cls.get_or_insert('master')
+
 class TeamMembersX(object):
   @classmethod
   def get_master_db(cls):
