@@ -80,7 +80,7 @@
     
 <select data-bind="options: allusers,  optionsText: 'uname' " data-live-search="true" multiple></select>
 
-<select  class="selectpicker" data-bind="options: allusers,  optionsText: 'uname' "  data-live-search="true"></select>
+<select  class="selectpicker" data-bind="options: allusers,  optionsText: 'uname' "  data-live-search="true" ></select>
 
 <select data-bind="options: allusers,  optionsText: 'uname', optionsValue: 'uuid' " ></select>
 
@@ -122,7 +122,22 @@ $(document).ready(function () {
     $('bfh-selectbox').bfhselectbox('toggle');
     $('.combobox').combobox();
 
-    
+    (function () {
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+        if (!MutationObserver) return;
+        console.log ("running select picker init");
+        $('.selectpicker').selectpicker();
+        var observer = new MutationObserver(function (mutation, observer) {
+            console.log("In mutation observer:",mutation,observer);
+            $('.selectpicker').selectpicker('refresh');
+        });
+        observer.observe($(".selectpicker")[0], 
+                         {
+                             subtree:true,
+                             attributes:true,
+                             attributeFilter: ['value', 'disabled']
+                         });
+    })();
 
     /*ko.bindingHandlers.dropdown = {
     init: function (element, valueAccessor, allBindingsAccessor) {
