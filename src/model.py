@@ -225,7 +225,7 @@ class TeamMembers(Base, modelx.TeamMembersX):
     teamId = ndb.KeyProperty(kind="TeamRegister", required=True)
 
     # memberName = ndb.KeyProperty(kind='User')
-    # memberId = ndb.KeyProperty(kind='User')
+    memberId = ndb.KeyProperty(kind='User')
     memberName = ndb.StringProperty("Member Name")
 
 '''
