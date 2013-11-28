@@ -279,7 +279,7 @@
                     <div class="controls">
                         <label><h5> Youtube URL (if any) </h5></label><br>
 
-                        {{ form.youtubevideo_url(id='yurl', class="form-control required", placeholder="Enter the twitter username",style="width:50%", autocomplete=True, **{'data-bind' : 'value: youtubeURL'} ) }}
+                        {{ form.youtubevideo_url(id='yurl', class="form-control", placeholder="Enter the twitter username",style="width:50%", autocomplete=True, **{'data-bind' : 'value: youtubeURL'} ) }}
                         {% if form.youtubevideo_url.errors %}
                         <ul class="errors">
                             {% for error in form.youtubevideo_url.errors %}
