@@ -220,12 +220,23 @@ class TeamComments(Base, modelx.TeamRegisterX):
     teamName = ndb.KeyProperty(kind="TeamRegister", required= True)
     comment = ndb.StringProperty(required=True)
 
+class SubEvents(Base, modelx.SubEventX):
+    eventId = ndb.KeyProperty(kind="Event", required=True)
+    eventName = ndb.KeyProperty(kind="Event", required=True)
+    teamId = ndb.KeyProperty(kind="TeamRegister", required=True)
+    teamName = ndb.KeyProperty(kind="TeamRegister", required=True)
+    subevent_name = ndb.StringProperty("Name", required=True)
+    subevent_description = ndb.StringProperty("Description", required=True)
+    
+
+
+
 class TeamMembers(Base, modelx.TeamMembersX):
     eventId = ndb.KeyProperty(kind="Event", required = True)
     teamId = ndb.KeyProperty(kind="TeamRegister", required=True)
 
     # memberName = ndb.KeyProperty(kind='User')
-    # memberId = ndb.KeyProperty(kind='User')
+    memberId = ndb.KeyProperty(kind='User')
     memberName = ndb.StringProperty("Member Name")
 
 '''

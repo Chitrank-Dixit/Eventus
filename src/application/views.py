@@ -1120,12 +1120,19 @@ def add_members(ename, eid, teamName, tid):
     entry = []
     print "JSON hai ji", request.json
     for queue in request.json['members']:
-      member =  queue['member']
+      member_id =  queue
+      print member_id
+      user_id = ndb.Key(model.User, member_id)
+      print user_id
+      userName = model.User.retrieve_one_by("key", user_id)
+      print userName.name
       # userKey = ndb.Key(model.User, queue['member'])
       member = model.TeamMembers(
         eventId = event_id,
         teamId = team_id,
-        memberName = member,
+        memberId = user_id,
+        memberName = userName.name,
+        
       )
       try:
         member.put()

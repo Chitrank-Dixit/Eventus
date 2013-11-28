@@ -10,55 +10,26 @@
         color: red;
     }
   </style>
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-select.css') }}" rel="stylesheet" />
 {% endblock %}
 {% block content %}
     <div class="span3">
     </div>
         
     <div class="container span6">
-    <form id="add_members" action="{{ url_for('add_members', ename=ename, eid=eid, teamName = teamName, tid=tid ) }}" data-bind="submit: addMembers" class="navbar-form form-inline" method="post" >
     
-        <fieldset>
-          
-            
+    <form id="add_members" action="{{ url_for('add_members', ename=ename, eid=eid, teamName = teamName, tid=tid ) }}" data-bind="submit: addTeamMembers" class="navbar-form form-inline" method="post" >
 
-            {% from "macro/_formhelpers.html" import render_field %}
-                               
-            Enhancement: With Typeahead (existing users only)<br><br>
+    <select data-bind="selectPicker: selectPicking, selectPickerOptions: { options: allusers, optionsText: 'uname', value: selectedUser, optionsValue: 'uuid'  }" data-live-search="true" multiple="true"></select>
 
-            <label>Members(<span data-bind="text: members().length"></span>) <button class="btn btn-default" data-bind="click: addMember, enable: members().length  < {{events.teamSize }} ">Add Member</button></label>
-            <div class="control-group">
-                <div class="controls" >
-            <table>
-                <thead>
-                    <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th></th>
-                    </tr>
-                </thead>
-
-            <tbody data-bind="foreach: members">
-                <tr>
-                <td><input type="text" data-bind="value: member" /></td>
-                <td><input type="text" data-bind="value: email" /></td>
-                <td><a href="#" data-bind="click: $root.removeMember">Remove</a></td>
-                </tr>
-            </tbody>
-            </table>
-                </div>
-            </div>
-            <div class="control-group form-actions">
-                    <div class="controls" >
-                        <br><button type="submit" id="register" onClick="" name="teamName" value"teamName" class="btn btn-primary">Add Members</button><br><br>
+    <div class="control-group form-actions">
+        <div class="controls" >
+            <br><button type="submit" id="register" name="teamName" value"teamName" class="btn btn-primary">Add Team Members</button><br><br>
                     
-                    </div>
-            </div>
-          </fieldset>
-    </form>
-    
+        </div>
+    </div>
 
-    
+    </form>
 
                 
    </div> 
@@ -67,9 +38,19 @@
    </div>
 
 {% block tail_script %}
-<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script> 
-<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script> 
-<script src="{{ url_for('static', filename='bootstrap/js/knockout.validate.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/knockout.validation.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-formhelpers.min.js') }}"></script>
+
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-buttons.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-select.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-switch.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-fileupload.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-combobox.js') }}"></script>
+
 <script type="text/javascript">
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
  // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
@@ -78,32 +59,103 @@ $(document).ready(function () {
 
 
 
-$('#add_members').validate({
-    rules: {
-        
-        
-    },
-    highlight: function (element) {
-        $(element).parent().css('border-color','red');
-        $(element).text('Please type some post').closest('.control-group').removeClass('success').addClass('error');
-        
-    },
-    success: function (element) {
-        element.text('OK!').addClass('valid')
-            .closest('.control-group').removeClass('error').addClass('success');
-    }
-});
+    
+
+    (function () {
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+        if (!MutationObserver) return;
+        console.log ("running select picker init");
+        $('.selectpicker').selectpicker();
+        var observer = new MutationObserver(function (mutation, observer) {
+            console.log("In mutation observer:",mutation,observer);
+            $('.selectpicker').selectpicker('refresh');
+        });
+        observer.observe($(".selectpicker")[0], 
+                         {
+                             subtree:true,
+                             attributes:true,
+                             attributeFilter: ['value', 'disabled']
+                         });
+    })();
 });
 
+ko.bindingHandlers.selectPicker = {
+        init: function (element, valueAccessor, allBindingsAccessor) {
+            if ($(element).is('select')) {
+                if (ko.isObservable(valueAccessor())) {
+                    if ($(element).prop('multiple') && $.isArray(ko.utils.unwrapObservable(valueAccessor()))) {
+                        // in the case of a multiple select where the valueAccessor() is an observableArray, call the default Knockout selectedOptions binding
+                        ko.bindingHandlers.selectedOptions.init(element, valueAccessor, allBindingsAccessor);
+                    }
+                    else {
+                        // regular select and observable so call the default value binding
+                        ko.bindingHandlers.value.init(element, valueAccessor, allBindingsAccessor);
+                    }
+                }
+                $(element).addClass('selectpicker').selectpicker();
+            }
+        },
+        update: function (element, valueAccessor, allBindingsAccessor) {
+            if ($(element).is('select')) {
+                var selectPickerOptions = allBindingsAccessor().selectPickerOptions;
+                if (typeof selectPickerOptions !== 'undefined' && selectPickerOptions !== null) {
+                    var options = selectPickerOptions.options,
+                        optionsText = selectPickerOptions.optionsText,
+                        optionsValue = selectPickerOptions.optionsValue,
+                        optionsCaption = selectPickerOptions.optionsCaption,
+                        isDisabled = selectPickerOptions.disabledCondition || false,
+                        resetOnDisabled = selectPickerOptions.resetOnDisabled || false;
+                    if (ko.utils.unwrapObservable(options).length > 0) {
+                        // call the default Knockout options binding
+                        ko.bindingHandlers.options.update(element, options, ko.observable({ optionsText: optionsText, optionsValue: optionsValue, optionsCaption: optionsCaption }));
+                    }
+                    if (isDisabled && resetOnDisabled) {
+                        // the dropdown is disabled and we need to reset it to its first option
+                        $(element).selectpicker('val', $(element).children('option:first').val());
+                    }
+                    $(element).prop('disabled', isDisabled);
+                }
+                if (ko.isObservable(valueAccessor())) {
+                    if ($(element).prop('multiple') && $.isArray(ko.utils.unwrapObservable(valueAccessor()))) {
+                        // in the case of a multiple select where the valueAccessor() is an observableArray, call the default Knockout selectedOptions binding
+                        ko.bindingHandlers.selectedOptions.update(element, valueAccessor);
+                    }
+                    else {
+                        // call the default Knockout value binding
+                        ko.bindingHandlers.value.update(element, valueAccessor);
+                    }
+                }
 
+                $(element).selectpicker('refresh');
+            }
+        }
+    };
+
+function AllUsers(data){
+        this.about_me = ko.observable(data.about_me);
+        this.email = ko.observable(data.email);
+        this.uname = ko.observable(data.uname);
+        this.uuid = ko.observable(data.uuid);
+        this.everyuser = [
+        {aboutMe: this.about_me(), email: this.email(), name: this.uname, id: this.uuid()}
+        ]
+
+}
 
 function Member(data, name, email) {
     var self = this;
 
     self.member = ko.observable(name);
     self.email = ko.observable(email);
+
 }
 
+function Members(data, memid) {
+    var self = this;
+
+    self.selectedUser = ko.observable(memid);
+
+}
 
 
 function TeamViewModel() {
@@ -113,15 +165,31 @@ function TeamViewModel() {
     self.captain = ko.observable();
     self.member = ko.observable();
     self.email = ko.observable();
+    self.selectedUser = ko.observable();
     self.members = ko.observableArray([]);
     // self.members.push(new Member(self.captain(), self.email()));
-    console.log(self.teamName);
+    self.selectPicking = ko.observableArray([]);
+    self.allusers = ko.observableArray([]);
 
-    
+    $.getJSON('/users', function (json) {
+        var t = $.map(json.users, function(item) {
+            console.log("Something",item);
+            
+            return new AllUsers(item);
+        });
+        self.allusers(t);
+    });
        
     self.addMembers = function() {
         self.save();
         self.members([]);
+        
+        
+    };
+
+    self.addTeamMembers = function() {
+        self.saveTeam();
+        self.selectPicking([]);
         
         
     };
@@ -132,21 +200,12 @@ function TeamViewModel() {
         
     };
 
-    console.log(self.member());
+    
 
     self.removeMember = function(member) { self.members.remove(member) }
 
     
-
-    $.getJSON('/teams', function(teamModels) {
-        var t = $.map(teamModels.teams, function(item) {
-            console.log("Working!!")
-            return new Team(item);
-        });
-        self.teams(t);
-    });
-
-
+    
 
     self.save = function() {
         return $.ajax({
@@ -168,6 +227,30 @@ function TeamViewModel() {
             }
         });
     };
+
+
+    self.saveTeam = function() {
+        return $.ajax({
+            url: '/events/{{ename}}/{{eid}}/teams/{{teamName}}/{{tid}}/addMembers',
+            contentType: 'application/json',
+            type: 'POST',
+            data: ko.toJSON({
+
+                'members': self.selectPicking() ,
+                      
+                
+            }),
+            success: function(data) {
+                console.log("Entered to Flask View");
+                return;
+            },
+            error: function() {
+                return console.log("Failed");
+            }
+        });
+    };
+
+    
 }
 
 
