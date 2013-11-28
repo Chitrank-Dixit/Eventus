@@ -20,7 +20,7 @@
     
     <form id="add_members" action="{{ url_for('add_members', ename=ename, eid=eid, teamName = teamName, tid=tid ) }}" data-bind="submit: addTeamMembers" class="navbar-form form-inline" method="post" >
 
-    <select data-bind="selectPicker: selectPicking, selectPickerOptions: { options: allusers, optionsText: 'uname', value: selectedUser, optionsValue: 'uuid'  }" data-live-search="true" multiple="true"></select>
+    <select id="selectUsers" data-bind="selectPicker: selectPicking, selectPickerOptions: { options: allusers, optionsText: 'uname', value: selectedUser, optionsValue: 'uuid' }" data-live-search="true"  multiple="true" ></select>
 
     <div class="control-group form-actions">
         <div class="controls" >
@@ -38,7 +38,7 @@
    </div>
 
 {% block tail_script %}
-<script src="{{ url_for('static', filename='bootstrap/js/knockout.validation.js') }}"></script>
+
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-formhelpers.min.js') }}"></script>
 
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-buttons.js') }}"></script>
@@ -50,6 +50,7 @@
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-fileupload.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-combobox.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/knockout.validation.js') }}"></script>
 
 <script type="text/javascript">
  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -57,9 +58,7 @@
 
 $(document).ready(function () {
 
-
-
-    
+      
 
     (function () {
         MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
@@ -105,6 +104,7 @@ ko.bindingHandlers.selectPicker = {
                         optionsCaption = selectPickerOptions.optionsCaption,
                         isDisabled = selectPickerOptions.disabledCondition || false,
                         resetOnDisabled = selectPickerOptions.resetOnDisabled || false;
+                        
                     if (ko.utils.unwrapObservable(options).length > 0) {
                         // call the default Knockout options binding
                         ko.bindingHandlers.options.update(element, options, ko.observable({ optionsText: optionsText, optionsValue: optionsValue, optionsCaption: optionsCaption }));

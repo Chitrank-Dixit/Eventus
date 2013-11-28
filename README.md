@@ -140,6 +140,8 @@ Bootstrap Plugins
 - http://tutorialzine.com/2013/07/50-must-have-plugins-for-extending-twitter-bootstrap/
 - http://bootsnipp.com/resources
 - http://www.eyecon.ro/bootstrap-datepicker/ (bootstrap datepicker)
+- http://ivaynberg.github.io/select2/ (boostrap select alike )
+- http://harvesthq.github.io/chosen/ ( bootstrap select alike ) 
 
 Ajax with Python Flask
 ----------------------------

@@ -83,7 +83,7 @@
 
     
 
-<select data-bind="selectPicker: selectPicking, selectPickerOptions: { options: allusers, optionsText: 'uname', optionsValue: 'uuid' }" data-live-search="true" multiple="true"></select>
+<select data-bind="selectPicker: selectPicking, selectPickerOptions: { options: allusers, optionsText: 'uname', optionsValue: 'uuid' }" data-live-search="true" size="3" multiple="true"   ></select>
 
 <select class="combobox">
     {% for post in post_db %}
@@ -231,7 +231,8 @@ ko.bindingHandlers.selectPicker = {
                 if (ko.isObservable(valueAccessor())) {
                     if ($(element).prop('multiple') && $.isArray(ko.utils.unwrapObservable(valueAccessor()))) {
                         // in the case of a multiple select where the valueAccessor() is an observableArray, call the default Knockout selectedOptions binding
-                        ko.bindingHandlers.selectedOptions.update(element, valueAccessor);
+                        if ($(element) <= 2 )
+                            ko.bindingHandlers.selectedOptions.update(element, valueAccessor);
                     }
                     else {
                         // call the default Knockout value binding
