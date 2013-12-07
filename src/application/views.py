@@ -318,7 +318,7 @@ def user_profile(name,uid):  #
 
 
 
-@app.route('/follow/<name>/<int:uid>/')
+@app.route('/follow/<name>/<int:uid>/', methods=['POST','GET'])
 @login_required
 def follow_user(name,uid):
   n=name; ui=uid
@@ -373,13 +373,13 @@ def follow_user(name,uid):
     )
   try:
     follow.put()
-    flash('%s you are now following %s' %(current_user.name,user.name), category='info')
+    # flash('%s you are now following %s' %(current_user.name,user.name), category='info')
     redirect(url_for('user_profile', name=n, uid=ui))
   except CapabilityDisabledError:
     flash('Ahh Something Went wrong with the server',category = 'danger')  
   return redirect(url_for('user_profile',name = n, uid= ui, m=False))
 
-@app.route('/unfollow/<name>/<int:uid>')
+@app.route('/unfollow/<name>/<int:uid>', methods=['POST','GET'])
 @login_required
 def unfollow_user(name,uid):
   n=name; ui=uid
@@ -874,6 +874,9 @@ def event_profile(ename,eid):
   events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
   # events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
   # comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
+  creator_key = ndb.Key(model.User, events.creator_id)
+  event_creator = model.User.retrieve_one_by('name' and 'key', events.creator and creator_key)
+
   user_id = ndb.Key(model.User, current_user.id)
   name = ndb.Key(model.User, current_user.name)
 
@@ -932,7 +935,7 @@ def event_profile(ename,eid):
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
     print "Here is the list",events
-  return render_template('event_profile2.html', events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform, teams= teams )
+  return render_template('event_profile2.html', event_creator = event_creator, events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform, teams= teams )
 
 @app.route('/comments/<int:eid>',methods=['GET'])
 @login_required

@@ -83,7 +83,7 @@
 
     
 
-<select data-bind="selectPicker: selectPicking, selectPickerOptions: { options: allusers, optionsText: 'uname', optionsValue: 'uuid' }" data-live-search="true" size="3" multiple="true"   ></select>
+<select data-live-search="true" multiple="true" data-bind="selectPicker: selectPicking, selectPickerOptions: { options: allusers, optionsText: 'uname', optionsValue: 'uuid', click: $root.canCheck, selectedOptions: 'iselected'  }"   ></select>
 
 <select class="combobox">
     {% for post in post_db %}
@@ -248,11 +248,12 @@ ko.bindingHandlers.selectPicker = {
 
 
 
-function AllUsers(data){
+function AllUsers(data, Selected){
         this.about_me = ko.observable(data.about_me);
         this.email = ko.observable(data.email);
         this.uname = ko.observable(data.uname);
         this.uuid = ko.observable(data.uuid);
+        this.iselected = ko.observable(Selected);
         this.everyuser = [
         {aboutMe: this.about_me(), email: this.email(), name: this.uname, id: this.uuid()}
         ]
@@ -277,9 +278,9 @@ function SeatReservation(name, initialMeal) {
 // Overall viewmodel for this screen, along with initial state
 function ReservationsViewModel() {
     var self = this;
-    self.selectPicking = ko.observableArray([]);
+    self.selectPicking = ko.observableArray();
     self.allusers = ko.observableArray([]);
-
+    self.copyArray = ko.observable(self.selectPicking());
     // Non-editable catalog data - would come from the server
     self.availableUsers = [
         { Name: "Test", uid: 5629499534213120 },
@@ -287,7 +288,11 @@ function ReservationsViewModel() {
         { Name: "Ultimate (whole zebra)", uid: 290 }
     ];    
 
-    
+    self.selectedItems = ko.computed(function(){
+        return ko.utils.arrayFilter(self.allusers(), function(item){
+            return item.iselected() === true;
+        });
+    });
 
 
 
@@ -314,12 +319,24 @@ function ReservationsViewModel() {
         var t = $.map(json.users, function(item) {
             console.log("Something",item);
             
-            return new AllUsers(item);
+            return new AllUsers(item, false);
         });
         self.allusers(t);
     });
 
-
+    self.canCheck = function(item){
+        var _canCheck = self.selectedItems().length < 2;
+        if (_canCheck){
+            // If it can check then just toggle
+            item.Selected(!item.Selected());
+            return true;
+        }
+        if (!_canCheck && item.Selected()){
+            // if it can't then only allow deselection
+            item.Selected(false);
+            return true;
+        }
+    }
 
 }
 

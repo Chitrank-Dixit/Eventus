@@ -21,10 +21,15 @@
            
 
         {% elif current_user.is_following(user) %}
-  		  	<a href="{{ url_for('unfollow_user', name=user.name, uid=euid) }}" role="button" class="btn btn-danger" data-toggle="Edit Your Profile Data"  title="Unfollow this User">Unfollow</a> <br><br>
+  		  	<a href="{{ url_for('unfollow_user', name=user.name, uid=euid) }}" role="button" class="btn btn-danger" data-toggle="Edit Your Profile Data"  title="Unfollow this User">Unfollow</a>
+          <!-- <button data-bind="click: unfollowUser" class="btn btn-danger" data-toggle="Edit Your Profile Data"  title="Unfollow this User">Unfollow</button> --> 
+          <br><br>
             
         {% else %}
-  		  	<a href="{{ url_for('follow_user', name=user.name, uid=euid) }}" class="btn btn-success" data-toggle="Edit Your Profile Data"  title="Follow this User">Follow</a> <br><br><br>
+  		  	<a href="{{ url_for('follow_user', name=user.name, uid=euid) }}" class="btn btn-success" data-toggle="Edit Your Profile Data"  title="Follow this User">Follow</a> 
+          <!-- <button data-bind="click: followUser" class="btn btn-success" data-toggle="Edit Your Profile Data"  title="Follow this User">Follow</button> -->
+          <br><br><br>
+
             
         {% endif %}
         <h3>{{user.name}}</h3>
@@ -249,6 +254,138 @@ $('#send_message').validate({
     }
 });
 });
+
+// Knockoutjs Comment Code
+
+function Comment(data) {
+    this.comment = ko.observable(data.comment);
+    this.name = ko.observable(data.name);
+    this.uid = ko.observable(data.uid);
+   
+    this.cname = this.name();
+    this.cid = this.uid();
+    
+    this.getName = ko.computed(function() {
+        return this.name();
+    }, this);
+
+    this.getUid = ko.computed(function() {
+        return this.uid();
+    }, this);
+    
+}
+
+
+
+function FollowViewModel() {
+    var self = this;
+    self.users = ko.observableArray([]);
+    self.userInfo = ko.observableArray([]);
+    self.invites = ko.observableArray([]);
+    self.comments = ko.observableArray([]);
+    self.comment = ko.observable();
+    self.allSelected= ko.observable(false);
+    self.url =  ko.observable("{{ url_for('follow_user', name=user.name, uid=euid) }}");
+    
+    self.selectAll = function() {
+        var all = self.allSelected();
+        ko.utils.arrayForEach(self.users(), function(user) {
+           user.isSelected(!all); 
+        });
+        return true;
+    }       
+    
+    self.inviteUser = function() {
+        self.invites.push(new AddInvite({ title: this.newTaskText() }));
+               
+        
+    };
+       
+    
+
+    self.followUser = function() {
+        self.saveFollow();
+               
+        
+    };
+
+    self.unfollowUser = function() {
+        self.saveUnfollow();
+               
+        
+    };
+
+    /*$.getJSON("", function(commentModels) {
+        var t = $.map(commentModels.comments, function(item) {
+            return new Comment(item);
+
+        });
+        self.comments(t);
+
+    });*/
+
+    $.getJSON('/users', function(invitationModels) {
+        var t = $.map(invitationModels.users, function(item) {
+            console.log("Something",item);
+            return new Invite(item);
+        });
+        self.users(t);
+    });
+
+    
+
+    self.saveFollow = function() {
+        return $.ajax({
+            url: "{{ url_for('follow_user', name=user.name, uid=euid) }}",
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify({
+                
+            }),
+
+
+            success: function(data) {
+                console.log("Pushing to comment array");
+                self.comments.push(new Comment({ comment: data.comment, name: data.name, uid: data.uid }));
+                return;
+            },
+            error: function() {
+              console.log(ename);
+                return console.log("Failed");
+            }
+        });
+    };
+
+    self.saveUnfollow = function() {
+        return $.ajax({
+            url: "{{ url_for('unfollow_user', name=user.name, uid=euid) }}",
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify({
+                
+            }),
+
+
+            success: function(data) {
+                
+                return;
+            },
+            error: function() {
+              console.log(ename);
+                return console.log("Failed");
+            }
+        });
+    };
+}
+
+
+
+// enable validation
+// ko.validation.init();
+
+// Activates knockout.js
+ko.applyBindings(new FollowViewModel());
+
 
 </script>
 {% endblock %}

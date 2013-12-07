@@ -87,7 +87,7 @@
   
     <div class="span6">
       <div class="eventLogo">
-        <img src="{{ url_for('static', filename='img/Es3.png') }}" style="width:120px;padding:10px 0px 10px 20px;"> 
+        <!-- <img src="{{ url_for('static', filename='img/Es3.png') }}" style="width:120px;padding:10px 0px 10px 20px;">  -->
         
 
         <!-- <img src="{{ url_for('static', filename='img/celebrate1.jpg') }}" style="width:100px;padding:10px 0px 10px 20px;"> 
@@ -262,7 +262,7 @@
         <h3> Created By  </h3>
 
 
-        <img src="event_list.creator.string_id().avatar(90)" class="teamPic"> <a href="/user/{{ events.creator.string_id() }}/{{ events.creator_id }}/"> {{events.creator.string_id()}}</a>
+        <img src="{{ event_creator.avatar(90) }}" class="teamPic"> <a href="/user/{{ events.creator.string_id() }}/{{ events.creator_id }}/"> {{events.creator.string_id()}}</a>
         {% if events.event_type == "Team Event" %}
         <h3>Teams</h3>
         {% for team in teams %}
