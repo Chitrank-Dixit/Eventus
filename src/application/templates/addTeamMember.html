@@ -18,7 +18,7 @@
         
     <div class="container span6">
     
-    <form id="add_members" action="{{ url_for('add_members', ename=ename, eid=eid, teamName = teamName, tid=tid ) }}" data-bind="submit: addTeamMembers" class="navbar-form form-inline" method="post" >
+    <form id="add_members" data-bind="submit: addTeamMembers" class="navbar-form form-inline" method="post" >
 
     <select id="selectUsers" data-bind="selectPicker: selectPicking, selectPickerOptions: { options: allusers, optionsText: 'uname', value: selectedUser, optionsValue: 'uuid' }" data-live-search="true"  multiple="true" ></select>
 

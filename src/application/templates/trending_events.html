@@ -39,7 +39,7 @@
 {% for event_list in events %}
 <!-- Pannel code is not working here ! Include for loop in content body instead -->
 
-<div class="well-inverse">
+<div class="well">
     <div class="panel-heading">
      <h3 class="panel-title"><a href="{{ url_for('event_profile', ename=event_list.name,eid=event_list.key.id() )}}"> {{ event_list.name }}</a></h3>
     </div>

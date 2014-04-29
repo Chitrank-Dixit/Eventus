@@ -80,8 +80,8 @@
       <div class="tab-pane active" id="eventscomments">
         {% for com in comments %}
 
-        <div class="well-inverse">
-          <div class="alert alert-success">{{com.event_name.string_id()}}</div>
+        <div class="well">
+          <div class="alert alert-info">{{com.event_name.string_id()}}</div>
           {{com.comment}}
           
         </div>
@@ -91,8 +91,8 @@
       <div class="tab-pane" id="teamscomments">
         {% for tcom in teamcomments %}
 
-        <div class="well-inverse">
-          <div class="alert alert-success">{{tcom.teamName.string_id()}}</div>
+        <div class="well">
+          <div class="alert alert-info">{{tcom.teamName.string_id()}}</div>
           {{tcom.comment}}
           
         </div>

@@ -161,17 +161,17 @@
 					<div class="">
 
 			        {% if events.event_type == 'Team Event' %}
-              <a class="btn btn-sidebar btn-block" href="{{ url_for('RegisterTeam', ename=ename,eid=eid )}}" >Register Your Team</a>
+              <a class="btn btn-info btn-block" href="{{ url_for('RegisterTeam', ename=ename,eid=eid )}}" >Register Your Team</a>
               
-			        <a class="btn btn-sidebar btn-block" href="" >Team Settings</a>
+			        <a class="btn btn-info btn-block" href="" >Team Settings</a>
 			        
 			        {% endif %}
               {% if events.creator_id == current_user.id %}
-			        <a class="btn btn-sidebar btn-block" href="#add-invite-modal" data-toggle="modal" >Add or Invite User</a>
+			        <a class="btn btn-info btn-block" href="#add-invite-modal" data-toggle="modal" >Add or Invite User</a>
 
-              <a class="btn btn-sidebar btn-block" href="{{ url_for('invite_people')}}" data-toggle="modal" >Add Subevent</a>
+              <a class="btn btn-info btn-block" href="{{ url_for('invite_people')}}" data-toggle="modal" >Add Subevent</a>
               {% endif %}
-			        <!-- well inverse end -->
+			        <!-- well end -->
 		      </div>
           <!-- span3 for buttons end -->
 	  </div>
@@ -351,7 +351,7 @@
         </form>
 
       <ul data-bind="foreach: comments, visible: comments().length > 0">
-            <div class="well-inverse time-stamp">
+            <div class="well time-stamp">
                 <!-- data-bind="attr: { href: commentBy , name: name , uid: uid }" -->
 
                 <p data-bind="text: comment"></p>
