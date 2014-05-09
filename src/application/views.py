@@ -555,40 +555,40 @@ u'given_name': u'Chitrank', u'id': u'113942220708315173370', u'verified_email': 
 ################################################################################
 
 
-@app.route('/signin/google/')
-def signin_google():
-  google_url = users.create_login_url(
-      flask.url_for('google_authorized', next=util.get_next_url())
-    )
-  return flask.redirect(google_url)
+# @app.route('/signin/google/')
+# def signin_google():
+#   google_url = users.create_login_url(
+#       flask.url_for('google_authorized', next=util.get_next_url())
+#     )
+#   return flask.redirect(google_url)
 
 
-@app.route('/_s/callback/google/authorized/')
-def google_authorized():
-  google_user = users.get_current_user()
-  if google_user is None:
-    flask.flash(u'You denied the request to sign in.')
-    return flask.redirect(util.get_next_url())
+# @app.route('/_s/callback/google/authorized/')
+# def google_authorized():
+#   google_user = users.get_current_user()
+#   if google_user is None:
+#     flask.flash(u'You denied the request to sign in.')
+#     return flask.redirect(util.get_next_url())
 
-  user_db = retrieve_user_from_googleopen(google_user)
-  return signin_user_db(user_db)
+#   user_db = retrieve_user_from_googleopen(google_user)
+#   return signin_user_db(user_db)
 
 
-def retrieve_user_from_googleopen(google_user):
-  user_db = model.User.retrieve_one_by('federated_id', google_user.user_id())
-  if user_db:
-    if not user_db.admin and users.is_current_user_admin():
-      user_db.admin = True
-      user_db.put()
-    return user_db
+# def retrieve_user_from_googleopen(google_user):
+#   user_db = model.User.retrieve_one_by('federated_id', google_user.user_id())
+#   if user_db:
+#     if not user_db.admin and users.is_current_user_admin():
+#       user_db.admin = True
+#       user_db.put()
+#     return user_db
 
-  return create_user_db(
-      google_user.nickname().split('@')[0].replace('.', ' ').title(),
-      google_user.nickname(),
-      google_user.email(),
-      federated_id=google_user.user_id(),
-      admin=users.is_current_user_admin(),
-    )
+#   return create_user_db(
+#       google_user.nickname().split('@')[0].replace('.', ' ').title(),
+#       google_user.nickname(),
+#       google_user.email(),
+#       federated_id=google_user.user_id(),
+#       admin=users.is_current_user_admin(),
+#     )
 
 
 
