@@ -13,6 +13,7 @@
   </style>
   <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-select.css') }}" rel="stylesheet" />
   <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-formhelpers.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='bootstrap/css/styles.css') }}" rel="stylesheet" />
 {% endblock %}
 {% block content %}
     
@@ -152,7 +153,89 @@
     </select>
                 
     <p>BodyText: <strong data-bind="text: bodytext" /></strong></p>
+
+    <div id="alphaFilter">
+            <span>Filter name by:</span>
+            <ul data-bind="template: 'letterTemplate'"></ul>
+            <a id="clear" href="#" title="Clear Filter" data-bind="click: clearLetter, css: { disabled: filterLetter() === '' }">Clear filter</a>
+            <fieldset id="searchForm">
+                <span>Search for:</span>
+                <button data-bind="click: setTerm, disable: filterTerm" type="button">Go</button>
+                <input id="term">
+                <a data-bind="visible: filterTerm, click: clearTerm" title="Clear search" href="#">x</a>
+            </fieldset>
+        </div>
+        {% raw %}
+        <script id="letterTemplate" type="text/x-jquery-tmpl">
+            
+            {{each(i, val) letters}}
+                <li>
+                    <a href="#" title="Filter name by ${ val }" data-bind="click: function() { 
+                        filterLetter(val) }, 
+                        css: { disabled: val === filterLetter() }">
+                        ${ val }
+                    </a>
+                </li>
+            {{/each}}
+            
+        </script>
+        <div id="people" data-bind="template: { name: 'personTemplate', foreach: showCurrentPage }">
+            <a href="#" title="Add new person" data-bind="click: showForm, visible: displayButton">Add person</a>
+            <nav id="paging">
                 
+                <a id="all" href="#" data-bind="click: function () { pageSize(people().length); currentPage(0); }, css: { disabled: pageSize() === people().length }">Show all</a>
+                <a id="last" title="Last Page" href="#" data-bind="click: function() { currentPage(totalPages() - 1); }, css: { disabled: currentPage() === totalPages() - 1 }">Last</a>
+                <a id="next" title="Next Page" href="#" data-bind="click: navigate, css: { disabled: currentPage() === totalPages() - 1 }">&raquo;</a>
+                <ul data-bind="template: 'pagingTemplate'"></ul>
+                <a id="prev" title="Previous Page" href="#" data-bind="click: navigate, css: { disabled: currentPage() === 0 }">&laquo;</a>
+                <a id="first" title="First Page" href="#" data-bind="click: function() { currentPage(0); }, css: { disabled: currentPage() === 0 }">First</a>
+                
+            </nav>
+            <label id="pageSize">Show <input data-bind="value: pageSize" /> per page</label>
+            <script id="pagingTemplate" type="text/x-jquery-tmpl">
+                
+                {{each(i) ko.utils.range(1, totalPages)}} 
+                    <li>
+                      <a href="#" title="View page ${ i + 1 }" data-bind="click: function() { 
+                        currentPage(i) }, 
+                        css: { on: i === currentPage() }">
+                        ${ i + 1 }
+                      </a>
+                    </li>
+                {{/each}}
+                
+            </script>
+            <fieldset data-bind="visible: displayForm">
+                <div class="details">
+                    <label>Name: <input id="name" /></label>
+                    <label>Address: <input id="address" /></label>
+                    <label>Tel: <input id="tel" /></label>
+                    <label>Site: <input id="site" /></label>
+                </div>
+                <div class="img">
+                    <label>Picture: <input id="pic" type="file" /></label>
+                </div>
+                <div class="tools">
+                    <button data-bind="click: addPerson">Add</button>
+                    <button data-bind="click: hideForm">Cancel</button>
+                </div>
+            </fieldset>
+        </div>
+        <script id="personTemplate" type="text/x-jquery-tmpl">
+            <section class="person">
+                
+                <img src="../img/person.png" alt="${ name }" />
+                <h1>${ name }</h1>
+                <address>${ address }</address>
+                <span class="tel">${ tel }</span>
+                <a href="http://${ site }" title="Visit site">${ site }</a>
+                <div class="tools">
+                    <button data-bind="click: deleteMe">Delete</button>
+                </div>
+                
+            </section>
+        </script>
+        {% endraw %}    
 {% block tail_script %}
 
 <script src="{{ url_for('static', filename='bootstrap/js/knockout.validation.js') }}"></script>
@@ -166,6 +249,8 @@
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-datepicker.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-fileupload.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.tmpl.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/behaviour.js') }}"></script>
 
 <!-- <script src="{{ url_for('static', filename='bootstrap/js/underscore.js') }}"></script> -->
 <script type="text/javascript"> 

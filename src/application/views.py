@@ -48,7 +48,7 @@ from models import *
 #from model import *
 import requests
 
-from datetime import datetime
+from datetime import datetime , timedelta
 from google.appengine.api import users
 from json import dumps, loads
 
@@ -58,7 +58,7 @@ from flaskext.login import login_url, logout_user , current_user, login_required
 from flaskext import oauth
 
 
-
+from hashlib import md5
 
 import util
 import model
@@ -80,6 +80,7 @@ cache = Cache(app)
 
 # Mail settings specified
 # message = mail.InboundEmailMessage(request.body)
+app.permanent_session_lifetime = timedelta(minutes=5)
 
 
 
@@ -113,7 +114,7 @@ def signin():
     if form.validate_on_submit() and request.method == 'POST':
         
         # model.User.retrieve_one_by('username', form.username.data) && model.User.retrieve_one_by('password', form.password.data) is not None:
-        user_db = model.User.retrieve_one_by('name' and  'password',form.name.data and form.password.data)
+        user_db = model.User.retrieve_one_by('name' and  'password',form.name.data and md5(form.password.data).hexdigest())
         #user_is = model.User.query(model.User.name == form.name.data, model.User.password == form.password.data)
         if not user_db:
           flash('Please check the username or password')
@@ -123,7 +124,7 @@ def signin():
           flask.flash('Hello %s, welcome to %s' % (
             user_db.name, config.CONFIG_DB.brand_name,
             ), category='success')
-          session['remember_me'] = form.remember_me.data
+          session['username'] = form.name.data
           return flask.redirect(flask.url_for('index'))
         else:
           flask.flash('Sorry, but you could not sign in.', category='danger')
@@ -183,7 +184,7 @@ def signup():
             name = form.name.data,
             username = form.name.data,
             email = form.email.data,
-            password = form.password.data,
+            password = md5(form.password.data).hexdigest(),
              
         )
         #session['remember_me'] = form.remeber_me.data
@@ -236,11 +237,27 @@ def signup():
     return flask.render_template('signup.html',form=form)
 
 
+@app.route('/user/<name>/<int:uid>/<hexcode>', methods=['POST','GET'])
+def recover_password(name,uid,hexcode):
+  '''
+  '''
+  user = model.User.retrieve_one_by('id' and 'password' , uid and hexcode)
+  form = ChangePassword(request.form)
+  if form.validate_on_submit() and request.method == 'POST':
+    user.password = md5(form.newpassword.data).hexdigest()
+    user.put()
+    flash('Password has been changed successfully !', category='success')
+    return redirect(url_for('index'))
+  return render_template('change_password.html', form=form, user=user)
+
+
+
 # This is user profile
 # @app.route('/user/<name>/')
 @app.route('/user/<name>/<int:uid>/', methods=['GET','POST']) # /
 @login_required
-def user_profile(name,uid):  #
+def user_profile(name,uid):
+  if 'username' in session:
     euid= uid
     
     user_is = model.User.query()
@@ -315,8 +332,76 @@ def user_profile(name,uid):  #
      user = user, euid= euid, followers = followers, form=form, inbox=inbox,
      user_in = user_in , comments= comments, teamcomments = teamcomments
      )
+  else:
+    return redirect(url_for('signin'))
 
 
+@app.route('/followorunfollow/<name>/<int:uid>', methods=['POST','GET'])
+@login_required
+def follow_unfollow(name,uid):
+  if 'username' in session:
+    n=name; ui=uid
+    user_is = model.User.query(model.User.name == name , model.User.id == uid)
+    if user_is==None:
+      return redirect(url_for('index'))
+    uiid = ndb.Key(model.User, uid)
+    user = model.User.retrieve_one_by('name' and 'key' ,name and uiid)
+
+    if not current_user.is_following(user):
+      if user == g.user:
+        flash('You can not Unfollow Yourself',category='warning')
+
+
+      cur_user = ndb.Key(model.Followers, current_user.name)
+      to_follow = ndb.Key(model.Followers, user.name)
+      model_ex = model.Followers.query()
+      print model_ex
+
+      for entry in model_ex:
+        if entry.follower_name.string_id() == current_user.id and entry.followed_name.string_id() == user.id:
+          flash('You are Already Following %s'%(user.name), category='warning')
+          return redirect(url_for('user_profile',name = n, uid= ui))
+
+
+      print ui
+      follower_name = ndb.Key(model.User, current_user.name)
+      followed_name = ndb.Key(model.User, user.name)
+      follower_avatar = ndb.Key(model.User, current_user.avatar(80))
+      followed_avatar = ndb.Key(model.User, user.avatar(80))
+      follow = model.Followers(
+        follower_name = follower_name,
+        follower_id = current_user.id, 
+        followed_name = followed_name,
+        followed_id = ui,
+        follower_avatar = follower_avatar,
+        followed_avatar = followed_avatar,
+        )
+      try:
+        follow.put()
+        # flash('%s you are now following %s' %(current_user.name,user.name), category='info')
+        redirect(url_for('user_profile', name=n, uid=ui))
+      except CapabilityDisabledError:
+        flash('Ahh Something Went wrong with the server',category = 'danger')  
+      return redirect(url_for('user_profile',name = n, uid= ui, m=False))
+      
+    else:
+      if user == g.user:
+        flash('You can not Unfollow Yourself',category='warning')
+
+      cur_user = ndb.Key(model.Followers, current_user.name)
+      to_follow = ndb.Key(model.Followers, name)
+
+      model_ex = model.Followers.query()
+      for entry in model_ex:
+        if entry.follower_name.string_id() == current_user.name and entry.followed_name.string_id() == name:
+          try:
+            entry.key.delete()
+            flash('You are not Following %s'%(name), category='info')
+          except CapabilityDisabledError:
+            flash(u'App Engine Datastore is currently in read-only mode.', category='danger')
+      return redirect(url_for('user_profile',name = n, uid= ui))
+  else:
+    return redirect(url_for('signin'))
 
 @app.route('/follow/<name>/<int:uid>/', methods=['POST','GET'])
 @login_required
@@ -408,38 +493,45 @@ def unfollow_user(name,uid):
 @app.route('/notifications/<name>/<int:uid>', methods=['GET','POST'])
 @login_required
 def user_notifications(name,uid):
-  user_id = ndb.Key(model.User, current_user.id)
-  print user_id
-  notify = model.EventInvites.query(model.EventInvites.invited_to == current_user.name, model.EventInvites.user_id == user_id)
-
-  return render_template('notifications.html', notify=notify)
+  if 'username' in session:
+    user_id = ndb.Key(model.User, current_user.id)
+    print user_id
+    notify = model.EventInvites.query(model.EventInvites.invited_to == current_user.name, model.EventInvites.user_id == user_id)
+    return render_template('notifications.html', notify=notify)
+  else:
+    return redirect(url_for('signin'))
 
 
 @app.route('/edit_profile/<name>/<int:uid>', methods=['GET','POST'])
 @login_required
 def user_profile_settings(name,uid):
-  userSettings = UserSettingsForm(request.form)
-  user_is = model.User.query(model.User.name == name , model.User.id == uid)
-  uiid = ndb.Key(model.User, uid)
-  user = model.User.retrieve_one_by('name' and 'key' ,name and uiid)
-  if userSettings.validate_on_submit() and request.method == 'POST':
-    print "Scooby DOO"
-    user.location = userSettings.location.data
-    user.about_me = userSettings.about.data
-    user.googleplus_id = userSettings.google_plusId.data
-    user.facebook_id = userSettings.facebookId.data
-    user.twitter_id = userSettings.twitterId.data
-    user.put()
-    flash('Profile has been updated', category="info")
-    return redirect(url_for('user_profile_settings', name=name, uid=uid))
-  print user, user_is
+  if 'username' in session:
+    userSettings = UserSettingsForm(request.form)
+    user_is = model.User.query(model.User.name == name , model.User.id == uid)
+    uiid = ndb.Key(model.User, uid)
+    user = model.User.retrieve_one_by('name' and 'key' ,name and uiid)
+
+    if userSettings.validate_on_submit() and request.method == 'POST':
+      print "Scooby DOO"
+      user.location = userSettings.location.data
+      user.about_me = userSettings.about.data
+      user.googleplus_id = userSettings.google_plusId.data
+      user.facebook_id = userSettings.facebookId.data
+      user.twitter_id = userSettings.twitterId.data
+      user.put()
+      flash('Profile has been updated', category="info")
+      return redirect(url_for('user_profile_settings', name=name, uid=uid))
+    print user, user_is
   
-  return render_template('edit_profile.html', userSettings=userSettings, user_is =user_is)
+    return render_template('edit_profile.html', userSettings=userSettings, user_is =user_is)
+  else:
+    return redirect(url_for('signin'))
 
 
 
 @app.route('/signout',methods=['POST','GET'])
 def signout():
+  session.pop('username', None)
   login.logout_user()
   flash(u'You have been signed out.','success')
   return redirect(url_for('index'))
@@ -743,6 +835,7 @@ def signin_user_db(user_db):
     return flask.redirect(flask.url_for('signin'))
   flask_user_db = FlaskUser(user_db)
   if login.login_user(flask_user_db):
+    session['username'] = user_db.username
     flask.flash('Hello %s, welcome to %s' % (
         user_db.name, config.CONFIG_DB.brand_name,
       ), category='success')
@@ -781,82 +874,86 @@ def crop_youtube_url(url):
 @app.route('/create_event/', methods=['POST','GET'])
 @login_required
 def create_event():
-  form= CreateEventForm(request.form)
-  #use_db = ndb.Key(urlsafe=current_user.get_id())
-  use_db = ndb.Key(model.User, current_user.name)
-  #id_db = ndb.Key(model.User, current_user.id)
-  teamsize = 0 ; noofteams = 0
-  if form.teamSize.data and form.noofTeams.data:
-    teamsize = int(form.teamSize.data)
-    noofteams = int(form.noofTeams.data)
-   
-  if request.method=='POST':
-    start_date =  form.sdate.data
-    sdate_list = start_date.split('/')
-    end_date = form.edate.data
-    edate_list = end_date.split('/')
-    youtube_url_code = crop_youtube_url(form.youtubevideo_url.data)
-    uploadLogo = str(form.logo.data)
-    upload_url = blobstore.create_upload_url('/upload/'+uploadLogo)
-    event = model.Event(
-        name = form.name.data,
-        event_type = form.event_type.data,
-        teamSize = teamsize,
-        noofTeams = noofteams ,
-        creator = use_db ,
-        creator_id = current_user.id,
-        event_url = form.event_url.data,
-        description = form.description.data,
-        venue= form.venue.data,
-        address = form.address.data,
-        city = form.city.data,
-        state = form.state.data,
-        country = form.country.data,
-        postal = int(form.postal.data),
-        phone =  int(form.phone.data),
-        event_email = form.eventEmail.data,
-        facebook_page = form.facebook_url.data,
-        twitter_id = form.twitter_url.data,
-        youtubevideo_url = youtube_url_code,
-        logo = upload_url,
-        sdate= datetime(int(sdate_list[2]),int(sdate_list[0]),int(sdate_list[1])),
-        edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
-        access = form.access_type.data,
-      )
-    event_name =  form.name.data
-    try:
-      record = event.put()
-      print "records is:------",record
-      eid=record.integer_id()
-      event_key = ndb.Key(model.Event, eid)
-      print "Key is:",event_key 
-      time.sleep(4)
-      #signup_id = .key.id()
-      #msg = Message("Welcome to Eventus <br><br> You have successfully registered to Eventus, Please note down your credentials <br><br> Username: %s <br> Password: %s"  % form.username.data % form.password.data,sender=config.ADMINS[0],recipients=[form.email.data])
-      flash(u'Event %s has been created.' % form.name.data, category='success')
+  if 'username' in session:
 
-      #mail.send(msg)
-
+    form= CreateEventForm(request.form)
+    #use_db = ndb.Key(urlsafe=current_user.get_id())
+    use_db = ndb.Key(model.User, current_user.name)
+    #id_db = ndb.Key(model.User, current_user.id)
+    teamsize = 0 ; noofteams = 0
+    if form.teamSize.data and form.noofTeams.data:
+      teamsize = int(form.teamSize.data)
+      noofteams = int(form.noofTeams.data)
      
-      # eventID = model.Event.query()
-      # eventKey = ndb.Key(model.Event, form.name.data )
-      
+    if request.method=='POST':
+      start_date =  form.sdate.data
+      sdate_list = start_date.split('/')
+      end_date = form.edate.data
+      edate_list = end_date.split('/')
+      youtube_url_code = crop_youtube_url(form.youtubevideo_url.data)
+      uploadLogo = str(form.logo.data)
+      upload_url = blobstore.create_upload_url('/upload/'+uploadLogo)
+      event = model.Event(
+          name = form.name.data,
+          event_type = form.event_type.data,
+          teamSize = teamsize,
+          noofTeams = noofteams ,
+          creator = use_db ,
+          creator_id = current_user.id,
+          event_url = form.event_url.data,
+          description = form.description.data,
+          venue= form.venue.data,
+          address = form.address.data,
+          city = form.city.data,
+          state = form.state.data,
+          country = form.country.data,
+          postal = int(form.postal.data),
+          phone =  int(form.phone.data),
+          event_email = form.eventEmail.data,
+          facebook_page = form.facebook_url.data,
+          twitter_id = form.twitter_url.data,
+          youtubevideo_url = youtube_url_code,
+          logo = upload_url,
+          sdate= datetime(int(sdate_list[2]),int(sdate_list[0]),int(sdate_list[1])),
+          edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
+          access = form.access_type.data,
+        )
+      event_name =  form.name.data
+      try:
+        record = event.put()
+        print "records is:------",record
+        eid=record.integer_id()
+        event_key = ndb.Key(model.Event, eid)
+        print "Key is:",event_key 
+        time.sleep(4)
+        #signup_id = .key.id()
+        #msg = Message("Welcome to Eventus <br><br> You have successfully registered to Eventus, Please note down your credentials <br><br> Username: %s <br> Password: %s"  % form.username.data % form.password.data,sender=config.ADMINS[0],recipients=[form.email.data])
+        flash(u'Event %s has been created.' % form.name.data, category='success')
 
-      # print eventKey
-      
-      #return redirect(url_for('event_profile', ename=form.name.data,eid=itrCid.integer_id()))
-      # return redirect(url_for('index'))
+        #mail.send(msg)
 
-      #current_event = model.Event.retrieve_one_by('name' and 'key' , event_name and event_key )
-      # return redirect(url_for('index'))
-      #print "Hiii",current_event
+       
+        # eventID = model.Event.query()
+        # eventKey = ndb.Key(model.Event, form.name.data )
+        
 
-      return redirect(url_for('event_profile', ename=event_name , eid=record.integer_id()))
+        # print eventKey
+        
+        #return redirect(url_for('event_profile', ename=form.name.data,eid=itrCid.integer_id()))
+        # return redirect(url_for('index'))
 
-    except CapabilityDisabledError:
-      flash(u'App Engine Datastore is currently in read-only mode.', category='info')
-      return redirect(url_for('index'))
-  return render_template('create_event2.html',form=form)
+        #current_event = model.Event.retrieve_one_by('name' and 'key' , event_name and event_key )
+        # return redirect(url_for('index'))
+        #print "Hiii",current_event
+
+        return redirect(url_for('event_profile', ename=event_name , eid=record.integer_id()))
+
+      except CapabilityDisabledError:
+        flash(u'App Engine Datastore is currently in read-only mode.', category='info')
+        return redirect(url_for('index'))
+    return render_template('create_event2.html',form=form)
+  else:
+    return redirect(url_for('signin'))
 
 
 @app.route('/events/', methods=['POST','GET'])
@@ -939,6 +1036,7 @@ def event_profile(ename,eid):
 
 @app.route('/comments/<int:eid>',methods=['GET'])
 @login_required
+@cache.cached(timeout=15, key_prefix='all_event_comments')
 def all_event_comments(eid):
   event_id = ndb.Key(model.Event, eid)
   comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
@@ -956,80 +1054,90 @@ def all_event_comments(eid):
 @app.route('/events/<ename>/<int:eid>/invite/', methods=['POST','GET'])
 @login_required
 def invite_user(ename,eid):
-  event_id = ndb.Key(model.Event, eid)
-  events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
-  inviteform = InviteUserForm(request.form)
-  user_id = ndb.Key(model.User, current_user.id)
-  name = ndb.Key(model.User, current_user.name)
-  if request.method == 'POST':
-    invites = model.EventInvites(
-        user_id = user_id ,
-        event_id = event_id ,
-        invited_to = name ,
-        invitation_message = request.json['invitationMessage']
-      )
-    try:
-      invites.put()
-      # flash('your comment has been posted', category='info')
-      # mail.send(msg)
-      # print name.string_id() , user_id.integer_id() , event_id
-      #return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
-    except CapabilityDisabledError:
-      flash('Something went wrong and your comment has not been posted', category='danger')
-  return render_template('add_inviteModal.html', inviteform=inviteform)
+  if 'username' in session:
+
+    event_id = ndb.Key(model.Event, eid)
+    events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+    inviteform = InviteUserForm(request.form)
+    user_id = ndb.Key(model.User, current_user.id)
+    name = ndb.Key(model.User, current_user.name)
+    if request.method == 'POST':
+      invites = model.EventInvites(
+          user_id = user_id ,
+          event_id = event_id ,
+          invited_to = name ,
+          invitation_message = request.json['invitationMessage']
+        )
+      try:
+        invites.put()
+        # flash('your comment has been posted', category='info')
+        # mail.send(msg)
+        # print name.string_id() , user_id.integer_id() , event_id
+        #return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
+      except CapabilityDisabledError:
+        flash('Something went wrong and your comment has not been posted', category='danger')
+    return render_template('add_inviteModal.html', inviteform=inviteform)
+  else:
+    return redirect(url_for('signin'))
 
 
 @app.route('/users', methods=['GET'])
 @login_required
 def get_all_users():
-  all_users =  model.User.query()
-  first = {}; users = []
-  for user in all_users:
-    user_key = user.key
-    first['uname'] = user.name
-    first['uuid'] = user_key.integer_id()
-    first['about_me'] = user.about_me
-    first['email'] = user.email
-    users.append(first)
-    first = {}
-  
-  return jsonify(users=users)  #(all_users =all_users)
-  # Event_Type = Team Event Specifying the Teams
+  if 'username' in session:
+
+    all_users =  model.User.query()
+    first = {}; users = []
+    for user in all_users:
+      user_key = user.key
+      first['uname'] = user.name
+      first['uuid'] = user_key.integer_id()
+      first['about_me'] = user.about_me
+      first['email'] = user.email
+      users.append(first)
+      first = {}
+    
+    return jsonify(users=users)  #(all_users =all_users)
+    # Event_Type = Team Event Specifying the Teams
+  else:
+    return redirect(url_for('signin'))
 
 @app.route('/events/<ename>/<int:eid>/register_team', methods=['POST','GET'])
 @login_required
 def RegisterTeam(ename, eid):
-  form = TeamRegisterForm(request.form)
-  event_id = ndb.Key(model.Event, eid)
-  event_name = ndb.Key(model.Event, ename)
-  events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
-  form.teamVideoURL.data = "http://www.youtube.com/watch?v=PocfpmK458o"
+  if 'username' in session:
+    form = TeamRegisterForm(request.form)
+    event_id = ndb.Key(model.Event, eid)
+    event_name = ndb.Key(model.Event, ename)
+    events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+    form.teamVideoURL.data = "http://www.youtube.com/watch?v=PocfpmK458o"
   
 
-  #team_url_code = crop_youtube_url(form.teamVideoURL.data)
+    #team_url_code = crop_youtube_url(form.teamVideoURL.data)
 
 
-  if request.method == 'POST':
-    team = model.TeamRegister(
-        eventId = event_id,
-        eventName = event_name,
-        teamName = form.teamName.data,
-        description = form.description.data,
-        teamVideoURL = form.teamVideoURL.data
+    if request.method == 'POST':
+      team = model.TeamRegister(
+          eventId = event_id,
+          eventName = event_name,
+          teamName = form.teamName.data,
+          description = form.description.data,
+          teamVideoURL = form.teamVideoURL.data
 
-      )
-    
+        )
+      
 
 
-    try:
-      team = team.put()
-      time.sleep(4)
-      return redirect(url_for('Team_Profile', ename = ename , eid =  eid, teamName = form.teamName.data, tid= team.integer_id() ))
-    except CapabilityDisabledError:
-      flash('Something went wrong and your comment has not been posted', category='danger')
+      try:
+        team = team.put()
+        time.sleep(4)
+        return redirect(url_for('Team_Profile', ename = ename , eid =  eid, teamName = form.teamName.data, tid= team.integer_id() ))
+      except CapabilityDisabledError:
+        flash('Something went wrong and your comment has not been posted', category='danger')
 
-  return render_template('team_register.html', ename=ename , eid=eid, form=form, captain=current_user.name, events= events)
-
+    return render_template('team_register.html', ename=ename , eid=eid, form=form, captain=current_user.name, events= events)
+  else:
+    return redirect(url_for('signin'))
 
 
 
@@ -1116,38 +1224,43 @@ def invite_people():
 @app.route('/events/<ename>/<int:eid>/teams/<teamName>/<int:tid>/addMembers', methods=['POST','GET'])
 @login_required
 def add_members(ename, eid, teamName, tid):
-  event_id = ndb.Key(model.Event, eid)
-  team_id = ndb.Key(model.TeamRegister, tid)
-  events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
-  if request.method == 'POST':
-    entry = []
-    print "JSON hai ji", request.json
-    for queue in request.json['members']:
-      member_id =  queue
-      print member_id
-      user_id = ndb.Key(model.User, member_id)
-      print user_id
-      userName = model.User.retrieve_one_by("key", user_id)
-      print userName.name
-      # userKey = ndb.Key(model.User, queue['member'])
-      member = model.TeamMembers(
-        eventId = event_id,
-        teamId = team_id,
-        memberId = user_id,
-        memberName = userName.name,
-        
-      )
-      try:
-        member.put()
+  if 'username' in session:
+
+    event_id = ndb.Key(model.Event, eid)
+    team_id = ndb.Key(model.TeamRegister, tid)
+    events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+    if request.method == 'POST':
+      entry = []
+      print "JSON hai ji", request.json
+      for queue in request.json['members']:
+        member_id =  queue
+        print member_id
+        user_id = ndb.Key(model.User, member_id)
+        print user_id
+        userName = model.User.retrieve_one_by("key", user_id)
+        print userName.name
+        # userKey = ndb.Key(model.User, queue['member'])
+        member = model.TeamMembers(
+          eventId = event_id,
+          teamId = team_id,
+          memberId = user_id,
+          memberName = userName.name,
           
-      except CapabilityDisabledError:
-        flash('Something went wrong and your comment has not been posted', category='danger')
-      
-  return render_template('addTeamMember.html', ename=ename, eid=eid, teamName= teamName, tid=tid, events= events)
+        )
+        try:
+          member.put()
+            
+        except CapabilityDisabledError:
+          flash('Something went wrong and your comment has not been posted', category='danger')
+        
+    return render_template('addTeamMember.html', ename=ename, eid=eid, teamName= teamName, tid=tid, events= events)
+  else:
+    return redirect(url_for('signin'))
 
 
 @app.route('/comments/<int:eid>/<int:tid>',methods=['GET'])
 @login_required
+@cache.cached(timeout=15, key_prefix='all_team_comments')
 def all_team_comments(eid, tid):
   event_id = ndb.Key(model.Event, eid)
   team_id = ndb.Key(model.TeamRegister, tid)

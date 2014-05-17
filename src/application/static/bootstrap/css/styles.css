@@ -1,0 +1,42 @@
+﻿#people { width:600px; margin:auto; }
+section { padding:10px; border:2px solid #868585; margin-bottom:10px; background-color:#eaeaea; }
+section:after { content:""; display:block; height:0; visibility:hidden; clear:both; }
+h1, address, span, a, fieldset { margin:0; float:left; color:#555; font:bold 16px/18px Verdana, sans-serif; }
+address, span, a, fieldset { clear:left; font-size:12px; font-weight:normal; }
+img { float:right; }
+.tools { width:100%; padding-top:10px; border-top:2px dotted #868585; margin-top:10px; float:left; clear:both; }
+fieldset { padding:10px; border:2px solid #868585; float:none; clear:right; background-color:#eaeaea; }
+label { display:block; margin-bottom:10px; clear:both; }
+.details, .img { float:left; }
+.details { width:250px; margin-right:56px; }
+input { width:190px; float:right; }
+.img input { margin-left:10px; }
+fieldset button { clear:both; }
+
+#paging { float:right; }
+#paging ul { padding:0; margin:0; float:right; }
+#paging li { margin-right:3px; float:left; list-style-type:none; }
+#paging a:hover, #paging .on, #paging .disabled { color:#aeaeae; }
+#paging .on { font-weight:bold; text-decoration:none; }
+#paging .on, #paging .disabled { cursor:default; }
+#paging .disabled { text-decoration:none; opacity:.5; }
+#prev, #next, #first, #last { float:right; clear:none; }
+#prev, #next, #first { margin-right:3px; }
+#all { margin-right:10px; }
+#pageSize { margin:-2px 10px 0 0; float:right; clear:none; color:#555; font:12px/18px Verdana, sans-serif; }
+#pageSize input { width:30px; float:none; }
+
+#alphaFilter { width:600px; margin:0 auto 10px; }
+#alphaFilter:after { content:""; display:block; height:0; clear:both; }
+#alphaFilter span { display:block; margin-right:3px; float:left; }
+#alphaFilter ul { padding:0; margin:0 3px 0 0; float:left; }
+#alphaFilter li { margin-right:3px; float:left; list-style-type:none; }
+#clear  { float:left; clear:none; }
+#alphaFilter a:hover { color:#aeaeae; }
+#alphaFilter a.disabled { text-decoration:none; opacity:.5; cursor:default; color:#aeaeae; }
+
+#searchForm { padding:0; border:none; position:relative; float:right; background-color:transparent; }
+#searchForm button { margin:-1px 0 0 2px; float:right; clear:none; }
+#searchForm input { width:auto; }
+#searchForm a { padding:2px 5px 5px; border-radius:100%; position:absolute; right:46px; top:3px; line-height:10px; text-decoration:none; font-weight:bold; color:#fff; background-color:#fb7a7a; }
+#searchForm a:hover { color:#fff; background-color:#ff0000; }
