@@ -177,6 +177,7 @@ class Event(Base,modelx.EventX):
     facebook_page = ndb.StringProperty(default='')
     twitter_id = ndb.StringProperty(default='')
     access = ndb.StringProperty(required=True)
+    avatar = ndb.KeyProperty(kind="User")
 
 # Sample post model for testing purposes    
 class Post(Base, modelx.EventX):
@@ -194,6 +195,7 @@ class EventComments(Base, modelx.EventX):
     event_id = ndb.KeyProperty(kind="Event", required=True)
     event_name = ndb.KeyProperty(kind="Event", required=True)
     comment = ndb.StringProperty(required=True)
+    avatar = ndb.KeyProperty(kind="User")
 
 # Event Invites model to invite site users to attend the Event
 class EventInvites(Base, modelx.EventX):
@@ -211,6 +213,7 @@ class TeamRegister(Base, modelx.TeamRegisterX):
     description = ndb.StringProperty("Message")
     teamVideoURL = ndb.StringProperty("Team Video URL")
     captain = ndb.KeyProperty(kind="User")
+    avatar = ndb.KeyProperty(kind="User")
 
 class TeamComments(Base, modelx.TeamRegisterX):
     name = ndb.KeyProperty(kind="User", required=True)
@@ -219,6 +222,7 @@ class TeamComments(Base, modelx.TeamRegisterX):
     team_id = ndb.KeyProperty(kind="TeamRegister", required= True)
     teamName = ndb.KeyProperty(kind="TeamRegister", required= True)
     comment = ndb.StringProperty(required=True)
+    avatar= ndb.KeyProperty(kind="User")
 
 class SubEvents(Base, modelx.SubEventX):
     eventId = ndb.KeyProperty(kind="Event", required=True)

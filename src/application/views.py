@@ -28,7 +28,7 @@ https://developers.google.com/appengine/docs/python/mail/
 """
 
 from google.appengine.runtime.apiproxy_errors import CapabilityDisabledError
-from google.appengine.api import mail
+from google.appengine.api import mail , memcache
 import logging
 import json
 import random
@@ -37,11 +37,11 @@ from apiclient.discovery import build
 from flask import make_response, request, render_template, flash, url_for, redirect, session,g, jsonify
 # from flask.ext import 
 import flask,flask.views
-from flask_cache import Cache
+# from flask_cache import Cache
 # from flaskext.mail.message import Message
 # Flask-mail documentation http://pythonhosted.org/flask-mail/
 #from models import FlaskUser
-from application import app #, mail  
+from application import app , cache#, mail  
 # from decorators import login_required, admin_required
 # from forms import ExampleForm
 from models import *
@@ -76,7 +76,7 @@ from simplekv.memory import DictStore
 from flaskext.kvsession import KVSessionExtension
 
 # Flask-Cache (configured to use App Engine Memcache API)
-cache = Cache(app)
+# cache = Cache(app)
 
 # Mail settings specified
 # message = mail.InboundEmailMessage(request.body)
@@ -112,9 +112,17 @@ def signin():
         return redirect(url_for('index'))
     form=SigninForm(request.form)
     if form.validate_on_submit() and request.method == 'POST':
-        
+        user_is = model.User.query()
+        usered = user_is.filter(model.User.email == form.email.data , model.User.password == md5(form.password.data).hexdigest())
+        user_in = user_is.fetch()
+        print user_in
         # model.User.retrieve_one_by('username', form.username.data) && model.User.retrieve_one_by('password', form.password.data) is not None:
-        user_db = model.User.retrieve_one_by('name' and  'password',form.name.data and md5(form.password.data).hexdigest())
+        #user_db = model.User.retrieve_one_by('email' and  'password',form.email.data and md5(form.password.data).hexdigest())
+        user_db = model.User.retrieve_one_by('email',form.email.data)
+        print form.email.data
+        if user_db.password != md5(form.password.data).hexdigest():
+          flash('Incorrect Password, Please Check your password', category='error')
+          return flask.redirect(flask.url_for('signin'))
         #user_is = model.User.query(model.User.name == form.name.data, model.User.password == form.password.data)
         if not user_db:
           flash('Please check the username or password')
@@ -124,12 +132,12 @@ def signin():
           flask.flash('Hello %s, welcome to %s' % (
             user_db.name, config.CONFIG_DB.brand_name,
             ), category='success')
-          session['username'] = form.name.data
+          session['username'] = form.email.data
           return flask.redirect(flask.url_for('index'))
         else:
           flask.flash('Sorry, but you could not sign in.', category='danger')
           return flask.redirect(flask.url_for('signin'))
-    return flask.render_template('signin.html', form=form, session=session)
+    return flask.render_template('signin.html', form=form)
  
                 
 '''
@@ -168,7 +176,7 @@ def signup():
     form = SignupForm(request.form)
     #next = request.args.get('next')
     if form.validate_on_submit() and request.method=='POST':
-        user_db = model.User.retrieve_one_by('name' and 'email' and 'password' , form.name.data and form.email.data and form.password.data)
+        user_db = model.User.retrieve_one_by('email', form.email.data)
 
         
         if user_db != None:
@@ -179,6 +187,12 @@ def signup():
           if user_db.name == form.name.data:
             flash('Username already taken', category='warning')
             return redirect(url_for('signup'))
+
+          if user_db.email == form.email.data:
+            flash('email alredy taken please choose different email')
+            return redirect(url_for('signup'))
+
+
         
         signup = model.User(
             name = form.name.data,
@@ -197,7 +211,7 @@ def signup():
         try:
             signup.put()
             #signup_id = .key.id()
-            message = mail.EmailMessage(sender='chitrankdixit@gmail.com',subject="Welcome to Eventus")
+            message = mail.EmailMessage(sender='chitrankdixit@gmail.com',subject="Welcome to Eventfor.us")
             message.to=form.email.data
             message.body = """
             Dear %s:
@@ -210,18 +224,18 @@ def signup():
             The Eventus Team
             """ % (form.name.data, "http://www.gcdc2013-eventus.appspot.com/")
 
-            message.html = """
-            <html><head></head><body>
-            Dear %s:
+            # message.html = """
+            # <html><head></head><body>
+            # Dear %s:
 
-            Your example.com account has been approved.  You can now visit
-            %s and access our application's services and features.
+            # Your example.com account has been approved.  You can now visit
+            # %s and access our application's services and features.
 
-            Please let us know if you have any questions.
+            # Please let us know if you have any questions.
 
-            The Eventus Team
-            </body></html>
-            """ % (form.name.data, "http://www.gcdc2013-eventus.appspot.com/")
+            # The Eventfor.us Team
+            # </body></html>
+            # """ % (form.name.data, "http://www.gcdc2013-eventus.appspot.com/signin")
             
             message.send()
 
@@ -893,6 +907,7 @@ def create_event():
       youtube_url_code = crop_youtube_url(form.youtubevideo_url.data)
       uploadLogo = str(form.logo.data)
       upload_url = blobstore.create_upload_url('/upload/'+uploadLogo)
+      avatarKey = ndb.Key(model.User, current_user.avatar(30))
       event = model.Event(
           name = form.name.data,
           event_type = form.event_type.data,
@@ -917,6 +932,7 @@ def create_event():
           sdate= datetime(int(sdate_list[2]),int(sdate_list[0]),int(sdate_list[1])),
           edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
           access = form.access_type.data,
+          avatar = avatarKey
         )
       event_name =  form.name.data
       try:
@@ -964,75 +980,81 @@ def trending_events():
 
 @app.route('/events/<ename>/<int:eid>/', methods=['GET', 'POST'])
 def event_profile(ename,eid):
-  event_id = ndb.Key(model.Event, eid)
-  event_name = ndb.Key(model.Event, ename)
-  print event_id
-  print "TESTING THINGS",eid
-  events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
-  # events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
-  # comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
-  creator_key = ndb.Key(model.User, events.creator_id)
-  event_creator = model.User.retrieve_one_by('name' and 'key', events.creator and creator_key)
+  if 'username' in session:
 
-  user_id = ndb.Key(model.User, current_user.id)
-  name = ndb.Key(model.User, current_user.name)
+    event_id = ndb.Key(model.Event, eid)
+    event_name = ndb.Key(model.Event, ename)
+    print event_id
+    print "TESTING THINGS",eid
+    events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+    # events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
+    # comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
+    creator_key = ndb.Key(model.User, events.creator_id)
+    event_creator = model.User.retrieve_one_by('name' and 'key', events.creator and creator_key)
 
-  # if comments been posted
-  comment_json = request.json
-  # print "Here is the list",events.name
-  # if user been invited
-  invite_json = request.json
-  
-  
-  # send all the Teams of an Event
-  teams =  model.TeamRegister.query(model.TeamRegister.eventId == event_id )
-  for team in teams:
-    print team
-  form = CommentForm(request.form)
-  inviteform = InviteUserForm(request.form)
-  # print request.json, type(comment_json)
-  if request.method == 'POST' and comment_json:
-    print request.json
+    user_id = ndb.Key(model.User, current_user.id)
+    name = ndb.Key(model.User, current_user.name)
+
+    # if comments been posted
+    comment_json = request.json
+    # print "Here is the list",events.name
+    # if user been invited
+    invite_json = request.json
     
-    comments = model.EventComments(
-        name = name,
-        user_id = user_id,
-        event_id = event_id,
-        event_name = event_name,
-        comment = request.json['comment'],
-      )
-    try:
-      comments.put()
-      # flash('your comment has been posted', category='info')
-      # mail.send(msg)
-      # print name.string_id() , user_id.integer_id() , event_id
-      return jsonify({ "name": name.string_id(),"uid": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
-    except CapabilityDisabledError:
-      flash('Something went wrong and your comment has not been posted', category='danger')
+    
+    # send all the Teams of an Event
+    teams =  model.TeamRegister.query(model.TeamRegister.eventId == event_id )
+    for team in teams:
+      print team
+    form = CommentForm(request.form)
+    inviteform = InviteUserForm(request.form)
+    # print request.json, type(comment_json)
+    if request.method == 'POST' and comment_json:
+      print request.json
+      avatarKey = ndb.Key(model.User , request.json['avatar'])
+      comments = model.EventComments(
+          name = name,
+          user_id = user_id,
+          event_id = event_id,
+          event_name = event_name,
+          comment = request.json['comment'],
+          avatar = avatarKey
+        )
+      try:
+        comments.put()
+        # flash('your comment has been posted', category='info')
+        # mail.send(msg)
+        # print name.string_id() , user_id.integer_id() , event_id
+        return jsonify({ "name": name.string_id(),"uid": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'], "avatar": request.json['avatar'] })
+      except CapabilityDisabledError:
+        flash('Something went wrong and your comment has not been posted', category='danger')
+        
+    elif request.method == 'POST' and inviteform.validate_on_submit():
       
-  elif request.method == 'POST' and inviteform.validate_on_submit():
-    
-    invitedUser = model.User.retrieve_one_by('name' and 'email', inviteform.invite_to.data and inviteform.invite_email.data)
-    print invitedUser
-    invitedUserKey = invitedUser.key
-    invites = model.EventInvites(
-        user_id = invitedUserKey ,
-        eventName =  ename,
-        event_id = event_id ,
-        invited_to = inviteform.invite_to.data ,
-        invitation_message = inviteform.invitation_message.data
-      )
-    try:
-      invites.put()
-      # flash('your comment has been posted', category='info')
-      # mail.send(msg)
-      # print name.string_id() , user_id.integer_id() , event_id
-      return redirect(url_for('index'))
-      #return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
-    except CapabilityDisabledError:
-      flash('Something went wrong and your comment has not been posted', category='danger')
-    print "Here is the list",events
-  return render_template('event_profile2.html', event_creator = event_creator, events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform, teams= teams )
+      invitedUser = model.User.retrieve_one_by('name' and 'email', inviteform.invite_to.data and inviteform.invite_email.data)
+      print invitedUser
+      invitedUserKey = invitedUser.key
+      invites = model.EventInvites(
+          user_id = invitedUserKey ,
+          eventName =  ename,
+          event_id = event_id ,
+          invited_to = inviteform.invite_to.data ,
+          invitation_message = inviteform.invitation_message.data
+        )
+      try:
+        invites.put()
+        # flash('your comment has been posted', category='info')
+        # mail.send(msg)
+        # print name.string_id() , user_id.integer_id() , event_id
+        return redirect(url_for('index'))
+        #return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
+      except CapabilityDisabledError:
+        flash('Something went wrong and your comment has not been posted', category='danger')
+      print "Here is the list",events
+    return render_template('event_profile2.html', event_creator = event_creator, events = events, ename =ename , eid= eid , form= form,  inviteform=inviteform, teams= teams )
+  else:
+    return redirect(url_for('signin'))
+
 
 @app.route('/comments/<int:eid>',methods=['GET'])
 @login_required
@@ -1046,6 +1068,7 @@ def all_event_comments(eid):
     first['uid'] = comment.user_id.integer_id()
     first['event_id'] = comment.event_id.integer_id()
     first['comment'] = comment.comment
+    first['avatar'] = comment.avatar.string_id()
     comments.append(first)
     first = {}
   return jsonify(comments=comments)
@@ -1117,12 +1140,14 @@ def RegisterTeam(ename, eid):
 
 
     if request.method == 'POST':
+      avatarKey = ndb.Key(model.User, current_user.avatar(30))
       team = model.TeamRegister(
           eventId = event_id,
           eventName = event_name,
           teamName = form.teamName.data,
           description = form.description.data,
-          teamVideoURL = form.teamVideoURL.data
+          teamVideoURL = form.teamVideoURL.data,
+          avatar = avatarKey
 
         )
       
@@ -1176,6 +1201,7 @@ def Team_Profile(ename, eid, teamName , tid):
   if request.method == 'POST' and comment_json:
     print request.json
     print "What the heck"
+    avatarKey = ndb.Key(model.User, request.json['avatar'])
     comments = model.TeamComments(
         name = name,
         user_id = user_id,
@@ -1183,13 +1209,14 @@ def Team_Profile(ename, eid, teamName , tid):
         team_id = team_id,
         teamName = team_name,
         comment = request.json['comment'],
+        avatar= avatarKey
       )
     try:
       comments.put()
       # flash('your comment has been posted', category='info')
       # mail.send(msg)
       # print name.string_id() , user_id.integer_id() , event_id
-      return jsonify({ "name": name.string_id(),"uid": user_id.integer_id(), "event_id": event_id.integer_id(),"team_id": team_id.integer_id() , "comment": request.json['comment'] })
+      return jsonify({ "name": name.string_id(),"uid": user_id.integer_id(), "event_id": event_id.integer_id(),"team_id": team_id.integer_id() , "comment": request.json['comment'], "avatar": request.json['avatar'] })
     except CapabilityDisabledError:
       flash('Something went wrong and your comment has not been posted', category='danger')
       

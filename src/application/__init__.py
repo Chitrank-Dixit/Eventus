@@ -13,10 +13,12 @@ import jinja2
 # import wtforms_json
 from momentjs import momentjs
 import os
+from flask_cache import Cache
 
 
 app = Flask('application')
 app.config.from_object('application.settings')
+cache = Cache(app)
 app.config.update(
     
     SECRET_KEY='SFxHRvAvD_w9JzfUhI8EiJrS',

@@ -486,7 +486,7 @@
             <div class="control-group">
                 <div class="controls">
                     <label><h4>Contact Email <font color="#C43F2C">*</font></h4></label><br>
-                    {{ form.eventEmail(id='eventEmail',class='form-control required ',placeholder="Postal Code", autocomplete=True )}}
+                    {{ form.eventEmail(id='eventEmail',class='form-control required ',placeholder="Contact Email", autocomplete=True )}}
                     {% if form.eventEmail.errors %}
                     <ul class="errors">
                         {% for error in form.eventEmail.errors %}
@@ -504,7 +504,7 @@
             <div class="control-group" >
                 <div class="controls">
                     <label><h4>Access Type <font color="#C43F2C">*</font></h4></label><br>
-                    {{ form.access_type(id='eaccess',class='selectpicker  required show-tick',placeholder="Postal Code", autocomplete=True, **{'data-live-search': 'true'} )}}
+                    {{ form.access_type(id='eaccess',class='selectpicker  required show-tick',placeholder="", autocomplete=True, **{'data-live-search': 'true'} )}}
                     {% if form.access_type.errors %}
                     <ul class="errors">
                         {% for error in form.access_type.errors %}

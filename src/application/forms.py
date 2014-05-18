@@ -41,7 +41,7 @@ class SignupForm(wtf.Form):
  
  
 class SigninForm(wtf.Form):
-    name = wtf.TextField('Name',validators=[validators.Required()])
+    email = wtf.html5.EmailField('Email',validators=[validators.Required()])
     password = wtf.PasswordField('Password',validators=[validators.Required()])
     remember_me = wtf.BooleanField('remember_me', default = False)
     
