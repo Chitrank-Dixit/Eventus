@@ -132,7 +132,7 @@ def signin():
           flask.flash('Hello %s, welcome to %s' % (
             user_db.name, config.CONFIG_DB.brand_name,
             ), category='success')
-          session['username'] = form.email.data
+          session['username'] = user_db.name
           return flask.redirect(flask.url_for('index'))
         else:
           flask.flash('Sorry, but you could not sign in.', category='danger')
@@ -1169,80 +1169,83 @@ def RegisterTeam(ename, eid):
 @app.route('/events/<ename>/<int:eid>/teams/<teamName>/<int:tid>', methods=['GET', 'POST'])
 @login_required
 def Team_Profile(ename, eid, teamName , tid):
-  event_id = ndb.Key(model.Event, eid)
-  event_name = ndb.Key(model.Event, ename)
-  team_id = ndb.Key(model.TeamRegister, tid)
-  team_name = ndb.Key(model.TeamRegister, teamName)
-  print event_id
-  print "TESTING THINGS",eid
-  events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
-  # events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
-  # comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
-  teams = model.TeamRegister.retrieve_one_by('teamName' and 'key', teamName and team_id)
+  if 'username' in session:
 
-  members = model.TeamMembers.query(model.TeamMembers.teamId == team_id)
+    event_id = ndb.Key(model.Event, eid)
+    event_name = ndb.Key(model.Event, ename)
+    team_id = ndb.Key(model.TeamRegister, tid)
+    team_name = ndb.Key(model.TeamRegister, teamName)
+    print event_id
+    print "TESTING THINGS",eid
+    events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+    # events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
+    # comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
+    teams = model.TeamRegister.retrieve_one_by('teamName' and 'key', teamName and team_id)
 
-  print "All Teams", teams.teamName
-  user_id = ndb.Key(model.User, current_user.id)
-  name = ndb.Key(model.User, current_user.name)
+    members = model.TeamMembers.query(model.TeamMembers.teamId == team_id)
 
-  # if comments been posted
-  comment_json = request.json
-  # print "Here is the list",events.name
-  # if user been invited
-  # invite_json = request.json
-  
+    print "All Teams", teams.teamName
+    user_id = ndb.Key(model.User, current_user.id)
+    name = ndb.Key(model.User, current_user.name)
 
-  
-  form = CommentForm(request.form)
-  inviteform = InviteUserForm(request.form)
-  # print request.json, type(comment_json)
-  
-  if request.method == 'POST' and comment_json:
-    print request.json
-    print "What the heck"
-    avatarKey = ndb.Key(model.User, request.json['avatar'])
-    comments = model.TeamComments(
-        name = name,
-        user_id = user_id,
-        event_id = event_id,
-        team_id = team_id,
-        teamName = team_name,
-        comment = request.json['comment'],
-        avatar= avatarKey
-      )
-    try:
-      comments.put()
-      # flash('your comment has been posted', category='info')
-      # mail.send(msg)
-      # print name.string_id() , user_id.integer_id() , event_id
-      return jsonify({ "name": name.string_id(),"uid": user_id.integer_id(), "event_id": event_id.integer_id(),"team_id": team_id.integer_id() , "comment": request.json['comment'], "avatar": request.json['avatar'] })
-    except CapabilityDisabledError:
-      flash('Something went wrong and your comment has not been posted', category='danger')
-      
-  elif request.method == 'POST' and inviteform.validate_on_submit():
-    print "HAHAHAHAH"
-    invitedUser = model.User.retrieve_one_by('name' and 'email', inviteform.invite_to.data and inviteform.invite_email.data)
-    print invitedUser
-    invitedUserKey = invitedUser.key
-    invites = model.EventInvites(
-        user_id = invitedUserKey ,
-        event_id = event_id ,
-        invited_to = inviteform.invite_to.data ,
-        invitation_message = inviteform.invitation_message.data
-      )
-    try:
-      invites.put()
-      # flash('your comment has been posted', category='info')
-      # mail.send(msg)
-      # print name.string_id() , user_id.integer_id() , event_id
-      return redirect(url_for('index'))
-      #return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
-    except CapabilityDisabledError:
-      flash('Something went wrong and your comment has not been posted', category='danger')
+    # if comments been posted
+    comment_json = request.json
+    # print "Here is the list",events.name
+    # if user been invited
+    # invite_json = request.json
     
-  return render_template('team_profile.html', ename=ename , eid=eid, teamName = teamName, tid = tid, teams= teams, events=events, form=form, members = members)
 
+    
+    form = CommentForm(request.form)
+    inviteform = InviteUserForm(request.form)
+    # print request.json, type(comment_json)
+    
+    if request.method == 'POST' and comment_json:
+      print request.json
+      print "What the heck"
+      avatarKey = ndb.Key(model.User, request.json['avatar'])
+      comments = model.TeamComments(
+          name = name,
+          user_id = user_id,
+          event_id = event_id,
+          team_id = team_id,
+          teamName = team_name,
+          comment = request.json['comment'],
+          avatar= avatarKey
+        )
+      try:
+        comments.put()
+        # flash('your comment has been posted', category='info')
+        # mail.send(msg)
+        # print name.string_id() , user_id.integer_id() , event_id
+        return jsonify({ "name": name.string_id(),"uid": user_id.integer_id(), "event_id": event_id.integer_id(),"team_id": team_id.integer_id() , "comment": request.json['comment'], "avatar": request.json['avatar'] })
+      except CapabilityDisabledError:
+        flash('Something went wrong and your comment has not been posted', category='danger')
+        
+    elif request.method == 'POST' and inviteform.validate_on_submit():
+      print "HAHAHAHAH"
+      invitedUser = model.User.retrieve_one_by('name' and 'email', inviteform.invite_to.data and inviteform.invite_email.data)
+      print invitedUser
+      invitedUserKey = invitedUser.key
+      invites = model.EventInvites(
+          user_id = invitedUserKey ,
+          event_id = event_id ,
+          invited_to = inviteform.invite_to.data ,
+          invitation_message = inviteform.invitation_message.data
+        )
+      try:
+        invites.put()
+        # flash('your comment has been posted', category='info')
+        # mail.send(msg)
+        # print name.string_id() , user_id.integer_id() , event_id
+        return redirect(url_for('index'))
+        #return jsonify({ "name": name.string_id(),"user_id": user_id.integer_id(), "event_id": event_id.integer_id(), "comment": request.json['comment'] })
+      except CapabilityDisabledError:
+        flash('Something went wrong and your comment has not been posted', category='danger')
+      
+    return render_template('team_profile.html', ename=ename , eid=eid, teamName = teamName, tid = tid, teams= teams, events=events, form=form, members = members)
+  else:
+    return redirect(url_for('signin'))
 
 @app.route('/event/invites', methods=['GET'])
 def invite_people():
@@ -1310,16 +1313,20 @@ def edit_it():
 @app.route('/events/<ename>/<int:eid>/scoreboard', methods=['POST', 'GET'])
 @login_required
 def event_scoreboard(ename, eid):
-  event_id = ndb.Key(model.Event, eid)
-  events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
-  teams = model.TeamRegister.query(model.TeamRegister.eventId == event_id)
-  print g.user
-  
-  now = datetime.now()
-  now1 = datetime.now()
-  print now1
-  print now
-  return render_template('scoreboard.html', events = events, teams=teams)
+  if 'username' in session:
+
+    event_id = ndb.Key(model.Event, eid)
+    events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+    teams = model.TeamRegister.query(model.TeamRegister.eventId == event_id)
+    print g.user
+    
+    now = datetime.now()
+    now1 = datetime.now()
+    print now1
+    print now
+    return render_template('scoreboard.html', events = events, teams=teams)
+  else:
+    redirect(url_for('signin'))
 
 @app.route('/help', methods=['GET'])
 def help():
