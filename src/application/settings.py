@@ -43,20 +43,20 @@ GOOGLE_OAUTH2_URL = 'https://accounts.google.com/o/oauth2/'
 GOOGLE_API_URL = 'https://www.googleapis.com/oauth2/v1/'
 
 
-# recaptch made using Google 
+# recaptch made using Google reCaptcha on : www.eventfor.us
 # https://www.google.com/recaptcha/admin/site?siteid=317209387
 RECAPTCHA_USE_SSL = True
-RECAPTCHA_PUBLIC_KEY = '6Ld5ZOgSAAAAACeDZoMNS707cmaraBEVJd2PFMTj'
-RECAPTCHA_PRIVATE_KEY = '6Ld5ZOgSAAAAAFLTuAJSwMOCJ5aZ_IpoMrGvTRXG'
+RECAPTCHA_PUBLIC_KEY = '6Lf2BPUSAAAAAExEhDbglIRj9bv9v-mo2d329RYj'
+RECAPTCHA_PRIVATE_KEY = '6Lf2BPUSAAAAAI8dYioZpE_rq4oOrC43j1Z-WNbk'
 # RECAPTCHA_OPTIONS = 
 
 # flask-mail settings
 # email server
-MAIL_DEBUG = True
-MAIL_SERVER = 'smtp.gmail.com'
-MAIL_PORT = 465
-MAIL_USE_TLS = True
-MAIL_USE_SSL = True
-MAIL_USERNAME = 'chitrankdixit1@gmail.com'
-MAIL_PASSWORD = 'rossi46656915'
-MAIL_SUPPRESS_SEND = False
+# MAIL_DEBUG = True
+# MAIL_SERVER = 'smtp.gmail.com'
+# MAIL_PORT = 465
+# MAIL_USE_TLS = True
+# MAIL_USE_SSL = True
+# MAIL_USERNAME = 'chitrankdixit1@gmail.com'
+# MAIL_PASSWORD = 'rossi46656915'
+# MAIL_SUPPRESS_SEND = False
