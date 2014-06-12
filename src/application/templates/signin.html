@@ -17,6 +17,7 @@
 	
 {% endblock %}
 {% block content %}
+  {% include 'forgot_password.html' %} 
 	<div class="container theme-showcase">
 	<div class="row">
 	 
@@ -59,7 +60,7 @@
               </div>
             </div><br>
             <p class="control-group">
-              <a href="" class="pull-right">forgot password</a>
+              <a href="#forgot-password-modal" class="pull-right" data-toggle="modal">forgot password</a>
               {{form.remember_me}} Remember Me </ul>
               
             </p>
@@ -142,6 +143,22 @@ $('#signin_form').validate({
     },
     success: function (element) {
         element.text('OK!').addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
+    }
+});
+
+
+$('#forgot_password').validate({
+    rules: {
+        
+        
+    },
+    
+    highlight: function (element) {
+        $(element).closest('control-group').removeClass('success').addClass('error');
+    },
+    success: function (element) {
+        element.addClass('valid')
             .closest('.control-group').removeClass('error').addClass('success');
     }
 });

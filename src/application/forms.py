@@ -45,7 +45,12 @@ class SigninForm(wtf.Form):
     password = wtf.PasswordField('Password',validators=[validators.Required()])
     remember_me = wtf.BooleanField('remember_me', default = False)
     
+class ForgotPassword(wtf.Form):
+    email = wtf.html5.EmailField('Email', validators=[validators.Required()])
 
+class ChangePassword(wtf.Form):
+    newpassword = wtf.PasswordField('Password', validators=[validators.Required(), validators.EqualTo('confirmpass', message='Passwords must match')])
+    confirmpass = wtf.PasswordField('Repeat Password', validators=[validators.Required(), validators.EqualTo('newpassword', message='Passwords must match')])
 
 class CreateEventForm(wtf.Form):
     name = wtf.TextField('Name', validators=[validators.Required()])

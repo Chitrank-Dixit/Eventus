@@ -63,7 +63,7 @@ from hashlib import md5
 import util
 import model
 import config
-from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm, TeamRegisterForm, InviteUserForm, UserSettingsForm
+from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm, TeamRegisterForm, InviteUserForm, UserSettingsForm, ForgotPassword, ChangePassword
 # Google API python Oauth 2.0
 import httplib2
 
@@ -137,7 +137,35 @@ def signin():
         else:
           flask.flash('Sorry, but you could not sign in.', category='danger')
           return flask.redirect(flask.url_for('signin'))
-    return flask.render_template('signin.html', form=form)
+    forgot_form = ForgotPassword(request.form)
+    if forgot_form.validate_on_submit() and request.method=='POST':
+      userd = model.User.query()
+      userd2 = userd.filter(model.User.email == forgot_form.email.data and model.User.password != u'') 
+      userdata = userd2.fetch()
+      for user in userdata:
+        if user.password:
+          print user.key.id()
+          message = mail.EmailMessage(sender='admin@eventfor.us',subject="Eventfor.us: Password Recovery")
+          print message
+          message.to=forgot_form.email.data
+          message.body = """
+          Dear %s:
+
+          Your Eventfor.us account password will be changed.
+
+          please follow this link to confirm the password changed http://www.eventfor.us/user/%s/%s/%s and access our application's services and features.
+
+          
+          Please let us know if you have any questions.
+
+          The Eventfor.us Team
+          %s
+          """ % (user.name, user.name, user.key.id() ,user.password , "http://www.eventfor.us/")
+          message.send()
+          flask.flash(user.name + " Password has been recovered please check your registered email" , category = "success")
+        else:
+          flask.flash(user.name + "with " +forgot_form.email.data + "does not exist or might signed in to the application using social signin" , category = "danger")
+    return flask.render_template('signin.html', form=form,session=session, forgot_form = forgot_form)
  
                 
 '''
@@ -211,18 +239,18 @@ def signup():
         try:
             signup.put()
             #signup_id = .key.id()
-            message = mail.EmailMessage(sender='chitrankdixit@gmail.com',subject="Welcome to Eventfor.us")
+            message = mail.EmailMessage(sender='admin@eventfor.us',subject="Welcome to Eventfor.us")
             message.to=form.email.data
             message.body = """
             Dear %s:
 
-            Your example.com account has been approved.  You can now visit
+            Your Eventfor.us account has been approved.  You can now visit
             %s and access our application's services and features.
 
             Please let us know if you have any questions.
 
-            The Eventus Team
-            """ % (form.name.data, "http://www.gcdc2013-eventus.appspot.com/")
+            The Eventfor.us Team
+            """ % (form.name.data, "http://www.eventfor.us/")
 
             # message.html = """
             # <html><head></head><body>
@@ -976,6 +1004,12 @@ def create_event():
 def trending_events():
   events= model.Event.query(model.Event.access == "Public")
   return render_template('trending_events.html', events=events)
+
+@app.route('/live_search/', methods=['POST','GET'])
+def live_search():
+  """
+  """
+  return ""
 
 
 @app.route('/events/<ename>/<int:eid>/', methods=['GET', 'POST'])
