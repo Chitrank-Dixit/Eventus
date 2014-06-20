@@ -1,6 +1,6 @@
 <!-- Fixed navbar -->
-    <!-- http://twitter.github.io/bootstrap/examples/starter-template.html -->
-     <div class="navbar navbar-inverse navbar-fixed-top transition">
+    <!-- http://twitter.github.io/bootstrap/examples/starter-template.html navbar-fixed-top transition-->
+     <div class="navbar navbar-fixed-top transition">
        <div class="navbar-inner">
          <div class="container">
            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -8,14 +8,14 @@
              <span class="icon-bar"></span>
              <span class="icon-bar"></span>
            </button>
-           <!-- <img src="../static/img/Eventus.jpg" width="15" height="8" /> -->
-            <a class="brand" href="/"><b><font size="6" face="Times New Roman">EventFor.us</font></b></a>
+           <a class="brand" href="/">EventFor.us</a>
            <div class="nav-collapse collapse">
-              <ul class="nav">
-                <form class="navbar-form">
-                  <input type="text" class="span2 input-medium search-query" x-webkit-speech placeholder="search" width="20"/>
+              <ul class="nav pull-left">
+                <form class="navbar-search ">
+                  <input type="text" class="span2 input-large search-query " x-webkit-speech placeholder="search events" action/>
                 </form>
-             </ul>
+              </ul>
+             
              <ul class="nav pull-right">
               <li><a href="{{ url_for('trending_events') }}"><i class="icon-magnet"></i> Trending Events</a></li>
               <li><a href="{{ url_for('create_event') }}"><i class="icon-cloud-upload"></i> Create an Event</a></li>
@@ -42,4 +42,4 @@
        </div>
 	
     
-            
+     

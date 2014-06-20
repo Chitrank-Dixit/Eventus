@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block title %} Trending Events | Eventus {% endblock %}
+<meta http-equiv="refresh" content="60">
 {% block style_block %}
 
   <!-- Google Analytics -->
@@ -26,37 +27,149 @@
   </style>
 {% endblock %}
 {% block content %}
+<div class="row">
+<div class="span9">
 
-<div class="row pull-right">
-<form class="form-search">
-  <input type="text" class="input-medium search-query">
-  <button type="submit" class="btn">Search</button>
-</form>
-</div>
-<br><br>
-
-
-{% for event_list in events %}
-<!-- Pannel code is not working here ! Include for loop in content body instead -->
-
-<div class="well">
+<ul id="refreshResults" data-bind="foreach: events, visible: events().length > 0">
+            
+    <div class="well">
     <div class="panel-heading">
-     <h3 class="panel-title"><a href="{{ url_for('event_profile', ename=event_list.name,eid=event_list.key.id() )}}"> {{ event_list.name }}</a></h3>
+     <h3 class="panel-title"><a data-bind="attr:{ href:  '/events/' + eventname() + '/' + eventid() + '/' }"><p data-bind="text: eventname"></p></a></h3>
     </div>
     <div class="panel-body">
-        {{ event_list.description }}<br><br>
+        <p data-bind="text: description"></p><br><br>
     </div>
     <div class="panel-footer">
-      <img src="#" class='img-circle'/><br><a href="/user/{{ event_list.creator.string_id() }}/{{ event_list.creator_id }}/">{{ event_list.creator.string_id() }}</a></ul>
+      <a data-bind="attr:{ href:  '/user/' + creator() + '/' + creator_id() + '/' }">
+                  <img class="img-circle" data-bind="attr:{src: avatar}" /><br>
+                  <p data-bind="text: creator"></p></a>
     </div>
-        
+    </div>
+</ul>
     
-</div>                
-<br><br>
 
 
-{% endfor %}
-            
+
+</ul>
+</div>
+
+<div class="span3">
+  Ads , recommended events , trending now here
+</div>
+</div>
+{% block tail_script %}
+<script type="text/javascript">
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+// bootstrap editable inline mode
+
+
+$(document).ready(function () {
+    
+  
+
+    
+});
+
+// Knockoutjs Comment Code
+
+function Event(data) {
+    console.log(data.eventname);
+    this.eventname = ko.observable(data.eventname);
+    this.eventid = ko.observable(data.eventid);
+    this.description = ko.observable(data.description);
+    this.avatar = ko.observable(data.avatar);
+    this.creator = ko.observable(data.creator);
+    this.creator_id = ko.observable(data.creator_id);
+ 
+}
+
+
+function EventsViewModel() {
+    var self = this;
+    self.events = ko.observableArray([]);
+    
+    $.getJSON("{{ url_for('pop_all_events') }}", function(eventModels) {
+        var t = $.map(eventModels.events, function(item) {
+            return new Event(item);
+            console.log(item);
+        });
+        self.events(t);
+
+    });
+
+    setInterval(function(){ 
+     $.ajax({
+     type:"POST",
+     data:"Time="+ date,     
+     url:"serverRef",
+     success: function(data){
+         // On success 
+                           }
+     });              
+
+     },60000);
+    
+    self.refresh = function() {
+        return $.getJSON("{{ url_for('pop_all_events') }}", function(eventModels) {
+        var t = $.map(eventModels.events, function(item) {
+            return new Event(item);
+            console.log(item);
+        });
+        self.events(t);
+
+      });
+    };
+  
+
+
+    self.refresh();
+    setTimeout(self.refresh, 1 * 60 * 1000);
+
+
+}
+
+
+
+
+
+// Activates knockout.js
+ko.applyBindings(new EventsViewModel());
+
+
+
+
+/*var limit="0:30"
+if (document.images){
+var parselimit=limit.split(":")
+parselimit=parselimit[0]*60+parselimit[1]*1
+}
+function beginrefresh(){
+if (!document.images)
+return
+if (parselimit==1)
+window.location.reload()
+else{ 
+parselimit-=1
+curmin=Math.floor(parselimit/60)
+cursec=parselimit%60
+if (curmin!=0)
+curtime=curmin+" minutes and "+cursec+" seconds left until page refresh!"
+else
+curtime=cursec+" seconds left until page refresh!"
+window.status=curtime
+setTimeout("beginrefresh()",200)
+ }
+  }
+
+ window.onload=beginrefresh
+*/
+
+
+
+
+</script>
+{% endblock %}
 
 
 {% endblock %}

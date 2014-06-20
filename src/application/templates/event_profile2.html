@@ -183,9 +183,7 @@
 			        
 			        {% endif %}
               {% if events.creator_id == current_user.id %}
-			        <a class="btn btn-info btn-block" href="#add-invite-modal" data-toggle="modal" >Add or Invite User</a>
-
-              <a class="btn btn-info btn-block" href="{{ url_for('invite_people')}}" data-toggle="modal" >Add Subevent</a>
+			        
               {% endif %} -->
 			        <!-- well end -->
 		      </div>
@@ -368,14 +366,15 @@
         </form>
 
       <ul data-bind="foreach: comments, visible: comments().length > 0">
+
             <div class="well time-stamp">
                 <!-- data-bind="attr: { href: commentBy , name: name , uid: uid }" -->
 
+               
                 <p data-bind="text: comment"></p>
                 <a data-bind="attr:{ href:  '/user/' + name() + '/' + uid() + '/' }">
                   <img class="img-circle" data-bind="attr:{src: avatar}" /><br>
                   <p data-bind="text: cname"></p></a>
-
                 
                 
             </div>

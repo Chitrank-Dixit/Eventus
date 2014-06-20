@@ -16,7 +16,7 @@
 
     <!-- Bootstrap theme -->
     <style type="text/css">
-        body { padding-top: 40px; }
+        body { padding-top: 80px;}
         @media screen and (max-width: 768px) {
         body { padding-top: 0px; }
         }
@@ -43,7 +43,7 @@
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='bootstrap/css/panels.css') }}" rel="stylesheet">
     <!-- <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet"> -->
-    <style> body { padding-top: 90px; } </style> <!-- Bootstrap -->
+     <!-- Bootstrap -->
      <!-- <link href="/static/css/main.css" rel="stylesheet" /> --> 
     
     {% block style_block %}{# page-specific CSS #}{% endblock %}
@@ -51,6 +51,7 @@
     {% block head_script %}{# defer-incapable JS block #}{% endblock %} 
 </head>
 <body>
+    
 <div id="wrap">
     <div id="header">
         {% include 'addables/header.html' %} {# pull in navbar #}
@@ -60,11 +61,14 @@
         <div id="body_content">
             {% block content %}{# main content area #}{% endblock %}
         </div>
+        
     </div><!-- /container -->
-    </div>
     <div id="footer">
+        <hr>
         {% include 'addables/footer.html' %}
     </div><!-- /footer -->
+</div>
+    
     
     <script src="{{ url_for('static', filename='bootstrap/js/json2.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/jquery-1.10.2.min.js') }}"></script>
