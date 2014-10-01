@@ -10,8 +10,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
     <title>{% block title%}Flask on App Engine{% endblock %}</title>
     <link rel="favicon" href="{{ url_for('static', filename='static/img/favicon.ico') }} " />
+    <!-- <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-2.2.2.css') }}" rel="stylesheet" /> -->
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap_flatly.css') }}" rel="stylesheet" />
 
+    <!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-52496891-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <!-- End Google Analytics -->
 
     <!-- Bootstrap theme -->
     <style type="text/css">
@@ -36,7 +49,18 @@
     <!-- <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet"> -->
     <style> body { padding-top: 90px; } </style> <!-- Bootstrap -->
      <!-- <link href="/static/css/main.css" rel="stylesheet" /> --> 
-    
+    <!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-52496891-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <!-- End Google Analytics -->
     {% block style_block %}{# page-specific CSS #}{% endblock %}
     
     {% block head_script %}{# defer-incapable JS block #}{% endblock %} 
@@ -47,7 +71,7 @@
     <div id="header">
         {% include 'addables/header.html' %} {# pull in navbar #}
     </div>
-    <div class="" id="maincontent" style="margin-top:-50px;">
+    <div class="" id="maincontent" style="margin-top:-50px;"> <!--  -->
         {% include 'addables/flash_message.html' %} {# page-level feedback notices #}
         <div id="body_content">
             {% block content %}{# main content area #}{% endblock %}
@@ -63,19 +87,67 @@
     
     
     <script src="{{ url_for('static', filename='bootstrap/js/json2.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap/js/jquery-1.10.2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/jquery-1.9.1.js') }}"></script>
     
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-2.2.2.js') }}"></script>
     
     <script src="{{ url_for('static', filename='bootstrap/js/holder.js') }}"></script>
 
     <!--  library for parsing and manipulating dates -->
     <script src="{{ url_for('static', filename = 'bootstrap/js/moment.min.js') }}"></script>
     
-    <script src="{{ url_for('static', filename='bootstrap/js/knockout-2.3.0.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/knockout.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/knockout-bootstrap.min.js') }}"></script>
 
-    <script src="{{ url_for('static', filename='bootstrap/js/sammy.js') }}"></script>
-    
+    <!-- <script src="{{ url_for('static', filename='bootstrap/js/sammy.js') }}"></script> -->
+    <script type="text/javascript">
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    var ExampleViewModel = function () {
+                var self = this;
+
+                
+
+                self.jsFrameworks = ko.observableArray([
+                        'Angular',
+                        'Canjs',
+                        'Batman',
+                        'Meteor',
+                        'Ember',
+                        'Backbone',
+                        'Knockout',
+                        'Knockback',
+                        'Spine',
+                        'Sammy',
+                        'YUI',
+                        'Closure',
+                        'jQuery'
+                    ]);
+
+                
+                /*
+                self.frameworkToAdd = ko.observable("");
+                self.addFramework = function() {
+                    self.jsFrameworks.push(self.frameworkToAdd());
+                };
+
+                self.removeFramework = function(framework) {
+                    self.jsFrameworks.remove(framework);
+                };
+
+                */
+            };
+
+            /*$(function(){
+                
+
+                var viewModel = new ExampleViewModel();
+
+                ko.applyBindings(viewModel);
+            });*/
+
+    var viewModel = new ExampleViewModel();
+    ko.applyBindings(viewModel);
+    </script>
 
 
     <!-- <script src="/static/js/main.js"></script> -->

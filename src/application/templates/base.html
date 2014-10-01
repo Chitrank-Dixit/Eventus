@@ -12,9 +12,7 @@
     <link rel="favicon" href="{{ url_for('static', filename='static/img/favicon.ico') }} " />
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap_flatly.css') }}" rel="stylesheet" />
 
-    <link href="{{ url_for('static', filename='bootstrap/css/panels.css') }}" rel="stylesheet">
-
-    <!-- Bootstrap theme -->
+        <!-- Bootstrap theme -->
     <style type="text/css">
         body { padding-top: 80px;}
         @media screen and (max-width: 768px) {
@@ -30,7 +28,7 @@
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', 'UA-22043294-2', 'gcdc2013-eventus.appspot.com');
+      ga('create', 'UA-52496891-1', 'auto');
       ga('send', 'pageview');
 
     </script>
@@ -41,10 +39,10 @@
     <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='bootstrap/css/fixed-footer.css') }}" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='bootstrap/css/panels.css') }}" rel="stylesheet">
-    <!-- <link href="{{ url_for('static', filename='bootstrap/css/social-buttons.css') }}" rel="stylesheet"> -->
+        
      <!-- Bootstrap -->
      <!-- <link href="/static/css/main.css" rel="stylesheet" /> --> 
+     <style> body { padding-top: 90px; } </style>
     
     {% block style_block %}{# page-specific CSS #}{% endblock %}
     
@@ -68,33 +66,82 @@
         {% include 'addables/footer.html' %}
     </div><!-- /footer -->
 </div>
+
     
     
     <script src="{{ url_for('static', filename='bootstrap/js/json2.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap/js/jquery-1.10.2.min.js') }}"></script>
     
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='bootstrap/js/underscore.js') }}"></script>
+    
+    <script src="{{ url_for('static', filename='bootstrap/js/knockout-2.3.0.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='bootstrap/js/jquery-1.9.1.js') }}"></script>
+    
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-2.2.2.js') }}"></script>
     
     <script src="{{ url_for('static', filename='bootstrap/js/holder.js') }}"></script>
 
     <!--  library for parsing and manipulating dates -->
     <script src="{{ url_for('static', filename = 'bootstrap/js/moment.min.js') }}"></script>
     
-    
-    
-    
-    <script src="{{ url_for('static', filename='bootstrap/js/knockout-2.3.0.js') }}"></script> 
+    <script src="{{ url_for('static', filename='bootstrap/js/knockout.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/knockout-bootstrap.min.js') }}"></script>
+    <script type="text/javascript">
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    var ExampleViewModel = function () {
+                var self = this;
 
-    <script src="{{ url_for('static', filename='bootstrap/js/knockout-bootstrap.js') }}"></script>
+                
 
+                self.jsFrameworks = ko.observableArray([
+                        'Angular',
+                        'Canjs',
+                        'Batman',
+                        'Meteor',
+                        'Ember',
+                        'Backbone',
+                        'Knockout',
+                        'Knockback',
+                        'Spine',
+                        'Sammy',
+                        'YUI',
+                        'Closure',
+                        'jQuery'
+                    ]);
 
-    <!-- <script src="{{ url_for('static', filename='bootstrap/js/sammy.js') }}"></script> -->
+                
+                /*
+                self.frameworkToAdd = ko.observable("");
+                self.addFramework = function() {
+                    self.jsFrameworks.push(self.frameworkToAdd());
+                };
+
+                self.removeFramework = function(framework) {
+                    self.jsFrameworks.remove(framework);
+                };
+
+                */
+            };
+
+            $(function(){
+                
+
+                var viewModel = new ExampleViewModel();
+
+                ko.applyBindings(viewModel);
+            });
+    </script>
+
+    
     
 
 
     <!-- <script src="/static/js/main.js"></script> -->
     {% block tail_script %}{# defer-capable JS block #}{% endblock %}
     {{ profiler_includes|safe }}
+
+    
 
 </body>
 </html>

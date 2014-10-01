@@ -119,7 +119,7 @@ def signin():
         # model.User.retrieve_one_by('username', form.username.data) && model.User.retrieve_one_by('password', form.password.data) is not None:
         #user_db = model.User.retrieve_one_by('email' and  'password',form.email.data and md5(form.password.data).hexdigest())
         user_db = model.User.retrieve_one_by('email',form.email.data)
-        print form.email.data
+        print form.email.data, user_db.password
         if user_db.password != md5(form.password.data).hexdigest():
           flash('Incorrect Password, Please Check your password', category='error')
           return flask.redirect(flask.url_for('signin'))
@@ -1003,12 +1003,14 @@ def create_event():
 @app.route('/events/', methods=['POST','GET'])
 def trending_events():
   events= model.Event.query(model.Event.access == "Public")
+  # filter(model.User.email == form.email.data , model.User.password == md5(form.password.data).hexdigest())
   return render_template('trending_events.html', events=events)
 
 @app.route('/pop_events/', methods=['GET'])
 def pop_all_events():
   events_data = model.Event.query()
-  events_data = events_data.order(model.Event.created)
+  events_data = events_data.filter(model.Event.access == "Public")
+  events_data = events_data.order(-model.Event.created)
   events_store = events_data.fetch()
   first = {}; events = []
   for event in events_store:
