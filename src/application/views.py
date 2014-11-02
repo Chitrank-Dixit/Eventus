@@ -63,7 +63,7 @@ from hashlib import md5
 import util
 import model
 import config
-from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm, TeamRegisterForm, InviteUserForm, UserSettingsForm, ForgotPassword, ChangePassword
+from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm, TeamRegisterForm, InviteUserForm, UserSettingsForm, ForgotPassword, ChangePassword, EditEventForm
 # Google API python Oauth 2.0
 import httplib2
 
@@ -552,7 +552,8 @@ def user_profile_settings(name,uid):
     user_is = model.User.query(model.User.name == name , model.User.id == uid)
     uiid = ndb.Key(model.User, uid)
     user = model.User.retrieve_one_by('name' and 'key' ,name and uiid)
-
+    print "------", user
+    #
     if userSettings.validate_on_submit() and request.method == 'POST':
       print "Scooby DOO"
       user.location = userSettings.location.data
@@ -561,11 +562,12 @@ def user_profile_settings(name,uid):
       user.facebook_id = userSettings.facebookId.data
       user.twitter_id = userSettings.twitterId.data
       user.put()
+      time.sleep(2)
       flash('Profile has been updated', category="info")
       return redirect(url_for('user_profile_settings', name=name, uid=uid))
     print user, user_is
-  
-    return render_template('edit_profile.html', userSettings=userSettings, user_is =user_is)
+    userSettings.about.data = user.about_me
+    return render_template('edit_profile.html', userSettings=userSettings, user_is =user_is, user = user)
   else:
     return redirect(url_for('signin'))
 
@@ -955,7 +957,7 @@ def create_event():
           event_email = form.eventEmail.data,
           facebook_page = form.facebook_url.data,
           twitter_id = form.twitter_url.data,
-          youtubevideo_url = youtube_url_code,
+          youtubevideo_url = form.youtubevideo_url.data,
           logo = upload_url,
           sdate= datetime(int(sdate_list[2]),int(sdate_list[0]),int(sdate_list[1])),
           edate= datetime(int(edate_list[2]),int(edate_list[0]),int(edate_list[1])), 
@@ -999,6 +1001,19 @@ def create_event():
   else:
     return redirect(url_for('signin'))
 
+@app.route('/delete_event/<ename>/<int:eid>', methods=['POST','GET'])
+def delete_event(ename, eid):
+  if 'username' in session:
+    event_id = ndb.Key(model.Event, eid)
+    event = model.Event.retrieve_one_by('key',event_id)
+    print event
+    event.key.delete()
+    flash('Event has been deleted', category='danger')
+    return redirect(url_for('signin'))
+  else:
+    return redirect(url_for('signin'))
+
+  
 
 @app.route('/events/', methods=['POST','GET'])
 def trending_events():
@@ -1103,6 +1118,51 @@ def event_profile(ename,eid):
   else:
     return redirect(url_for('signin'))
 
+@app.route('/event_settings/<ename>/<int:eid>', methods=['POST', 'GET'])
+@login_required
+def event_settings(ename,eid):
+  if 'username' in session:
+    form= EditEventForm(request.form)
+    event_id = ndb.Key(model.Event, eid)
+    events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
+    #description_data = form.description.data
+    
+    print ename, eid
+    frag = str(events.sdate).split('-') 
+    sdate  = frag[1]+'/'+frag[2]+'/'+frag[0]
+    frag = str(events.edate).split('-') 
+    edate  = frag[1]+'/'+frag[2]+'/'+frag[0]
+    if form.validate_on_submit() and request.method == 'POST':
+      frag= (form.sdate.data).split('/')
+      sdate_new = datetime(int(frag[2]),int(frag[0]),int(frag[1]))
+      frag= (form.edate.data).split('/')
+      edate_new = datetime(int(frag[2]),int(frag[0]),int(frag[1]))
+      events.name = form.name.data
+      events.description = form.description.data
+      events.sdate= sdate_new
+      events.edate = edate_new
+      events.event_url= form.event_url.data
+      events.facebook_page = form.facebook_url.data
+      events.twitter_id = form.twitter_url.data
+      events.youtubevideo_url = form.youtubevideo_url.data
+      events.venue = form.venue.data
+      events.address = form.address.data
+      events.city = form.city.data
+      events.state = form.state.data
+      events.country = form.country.data
+      events.postal = int(form.postal.data)
+      events.phone = int(form.phone.data)
+      events.event_email = form.eventEmail.data
+      events.access = form.access_type.data
+      events.put()
+      print "done"
+      time.sleep(2)
+      flash('Event has been updated', category='success')
+      return redirect(url_for('event_profile', ename=ename, eid=eid))
+    form.description.data = events.description
+    return render_template('event_settings.html', events=events, sdate=sdate, edate=edate,ename=ename, eid=eid, form=form)
+  else:
+    return redirect(url_for('signin'))
 
 @app.route('/comments/<int:eid>',methods=['GET'])
 @login_required

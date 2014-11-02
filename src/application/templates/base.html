@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
     <title>{% block title%}Flask on App Engine{% endblock %}</title>
     <link rel="favicon" href="{{ url_for('static', filename='static/img/favicon.ico') }} " />
-    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap_flatly.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap2.3.2.css') }}" rel="stylesheet" />
 
         <!-- Bootstrap theme -->
     <style type="text/css">
@@ -74,21 +74,31 @@
 
     <script src="{{ url_for('static', filename='bootstrap/js/underscore.js') }}"></script>
     
-    <script src="{{ url_for('static', filename='bootstrap/js/knockout-2.3.0.js') }}"></script>
+    
 
     <script src="{{ url_for('static', filename='bootstrap/js/jquery-1.9.1.js') }}"></script>
-    
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-2.2.2.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/knockout-3.2.0.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='bootstrap/js/knockout-bootstrap.min.js') }}"></script> -->
     
     <script src="{{ url_for('static', filename='bootstrap/js/holder.js') }}"></script>
 
     <!--  library for parsing and manipulating dates -->
     <script src="{{ url_for('static', filename = 'bootstrap/js/moment.min.js') }}"></script>
     
-    <script src="{{ url_for('static', filename='bootstrap/js/knockout.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap/js/knockout-bootstrap.min.js') }}"></script>
+    
+    
+
+
+    
+    
+
+
+    <!-- <script src="/static/js/main.js"></script> -->
+    {% block tail_script %}
     <script type="text/javascript">
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    /*
     var ExampleViewModel = function () {
                 var self = this;
 
@@ -122,7 +132,7 @@
                 };
 
                 */
-            };
+           /* };
 
             $(function(){
                 
@@ -131,14 +141,11 @@
 
                 ko.applyBindings(viewModel);
             });
+    */
     </script>
 
-    
-    
 
-
-    <!-- <script src="/static/js/main.js"></script> -->
-    {% block tail_script %}{# defer-capable JS block #}{% endblock %}
+    {% endblock %}
     {{ profiler_includes|safe }}
 
     

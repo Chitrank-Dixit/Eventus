@@ -1,17 +1,589 @@
-
 {% extends 'base.html' %}
-{% block title %} Event Settings | Eventus {% endblock %}
+{% import 'macro/error.html' as forms %}
+{% block title %} Edit {{ename}} | Eventus {% endblock %}
 {% block style_block %}
-	
-	<style type="text/css">
-		.background {
-			 background-color: #F3F3F3;
-			}
-	
-	</style>
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-select.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-wysihtml5.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-switch.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='bootstrap/css/datepicker.css') }}" rel="stylesheet">
+  
+
+  <style type="text/css">
+    .background {
+       background-color: #F3F3F3;
+      }
+    p.error {
+        color: red;
+    }
+    .fileButton {
+
+        position:absolute;
+        z-index:2;
+        top:0;
+        left:0;
+        filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+        opacity:0;background-color:transparent;
+        color:transparent;
+    }
+
+    .venue-form {
+        background-color: #f9faf7;
+        webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-box-shadow: 0 1px 2px 1px rgba(0,0,0,0.25);
+        box-shadow: 0 1px 2px 1px rgba(0,0,0,0.25);
+        border-radius: 1px;
+        -webkit-border-radius: 1px;
+        padding: 30px 20px 48px 30px;
+        width: 100%;
+        height: 100%;       
+
+
+    }
+
+
+  </style>
 {% endblock %}
+
+{% block head_script %}
+<!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-52496891-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <!-- End Google Analytics -->
+{% endblock %}
+
 {% block content %}
-	
-	
+<div class="container">
+    <!-- outer most span12 -->
+    <div class="span12">
+        <form action="{{ url_for('event_settings' , ename=ename, eid=eid) }}" class="navbar-form form-inline" method="post" id="edit_eventform">
+
+        <div class="row">
+            <div class="span12" id = "title">
+                    
+                <div class="span7">
+                    
+                    
+                    <h3 style="color : #C43F2C;">Edit {{ename}} </h3>
+                    
+                </div>
+
+                
+            </div>
+            <!-- id= title  end here-->
+
+        </div>
+
+
+        <!-- mainForm details information here  -->
+        <div class="span7" id = "mainForm">
+            
+            {{ form.csrf_token }}
+            <fieldset>
+                {{ form.hidden_tag() }}
+
+                {% from "macro/_formhelpers.html" import render_field %}
+                <div class="control-group">
+                    <!-- Event Name -->
+                    <div class="controls" >
+                        <label> <h5>Event Name <font color="#C43F2C">*</font></h5> </label><br>
+                        {{ form.name(id='ename', class='form-control required ', value=ename , style="width:50%", autocomplete=True, autocomplete=True)}}
+                        {% if form.name.errors %}
+                        <ul class="errors">
+                            {% for error in form.name.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    <!-- Event name div end below-->
+                    </div>
+                <!-- event name control-group end below -->    
+                </div>
+
+
+                
+                
+
+
+
+                <!-- Wsyiwyg editor control started -->
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h4>  About the event <font color="#C43F2C">*</font></h4></label><br>
+                        {{ form.description(id='edescription',class='form-control required ',
+                        value=events.description,
+                        style="width:80%; height:140px;", autocomplete=True )}}
+
+
+                        {% if form.description.errors %}
+                        <ul class="errors">
+                            {% for error in form.description.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    <!-- Wsyiwyg editor  controls class end below -->
+                    </div>
+                <!-- Wsyiwyg editor control-group end below-->
+                </div>
+
+
+
+
+                <div class="control-group">
+                    <div class="controls">
+                        <!-- Downloaded datepicker from 
+                        http://www.eyecon.ro/bootstrap-datepicker/
+                         -->
+                        <label><h4>  From <font color="#C43F2C">*</font> </h4></label><br>
+                        {{ form.sdate(id='start_date',class='form-control required ', value=sdate, autocomplete=True )}}
+                        {% if form.sdate.errors %}
+                        <ul class="errors">
+                            {% for error in form.sdate.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        
+                        
+
+                      
+                    </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h4> To <font color="#C43F2C">*</font> </h4></label><br>
+                        {{ form.edate(id='end_date',class='form-control required ',value=edate, autocomplete=True )}}
+                        {% if form.edate.errors %}
+                        <ul class="errors">
+                            {% for error in form.edate.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        
+                            
+                    </div>
+                </div>
+
+
+
+                <!-- google plus url control started -->
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h5> URL of event at G+ </h5></label><br>
+
+                        {{ form.event_url(id='eurl', class="form-control", value = events.event_url ,style="width:50%", autocomplete=True) }}
+                        {% if form.event_url.errors %}
+                        <ul class="errors">
+                            {% for error in form.event_url.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    <!-- google plus url controls class end -->
+                    </div>
+                <!-- google plus url  control-group end -->
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h5> Facebook Url (if any) </h5></label><br>
+
+                        {{ form.facebook_url(id='fburl', class="form-control", value = events.facebook_page ,style="width:50%", autocomplete=True ) }}
+                        {% if form.facebook_url.errors %}
+                        <ul class="errors">
+                            {% for error in form.facebook_url.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    <!-- facebook url controls class end -->
+                    </div>
+                <!-- facebook url  control-group end -->
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h5> Twitter (if any) </h5></label><br>
+
+                        {{ form.twitter_url(id='twurl', class="form-control", value = events.twitter_id,style="width:50%", autocomplete=True ) }}
+                        {% if form.twitter_url.errors %}
+                        <ul class="errors">
+                            {% for error in form.twitter_url.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    <!-- twitter url controls class end -->
+                    </div>
+                <!-- twitter url  control-group end -->
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <label><h5> Youtube URL (if any) </h5></label><br>
+
+                        {{ form.youtubevideo_url(id='yurl', class="form-control", value=events.youtubevideo_url,style="width:50%", autocomplete=True ) }}
+                        {% if form.youtubevideo_url.errors %}
+                        <ul class="errors">
+                            {% for error in form.youtubevideo_url.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    <!-- video url controls class end -->
+                    </div>
+                <!-- video url  control-group end -->
+                </div>
+
+                <!-- upload logo controls -->
+                <!-- <div class="control-group">
+                    <div class="controls">
+                        <label><h4>Upload logo</h4></label><br>
+                        
+                    <div style="position:relative;">
+                    <a class='btn btn-info' href='javascript:;'>
+                        Choose File...
+                        
+                        {{ form.logo(id='logo', class="form-control required fileButton",  size="40" , onchange='$("#upload-file-info").html($(this).val());', autocomplete=True, **{'data-bind' : 'value: youtubeURL'} ) }}
+                        {% if form.youtubevideo_url.errors %}
+                        <ul class="errors">
+                            {% for error in form.youtubevideo_url.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </a>
+                    &nbsp;
+                    <span class='label-info' id="upload-file-info"></span>
+            </div>  
+                        
+ -->
+                    <!-- upload logo controls class end below-->
+                <!-- </div>
+ -->
+                <!-- upload logo control-group end below-->
+               <!--  </div> -->
+
+                
+                
+                <!-- create event button -->
+                <div class="form-actions">
+
+                        <div class="controls ">
+                            <center>
+                            <button type="submit" id="event_submit" value"create_event" class="btn btn-primary" data-loading-text="Creating Event..." >Update</button><br><br>
+                            </center>
+                        </div>
+                </div>
+
+
+
+            </fieldset>
+
+
+
+            
+
+
+        <!-- mainForm ends below-->
+        </div>
+
+        
+
+        <!-- venue information form here  -->
+        <div class="span4" id = "venue">
+            <h4> Venue Information</h4>
+            <div class="venue-form">
+            <!--venue control-group started -->
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>Venue <font color="#C43F2C">*</font></h4></label><br>
+                    {{ form.venue(id='evenue',class='form-control required ',value=events.venue, autocomplete=True )}}
+                    {% if form.venue.errors %}
+                    <ul class="errors">
+                        {% for error in form.venue.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- venue controls class end below-->
+                </div>
+
+            <!-- Venue control-group end below-->
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>Address <font color="#C43F2C">*</font></h4></label><br>
+                    {{ form.address(id='eaddress',class='form-control required ',value=events.address, autocomplete=True )}}
+                    {% if form.address.errors %}
+                    <ul class="errors">
+                        {% for error in form.address.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- address controls class end below-->
+                </div>
+
+            <!-- address control-group end below-->
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>City <font color="#C43F2C">*</font></h4></label><br>
+                    {{ form.city(id='ecity',class='form-control required ',value=events.city, autocomplete=True )}}
+                    {% if form.city.errors %}
+                    <ul class="errors">
+                        {% for error in form.city.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- city controls class end below-->
+                </div>
+
+            <!-- venue control-group end below-->
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>State <font color="#C43F2C">*</font></h4></label><br>
+                    {{ form.state(id='estate',class='form-control required ',value=events.state, autocomplete=True )}}
+                    {% if form.state.errors %}
+                    <ul class="errors">
+                        {% for error in form.state.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- state controls class end below-->
+                </div>
+
+            <!-- state control-group end below-->
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>Country <font color="#C43F2C">*</font></h4></label><br>
+                    {{ form.country(id='ecountry',class='form-control required ',value=events.country, autocomplete=True )}}
+                    {% if form.country.errors %}
+                    <ul class="errors">
+                        {% for error in form.country.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- country controls class end below-->
+                </div>
+
+            <!-- Country control-group end below-->
+            </div>
+
+
+            <!-- Country selector end -->
+            
+
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>Postal Code <font color="#C43F2C">*</font></h4></label><br>
+                    {{ form.postal(id='epostal',class='form-control required ',value=events.postal, autocomplete=True )}}
+                    {% if form.postal.errors %}
+                    <ul class="errors">
+                        {% for error in form.postal.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- poastal code controls class end below-->
+                </div>
+
+
+            <!-- postal code control-group end below-->
+            </div>
+
+                <div class="control-group">
+                <div class="controls">
+                    <label><h4>Contact No <font color="#C43F2C">*</font></h4></label><br>
+                    {{ form.phone(id='ephone',class='form-control required ',value=events.phone, autocomplete=True )}}
+                    {% if form.phone.errors %}
+                    <ul class="errors">
+                        {% for error in form.phone.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- phone  controls class end below-->
+                </div>
+
+            <!-- phone  control-group end below-->
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <label><h4>Contact Email <font color="#C43F2C">*</font></h4></label><br>
+                    {{ form.eventEmail(id='eventEmail',class='form-control required ',value=events.event_email, autocomplete=True )}}
+                    {% if form.eventEmail.errors %}
+                    <ul class="errors">
+                        {% for error in form.eventEmail.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                <!-- eventEmail controls class end below-->
+                </div>
+
+            <!-- eventEmail control-group end below-->
+            </div>
+
+            <div class="control-group" >
+                <div class="controls">
+                    <label><h4>Access Type <font color="#C43F2C">*</font></h4></label><br>
+                    {{ form.access_type(id='eaccess',class='selectpicker  required show-tick', value=events.access, autocomplete=True, **{'data-live-search': 'true'} )}}
+                    {% if form.access_type.errors %}
+                    <ul class="errors">
+                        {% for error in form.access_type.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                <!-- poastal code controls class end below-->
+                </div>
+
+            <!-- postal code control-group end below-->
+            </div>
+
+            
+
+            <!-- class venue-form div ends below-->
+            </div>
+
+        <!-- venue information ends below-->
+        </div>
+
+
+    </form>
+    <!-- outer most span12 ends below -->    
+    </div>
+
+<!-- container ends below -->
+</div>
+
+
+{% block tail_script %}
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-buttons.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/additional-methods.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-select.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-switch.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-typeahead.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap-fileupload.js') }}"></script>
+
+<script type="text/javascript">
+ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+ // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+
+// Enabling Select Picker custom select fields from Bootstrap
+
+$('.selectpicker').selectpicker();
+
+
+/* datepicker validation here from  "" http://www.eyecon.ro/bootstrap-datepicker/ ""  */
+
+/* start/initiate the date picker using jquery command 
+" $('id/classOfElement').datepicker() ; " */
+var nowTemp = new Date();
+var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+ 
+var checkin = $('#start_date').datepicker({
+  onRender: function(date) {
+    return date.valueOf() < now.valueOf() ? 'disabled' : '';
+  }
+}).on('changeDate', function(ev) {
+  if (ev.date.valueOf() > checkout.date.valueOf()) {
+    var newDate = new Date(ev.date)
+    newDate.setDate(newDate.getDate() + 1);
+    checkout.setValue(newDate);
+  }
+  checkin.hide();
+  $('#end_date')[0].focus();
+}).data('datepicker');
+var checkout = $('#end_date').datepicker({
+  onRender: function(date) {
+    return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+  }
+}).on('changeDate', function(ev) {
+  checkout.hide();
+}).data('datepicker');
+
+/* date picker validation ends*/
+
+$(document).ready(function () {
+
+
+$('.dpkr').datepicker(); 
+
+
+$('#edit_eventform').validate({
+    rules: {
+        
+        
+    },
+    highlight: function (element) {
+        $(element).parent().css('border-color','red');
+        $(element).text('Please type some post').closest('.control-group').removeClass('success').addClass('error');
+        
+    },
+    success: function (element) {
+        element.text('').addClass('valid')
+            .closest('.control-group').removeClass('error').addClass('success');
+    }
+
+    
+});
+
+/*$('#event_submit')
+    .click(function () {
+        var btn = $(this)
+        btn.button('loading')
+        setTimeout(function () {
+            btn.button('reset')
+        }, 5000)
+    });*/
+
+
+    
+
+});
+
+
+
+
+
+
+
+</script>
+
+{% endblock %}
+
 
 {% endblock %}

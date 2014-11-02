@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 <html xmlns:fb="http://ogp.me/ns/fb#">
-{% block title %} Event Profile | Eventus {% endblock %}
+{% block title %} Event Profile | Eventfor.us {% endblock %}
 
 {% block style_block %}
   	
@@ -95,7 +95,9 @@
       </a>
       <ul class="dropdown-menu">
         <!-- dropdown menu links -->
-        <li><a href="">Edit Event</a></li>
+        <li><a href="{{  url_for('event_settings', ename=ename, eid=eid)}}">Edit Event</a></li>
+        
+        <li><a href="{{  url_for('delete_event', ename=ename, eid=eid)}}">Delete Event</a></li> <!-- delete event -->
         <!-- <li><a href="">Add or Invite user</a></li> -->
         {% if events.event_type == "Team Event" %}
           <li><a href="">Add SubEvent</a></li>
@@ -175,24 +177,8 @@
 <div class="row">
 	
   
-		<div class="span3">
-
-					<div class="">
-
-			        <!-- {% if events.event_type == 'Team Event' %}
-              <a class="btn btn-info btn-block" href="{{ url_for('RegisterTeam', ename=ename,eid=eid )}}" >Register Your Team</a>
-              
-			        <a class="btn btn-info btn-block" href="" >Team Settings</a>
-			        
-			        {% endif %}
-              {% if events.creator_id == current_user.id %}
-			        
-              {% endif %} -->
-			        <!-- well end -->
-		      </div>
-          <!-- span3 for buttons end -->
-	  </div>
-    <div class="span2">
+		
+    <div class="span3">
       <div class="">
         <h4>Event Duration</h4>
         <label> From : {{events.sdate}} </label> 
@@ -201,7 +187,7 @@
       </div>
 
     </div>
-    <div class="span3">
+    <div class="span4">
       <div class="">
         <h4>Contact Information</h4>
         Phone : {{events.phone}}<br>
@@ -213,7 +199,7 @@
 
 
 
-  <div class="span3">
+  <div class="span4">
     <h4>Venue</h4>  
 
       <div class="venue "> <a target = "blank" href="https://maps.google.co.in/maps?q={{events.address}}, {{events.city}}, {{events.postal}}, {{events.country}}">

@@ -94,6 +94,28 @@ class UserSettingsForm(wtf.Form):
     facebookId = wtf.html5.URLField('Facebook')
     twitterId = wtf.html5.URLField('Twitter')
 
+class EditEventForm(wtf.Form):
+    name = wtf.TextField('Name', validators=[validators.Required()])
+    logo = wtf.FileField('logo')
+    #creator = wtf.TextField('creator', validators=[validators.Required()])
+    # manager = wtf.TextField('manager', default='')
+    event_url = wtf.html5.URLField('URL')
+    facebook_url =  wtf.html5.URLField('URL')
+    twitter_url  = wtf.html5.URLField('URL')
+    youtubevideo_url = wtf.html5.URLField('URL')
+    description = wtf.TextAreaField('Description',default='')
+    venue = wtf.TextField('Where', validators=[validators.Required()])
+    address = wtf.TextField('Address', validators=[validators.Required()])
+    city = wtf.TextField('City', validators=[validators.Required()])
+    state = wtf.TextField('State', validators=[validators.Required()])
+    country = wtf.TextField('Country',  validators=[validators.Required()])
+    postal = wtf.TextField("Postal Code")
+    phone = wtf.IntegerField('Phone')
+    eventEmail =  wtf.html5.EmailField('Email')
+    sdate= wtf.TextField('From')
+    edate= wtf.TextField('To')
+    access_type = wtf.SelectField('Access Type', choices=[('Public','Public'), ('Private','Private') ], validators=[validators.Required()])
+
 
 
 class CreatePost(wtf.Form):

@@ -27,11 +27,10 @@
 {% endblock %}
 
 {% block content %}
-    <div class="span3">
-    </div>
     
     
-    <div class="span4">
+    
+    <div class="span12">
     <h2>Settings</h2>
 	<form id="usersettings_form" action="{{ url_for('user_profile_settings', name=g.user.name, uid=g.user.id) }}" method="post">
         <fieldset>
@@ -44,7 +43,7 @@
                   <div class="controls">
                         {{ userSettings.location.label }}
                         
-                        {{ userSettings.location(id='location',class='form-control required ',placeholder="Where you live", autocomplete=True )}}
+                        {{ userSettings.location(id='location',class='span6 form-control ',placeholder="Where you live", autocomplete=True , value=user.location)}}
                         {% if userSettings.location.errors %}
                         <ul class="errors">
                             {% for error in userSettings.location.errors %}
@@ -62,7 +61,7 @@
                   <div class="controls">
                         {{ userSettings.about.label }}
                         
-                        {{ userSettings.about(id='about',class='form-control required ',placeholder="Say something about you", autocomplete=True )}}
+                        {{ userSettings.about(id='about',class='span6 form-control',placeholder="Say something about you", value=user.about_me, autocomplete=True )}}
                         {% if userSettings.about.errors %}
                         <ul class="errors">
                             {% for error in userSettings.about.errors %}
@@ -84,7 +83,7 @@
                   <div class="controls">
                         {{ userSettings.google_plusId.label }}
                         
-                        {{ userSettings.google_plusId(id='gplus',class='form-control required ',placeholder="Your Google + Profile URL", autocomplete=True )}}
+                        {{ userSettings.google_plusId(id='gplus',class='span6 form-control',placeholder="Your Google + Profile URL", value=user.googleplus_id,autocomplete=True )}}
                         {% if userSettings.google_plusId.errors %}
                         <ul class="errors">
                             {% for error in userSettings.google_plusId.errors %}
@@ -101,7 +100,7 @@
                   <div class="controls">
                         {{ userSettings.facebookId.label }}
                         
-                        {{ userSettings.facebookId(id='facebook',class='form-control required ',placeholder="Your Facebook Profile URL", autocomplete=True )}}
+                        {{ userSettings.facebookId(id='facebook',class='span6 form-control',placeholder="Your Facebook Profile URL", value=user.facebook_id ,autocomplete=True )}}
                         {% if userSettings.facebookId.errors %}
                         <ul class="errors">
                             {% for error in userSettings.facebookId.errors %}
@@ -118,7 +117,7 @@
                   <div class="controls">
                         {{ userSettings.twitterId.label }}
                         
-                        {{ userSettings.twitterId(id='twitter',class='form-control required ',placeholder="Your Twitter Profile URL", autocomplete=True )}}
+                        {{ userSettings.twitterId(id='twitter',class='span6 form-control',placeholder="Your Twitter Profile URL", value=user.twitter_id,autocomplete=True )}}
                         {% if userSettings.twitterId.errors %}
                         <ul class="errors">
                             {% for error in userSettings.twitterId.errors %}
@@ -132,17 +131,14 @@
         </div>
         </div>
         <br><br>
-        <center>
-        <div class="form-actions">
         <button id="usersettings" class="btn btn-primary" type="submit">Save Changes</button>
-        </div>
-        </center>
+        
+        
 
     </fieldset>
 </form>
 </div>
-<div class="span5">
-</div>
+
 
 {% block tail_script %}
 <script src="{{ url_for('static', filename='bootstrap/js/jquery.validate.js') }}"></script>
