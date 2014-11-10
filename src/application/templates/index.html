@@ -1,5 +1,6 @@
-<title>Eventus | Events Never been so Interesting</title>
 {% extends "base_index.html" %}
+{% import 'macro/error.html' as forms %}
+{% block title %} Eventus | Events Never been so Interesting {% endblock %}
 {% block style_block %}
   
   <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
