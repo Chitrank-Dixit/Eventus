@@ -18,6 +18,10 @@
         @media screen and (max-width: 768px) {
         body { padding-top: 0px; }
         }
+
+        
+
+
     </style>
 
 
@@ -86,7 +90,7 @@
     <!--  library for parsing and manipulating dates -->
     <script src="{{ url_for('static', filename = 'bootstrap/js/moment.min.js') }}"></script>
     
-    
+    <script  type="text/javascript" src="{{ url_for('static', filename = 'bootstrap/js/typeahead.bundle.js') }}"></script>
     
 
 
@@ -98,52 +102,11 @@
     {% block tail_script %}
     <script type="text/javascript">
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-    /*
-    var ExampleViewModel = function () {
-                var self = this;
+    
 
-                
-
-                self.jsFrameworks = ko.observableArray([
-                        'Angular',
-                        'Canjs',
-                        'Batman',
-                        'Meteor',
-                        'Ember',
-                        'Backbone',
-                        'Knockout',
-                        'Knockback',
-                        'Spine',
-                        'Sammy',
-                        'YUI',
-                        'Closure',
-                        'jQuery'
-                    ]);
-
-                
-                /*
-                self.frameworkToAdd = ko.observable("");
-                self.addFramework = function() {
-                    self.jsFrameworks.push(self.frameworkToAdd());
-                };
-
-                self.removeFramework = function(framework) {
-                    self.jsFrameworks.remove(framework);
-                };
-
-                */
-           /* };
-
-            $(function(){
-                
-
-                var viewModel = new ExampleViewModel();
-
-                ko.applyBindings(viewModel);
-            });
-    */
-    </script>
-
+</script>
+    
+    
 
     {% endblock %}
     {{ profiler_includes|safe }}
