@@ -146,9 +146,10 @@ function EventsViewModel() {
     };
   
     self.refresh();
-    while(true){
-      setTimeout(self.refresh, 1 * 60 * 1000);
-    }
+    // setTimeout(self.refresh, 1 * 60 * 1000); It would work on the page just once
+    // setInterval(self.refresh, 1 * 60 * 1000); work multiple times
+    setInterval(self.refresh, 7000);
+    
     
 
     
