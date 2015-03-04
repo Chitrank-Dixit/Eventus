@@ -1,4 +1,4 @@
-{% extends "base_index.html" %}
+{% extends "base.html" %}
 {% import 'macro/error.html' as forms %}
 {% block title %} Eventus | Events Never been so Interesting {% endblock %}
 {% block style_block %}
@@ -34,7 +34,7 @@
 
 
       <!-- Full Page Image Header Area -->
-          <!-- <div id="top" class="header">
+           <div id="top" class="header">
             <div class="vert-text">
               <div class="span12">
                 <div class="span3"></div>
@@ -45,16 +45,17 @@
               <h3 style ="color:purple;background-color:"><em>We</em> Help To make Great Events, <em>You'll</em> Make Them Better</h3>
               <center>
                 {% if g.user.is_authenticated() %}    
-                  Welcome
+                  Welcome 
+                  <a href="/events" class="btn btn-primary btn-lg">Go to your event</a>
                 {% else %}
                 <p><a href="/help" class="btn btn-default btn-lg" role="button">Learn more &raquo;</a> <a href="{{ url_for('signin') }}" class="btn btn-success btn-lg" role="button">Sign in &raquo;</a></p>
                 {% endif %}
               </center>
-              <a href="/events" class="btn btn-primary btn-lg">Go to your event</a>
+              
             </div>
             </div>
             </div>
-          </div> -->
+          </div> 
           <!-- /Full Page Image Header Area -->
       
         
@@ -69,7 +70,7 @@
 
 
        <!-- Intro -->
-          <!-- <div id="about" class="intro">
+          <div id="about" class="intro">
             <div class="container">
           
               <div class="row">
@@ -81,11 +82,11 @@
             
               </div>
             </div>
-          </div> -->
+          </div> 
           <!-- /Intro -->
         
           <!-- Services -->
-          <!-- <div id="services" class="services">
+          <div id="services" class="services">
             <div class="container">
           <div class"span12">
               <div class="row">
@@ -127,21 +128,22 @@
               </div>
             </div>
             </div>
-          </div> -->
+          </div> 
           <!-- /Services -->
 
           <!-- Callout -->
-          <!-- <div class="callout">
+          <div class="callout">
             <div class="vert-text">
+              <center>
               <h1>Enjoy the awesomeness of the Events</h1>
               <h4>Get connected to every one in the events</h4>
-              
+              </center>
             </div>
-          </div> -->
+          </div> 
           <!-- /Callout -->
 
           <!-- Portfolio -->
-          <!-- <div id="portfolio" class="portfolio">
+          <div id="portfolio" class="portfolio">
             <div class="container">
           <div class="span12">
               <div class="row">
@@ -170,16 +172,16 @@
               </div>
             </div>
             </div>
-          </div> -->
+          </div> 
           <!-- /Portfolio -->
 
            <!-- Callout1 -->
-          <!-- <div class="callout1">
+          <div class="callout1">
             <div class="vert-text">
               
               
             </div>
-          </div>  -->
+          </div>  
           <!-- /Callout1 -->
 
     
@@ -187,7 +189,7 @@
 		  
 		<!-- Add any content here like intro video , testimonials , how to use Help doc links, Support , who is using ETC -->		
 		      
-      <!-- </div> -->
+      </div>
 
       
 

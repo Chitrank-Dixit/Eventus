@@ -84,6 +84,7 @@ class User(Base, modelx.UserX):
   location = ndb.StringProperty()
   email = ndb.StringProperty(default='')
   password = ndb.StringProperty(default='')
+  rep_password = ndb.StringProperty(default='')
   confirm = ndb.StringProperty(default='')
 
   active = ndb.BooleanProperty(default=True)

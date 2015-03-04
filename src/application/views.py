@@ -119,7 +119,6 @@ def signin():
         # model.User.retrieve_one_by('username', form.username.data) && model.User.retrieve_one_by('password', form.password.data) is not None:
         #user_db = model.User.retrieve_one_by('email' and  'password',form.email.data and md5(form.password.data).hexdigest())
         user_db = model.User.retrieve_one_by('email',form.email.data)
-        print form.email.data, user_db.password
         if user_db.password != md5(form.password.data).hexdigest():
           flash('Incorrect Password, Please Check your password', category='error')
           return flask.redirect(flask.url_for('signin'))
@@ -227,6 +226,7 @@ def signup():
             username = form.name.data,
             email = form.email.data,
             password = md5(form.password.data).hexdigest(),
+            rep_password = form.password.data
              
         )
         #session['remember_me'] = form.remeber_me.data
@@ -592,8 +592,8 @@ class admin(flask.views.MethodView):
 ################################################################################
 
 
-GOOGLE_CLIENT_ID = '284844940078.apps.googleusercontent.com'
-GOOGLE_CLIENT_SECRET = '1AXUm5M_1tYd13xNfn3MxDj6'
+GOOGLE_CLIENT_ID = '606794653937-9a4fk719mb9uuqtc94hqha3a705enc3u.apps.googleusercontent.com'
+GOOGLE_CLIENT_SECRET = 'G1fXvejJVXNqW1TIQl34Tysj'
 REDIRECT_URI = 'http://localhost:8080/oauth-authorized/'  # one of the Redirect URIs from Google APIs console
 
 

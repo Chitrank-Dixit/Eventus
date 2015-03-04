@@ -162,7 +162,7 @@
             	<div class="span1">
                 <br>
                 <img src="{{ follower.follower_avatar.string_id() }}" class='img-circle' /><br>
-                <a href="/user/{{ follower.follower_name.string_id() }}/{{ follower.follower_id }}" class="btn btn-link">{{ follower.follower_name.string_id() }}</a></div>
+                <a href="/user/{{ follower.follower_name.string_id() }}/{{ follower.follower_id }}" class="btn btn-link"><font color="blue">{{ follower.follower_name.string_id() }}</font></a></div>
 
             {% endif %}
           {% endfor %}
@@ -179,7 +179,7 @@
                 <br>
 
                 <img src="{{ follower.followed_avatar.string_id() }}" class='img-circle' /><br>
-                <a href="/user/{{ follower.followed_name.string_id() }}/{{ follower.followed_id }}" class="btn btn-link">{{ follower.followed_name.string_id() }}</a></div>
+                <a href="/user/{{ follower.followed_name.string_id() }}/{{ follower.followed_id }}" class="btn btn-link"><font color="blue">{{ follower.followed_name.string_id() }}</font></a></div>
             {% endif %}
           {% endfor %}
   				
