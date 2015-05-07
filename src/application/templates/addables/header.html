@@ -11,9 +11,10 @@
            <a class="brand" href="/">EventFor.us</a>
            <div class="nav-collapse collapse">
               <ul class="nav pull-left">
-                <form>
-                <div class="navbar-search" id="multiple-datasets">
-                  <input type="search" id="ms" class="typeahead span2 search-query" x-webkit-speech placeholder="search events" /> 
+                <form name="search_events" action="{{ url_for('search_results') }}" method="post">
+                <div class="navbar-search">
+                  <input type="search" id="ms" class="" x-webkit-speech placeholder="search events" /> 
+                  <!--  -->
                 </div>
                 
               </form>

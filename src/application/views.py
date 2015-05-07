@@ -63,7 +63,7 @@ from hashlib import md5
 import util
 import model
 import config
-from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm, TeamRegisterForm, InviteUserForm, UserSettingsForm, ForgotPassword, ChangePassword, EditEventForm
+from forms import SignupForm, SigninForm, CreateEventForm , CreatePost , MessageForm, CommentForm, TeamRegisterForm, InviteUserForm, UserSettingsForm, ForgotPassword, ChangePassword, EditEventForm, SearchEventsForm
 # Google API python Oauth 2.0
 import httplib2
 
@@ -1058,6 +1058,59 @@ def pop_all_events():
     events.append(first)
     first = {}
   return jsonify(events = events)
+
+
+# @app.route('/search_results/', methods=['GET'])
+# def search_results():
+#   form=SigninForm(request.form)
+#   events = []
+#   if form.validate_on_submit() and request.method == 'GET':
+#     events_data = model.Event.query()
+#     events_data = events_data.filter(model.Event.access == "Public")
+#     events_data = events_data.order(-model.Event.created)
+#     events_store = events_data.fetch()
+#     first = {}
+#     for event in events_store:
+#       first['eventname'] = event.name
+#       first['eventid'] = event.key.id()
+#       first['description'] = event.description
+#       first['avatar'] = event.avatar.string_id()
+#       first['creator'] =  event.creator.string_id()
+#       first['creator_id'] =  event.creator_id
+#       events.append(first)
+#       first = {}
+#     return jsonify
+#   return render_template('search_events.html', events = events)
+
+search_query = ''
+@app.route('/search_results/', methods=['POST','GET'])
+def search_results():
+  # print request.form['livesearch']
+  return render_template('search_events.html')
+
+@app.route('/jsonified_search/', methods=['GET','POST'])
+def jsonified_search():
+  # print "In JR"
+  # form=SearchEventsForm(request.form)
+  # print request.form['ms'];
+  events = []
+  # if request.method == 'POST':
+  events_data = model.Event.query()
+  events_data = events_data.filter(model.Event.access == "Public")
+  events_data = events_data.order(-model.Event.created)
+  events_store = events_data.fetch()
+  first = {}
+  for event in events_store:
+    first['eventname'] = event.name
+    first['eventid'] = event.key.id()
+    first['description'] = event.description
+    first['avatar'] = event.avatar.string_id()
+    first['creator'] =  event.creator.string_id()
+    first['creator_id'] =  event.creator_id
+    events.append(first)
+    first = {}
+  # print events
+  return jsonify(events=events)
 
 
 

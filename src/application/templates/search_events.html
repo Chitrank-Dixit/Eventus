@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% block title %} Search Results | Eventfor.us {% endblock %}
+<meta http-equiv="refresh" content="60">
+{% block style_block %}
+
+   <style type="text/css">
+    .background {
+       background-color: #F3F3F3;
+      }
+
+    .outer {
+       border-width: 2px solid;
+    }
+  
+  </style>
+{% endblock %}
+
+{% block head_script %}
+<!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-52496891-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <!-- End Google Analytics -->
+{% endblock %}
+
+{% block content %}
+<div class="row">
+<div class="span9">
+
+<ul id="refreshResults" data-bind="foreach: events, visible: events().length > 0">
+            
+    <div class="well">
+    <div class="panel-heading">
+     <h3 class="panel-title"><a data-bind="attr:{ href:  '/events/' + eventname() + '/' + eventid() + '/' }"><p data-bind="text: eventname"></p></a></h3>
+    </div>
+    <div class="panel-body">
+        <p data-bind="text: description"></p><br><br>
+    </div>
+    <div class="panel-footer">
+      <a data-bind="attr:{ href:  '/user/' + creator() + '/' + creator_id() + '/' }">
+                  <img class="img-circle" data-bind="attr:{src: avatar}" /><br>
+                  <p data-bind="text: creator"></p></a>
+    </div>
+    </div>
+</ul>
+    
+
+
+
+</ul>
+</div>
+
+<div class="span3">
+  <!-- Flipkart Widget -->
+  <iframe src='http://www.flipkart.com/affiliate/displayWidget?affrid=WRID-141386787336469970' frameborder=0 height=250 width=300></iframe>
+  <br>
+  <br>
+  <!-- Amazon Widget -->
+  <script charset="utf-8" type="text/javascript">
+  amzn_assoc_ad_type = "responsive_search_widget";
+  amzn_assoc_tracking_id = "httptrackleec-21";
+  amzn_assoc_link_id = "WMEY2VLKVSN5LVIS";
+  amzn_assoc_marketplace = "amazon";
+  amzn_assoc_region = "IN";
+  amzn_assoc_placement = "";
+  amzn_assoc_search_type = "search_widget";
+  amzn_assoc_width = "auto";
+  amzn_assoc_height = "auto";
+  amzn_assoc_default_search_category = "";
+  amzn_assoc_default_search_key = "xperia";
+  amzn_assoc_theme = "light";
+  amzn_assoc_bg_color = "ffffff";
+  </script>
+  <script src="//z-in.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&Operation=GetScript&ID=OneJS&WS=1&MarketPlace=IN"></script>
+</div>
+</div>
+{% block tail_script %}
+<script type="text/javascript">
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+// bootstrap editable inline mode
+
+
+
+// Knockoutjs Comment Code
+
+function Event(data) {
+    console.log(data.eventname);
+    this.eventname = ko.observable(data.eventname);
+    this.eventid = ko.observable(data.eventid);
+    this.description = ko.observable(data.description);
+    this.avatar = ko.observable(data.avatar);
+    this.creator = ko.observable(data.creator);
+    this.creator_id = ko.observable(data.creator_id);
+ 
+}
+
+
+function EventsViewModel() {
+    var self = this;
+    self.events = ko.observableArray([]);
+    
+    $.getJSON("{{ url_for('jsonified_search') }}", function(eventModels) {
+        var t = $.map(eventModels.events, function(item) {
+            console.log("Hii",item);
+            return new Event(item);
+            
+        });
+        self.events(t);
+
+    });
+
+    setInterval(function(){ 
+     $.ajax({
+     type:"POST",
+     data:"Time="+ date,     
+     url:"serverRef",
+     success: function(data){
+         // On success 
+                           }
+     });              
+
+     },60000);
+    
+    self.refresh = function() {
+        return $.getJSON("{{ url_for('jsonified_search') }}", function(eventModels) {
+        var t = $.map(eventModels.events, function(item) {
+            return new Event(item);
+            console.log(item);
+        });
+        self.events(t);
+
+      });
+    };
+  
+    self.refresh();
+    // setTimeout(self.refresh, 1 * 60 * 1000); It would work on the page just once
+    // setInterval(self.refresh, 1 * 60 * 1000); work multiple times
+    setInterval(self.refresh, 7000);
+    
+    
+
+    
+
+
+}
+
+
+
+
+
+// Activates knockout.js
+ko.applyBindings(new EventsViewModel());
+
+
+
+
+/*var limit="0:30"
+if (document.images){
+var parselimit=limit.split(":")
+parselimit=parselimit[0]*60+parselimit[1]*1
+}
+function beginrefresh(){
+if (!document.images)
+return
+if (parselimit==1)
+window.location.reload()
+else{ 
+parselimit-=1
+curmin=Math.floor(parselimit/60)
+cursec=parselimit%60
+if (curmin!=0)
+curtime=curmin+" minutes and "+cursec+" seconds left until page refresh!"
+else
+curtime=cursec+" seconds left until page refresh!"
+window.status=curtime
+setTimeout("beginrefresh()",200)
+ }
+  }
+
+ window.onload=beginrefresh
+*/
+
+
+
+
+</script>
+{% endblock %}
+
+
+{% endblock %}

@@ -143,6 +143,10 @@ class TeamRegisterForm(wtf.Form):
     description= wtf.TextAreaField('Team Description')
     teamVideoURL = wtf.html5.URLField('Team Video URL')
     captain = wtf.TextField('Captain')
+
+
+class SearchEventsForm(wtf.Form):
+    ms = wtf.TextField('Event Name')
 '''     
 No need to make a model that is already made
 
