@@ -13,6 +13,7 @@
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap_flatly.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='bootstrap/font-awesome/css/font-awesome.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-responsive.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='bootstrap/css/magicsuggest.css') }}" rel="stylesheet">
         <!-- Bootstrap theme -->
     <style type="text/css">
         body { padding-top: 80px;}
@@ -89,9 +90,12 @@
     <!--  library for parsing and manipulating dates -->
     <script src="{{ url_for('static', filename = 'bootstrap/js/moment.min.js') }}"></script>
     
-    <script  type="text/javascript" src="{{ url_for('static', filename = 'bootstrap/js/typeahead.bundle.js') }}"></script>
     
-
+    
+    <script src="{{ url_for('static', filename = 'bootstrap/js/magicsuggest-min.js') }}"></script>
+    
+    <script src="{{ url_for('static', filename = 'bootstrap/js/search-events.js') }}"></script>
+    
 
     
     
@@ -102,6 +106,44 @@
     <script type="text/javascript">
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     
+    $(document).ready(function(){
+    $('input.typeahead').typeahead({
+        name: 'typeahead',
+        remote:'{{ url_for("pop_all_events1") }}',
+        limit : 10
+        });
+
+    $.ajax({
+        dataType: "json",
+        url: '{{ url_for("pop_all_events1") }}',
+        data: data,
+        success: success
+    });
+    
+    });
+
+    var ViewModel = function() {
+    //....
+    //...
+    self.jsFrameworks = ko.observableArray([
+            'Angular',
+            'Canjs',
+            'Batman',
+            
+        ]);
+ 
+    self.frameworkToAdd = ko.observable("");
+    /*self.addFramework = function() {
+        self.jsFrameworks.push(self.frameworkToAdd());
+    };
+ 
+    self.removeFramework = function(framework) {
+        self.jsFrameworks.remove(framework);
+    };*/
+    
+};
+
+ViewModel();
 
 </script>
     

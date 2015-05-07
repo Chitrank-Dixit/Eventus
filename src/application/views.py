@@ -34,7 +34,7 @@ import json
 import random
 import string, time
 from apiclient.discovery import build
-from flask import make_response, request, render_template, flash, url_for, redirect, session,g, jsonify
+from flask import make_response, request, render_template, flash, url_for, redirect, session,g, jsonify, Response
 # from flask.ext import 
 import flask,flask.views
 # from flask_cache import Cache
@@ -82,7 +82,7 @@ from flaskext.kvsession import KVSessionExtension
 # message = mail.InboundEmailMessage(request.body)
 app.permanent_session_lifetime = timedelta(minutes=5)
 
-
+print "Requests_version",requests.__version__
 
 
 @login_manager.user_loader
@@ -909,6 +909,8 @@ def crop_youtube_url(url):
 
 #################################################################
 # Create an Event
+# Delete an Event
+# Live search AJAX
 # Trending Events
 # Event Profile
 # new comments
@@ -967,10 +969,10 @@ def create_event():
       event_name =  form.name.data
       try:
         record = event.put()
-        print "records is:------",record
+        # print "records is:------",record
         eid=record.integer_id()
         event_key = ndb.Key(model.Event, eid)
-        print "Key is:",event_key 
+        # print "Key is:",event_key 
         time.sleep(4)
         #signup_id = .key.id()
         #msg = Message("Welcome to Eventus <br><br> You have successfully registered to Eventus, Please note down your credentials <br><br> Username: %s <br> Password: %s"  % form.username.data % form.password.data,sender=config.ADMINS[0],recipients=[form.email.data])
@@ -1013,7 +1015,25 @@ def delete_event(ename, eid):
   else:
     return redirect(url_for('signin'))
 
-  
+
+@app.route('/pop_events1/', methods=['POST','GET'])
+def pop_all_events1():
+  events_data = model.Event.query()
+  events_data = events_data.filter(model.Event.access == "Public")
+  events_data = events_data.order(-model.Event.created)
+  events_store = events_data.fetch()
+  first = {}; events = []
+  for event in events_store:
+    first['eventname'] = event.name
+    first['eventid'] = event.key.id()
+    first['description'] = event.description
+    first['avatar'] = event.avatar.string_id()
+    first['creator'] =  event.creator.string_id()
+    first['creator_id'] =  event.creator_id
+    events.append(first)
+    first = {}
+  return jsonify(events = events)
+
 
 @app.route('/events/', methods=['POST','GET'])
 def trending_events():
@@ -1047,8 +1067,8 @@ def event_profile(ename,eid):
 
     event_id = ndb.Key(model.Event, eid)
     event_name = ndb.Key(model.Event, ename)
-    print event_id
-    print "TESTING THINGS",eid
+    # print event_id
+    # print "TESTING THINGS",eid
     events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
     # events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
     # comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
