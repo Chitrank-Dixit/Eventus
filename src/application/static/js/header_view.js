@@ -1,36 +1,9 @@
-function ExampleViewModel() {
-                var self = this;
+function viewModel(){
+    this.myMessage=ko.observable('The next big thing'); // Initially blank
+    this.fullMessage = ko.computed(function() {
+        return "From: Chitrank Dixit " + this.myMessage();
+    }, this);
+}
 
-                
-
-                self.jsFrameworks = ko.observableArray([
-                        'Angular',
-                        'Canjs',
-                        'Batman',
-                        'Meteor',
-                        'Ember',
-                        'Backbone',
-                        'Knockout',
-                        'Knockback',
-                        'Spine',
-                        'Sammy',
-                        'YUI',
-                        'Closure',
-                        'jQuery'
-                    ]);
-
-                
-                
-                self.frameworkToAdd = ko.observable("");
-                self.addFramework = function() {
-                    self.jsFrameworks.push(self.frameworkToAdd());
-                };
-
-                self.removeFramework = function(framework) {
-                    self.jsFrameworks.remove(framework);
-                };
-
-                
-            };
 
             

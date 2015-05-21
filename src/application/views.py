@@ -115,7 +115,7 @@ def signin():
         user_is = model.User.query()
         usered = user_is.filter(model.User.email == form.email.data , model.User.password == md5(form.password.data).hexdigest())
         user_in = user_is.fetch()
-        print user_in
+        #print user_in
         # model.User.retrieve_one_by('username', form.username.data) && model.User.retrieve_one_by('password', form.password.data) is not None:
         #user_db = model.User.retrieve_one_by('email' and  'password',form.email.data and md5(form.password.data).hexdigest())
         user_db = model.User.retrieve_one_by('email',form.email.data)
@@ -143,9 +143,9 @@ def signin():
       userdata = userd2.fetch()
       for user in userdata:
         if user.password:
-          print user.key.id()
+          #print user.key.id()
           message = mail.EmailMessage(sender='admin@eventfor.us',subject="Eventfor.us: Password Recovery")
-          print message
+          #print message
           message.to=forgot_form.email.data
           message.body = """
           Dear %s:
@@ -312,10 +312,10 @@ def user_profile(name,uid):
 
     teamcomments = model.TeamComments.query(model.TeamComments.user_id == user_key)
 
-    print user_key
+    #print user_key
     
-    for res in user_in:
-      print res.name, res.id
+    #for res in user_in:
+      #print res.name, res.id
 
     
 
@@ -328,7 +328,7 @@ def user_profile(name,uid):
     userid = current_user.id
     user = model.User.retrieve_one_by('name' and 'key' , name and user_key )
     #userid_db = ndb.Key(model.User, user.id)
-    print "-----------++++",user
+    #print "-----------++++",user
     # if user.key.id() != euid:
       #flash('Invalid User', category='danger')
       #return redirect(url_for('index'))
@@ -397,7 +397,7 @@ def follow_unfollow(name,uid):
       cur_user = ndb.Key(model.Followers, current_user.name)
       to_follow = ndb.Key(model.Followers, user.name)
       model_ex = model.Followers.query()
-      print model_ex
+      #print model_ex
 
       for entry in model_ex:
         if entry.follower_name.string_id() == current_user.id and entry.followed_name.string_id() == user.id:
@@ -405,7 +405,7 @@ def follow_unfollow(name,uid):
           return redirect(url_for('user_profile',name = n, uid= ui))
 
 
-      print ui
+      #print ui
       follower_name = ndb.Key(model.User, current_user.name)
       followed_name = ndb.Key(model.User, user.name)
       follower_avatar = ndb.Key(model.User, current_user.avatar(80))
@@ -473,7 +473,7 @@ def follow_user(name,uid):
   model_ex = model.Followers.query()
   #site_en =  model.Followers.query(model.Followers.follower_id == (ndb.Key(model.Followers, current_user.name)), model.followed_id == ndb.Key(model.Followers, user.name)).fetch()
   #site_en = model_ex.filter(model.Followers.follower_id == cur_user, model.Followers.followed_id == to_follow)
-  print model_ex
+  #print model_ex
 
   for entry in model_ex:
     if entry.follower_name.string_id() == current_user.id and entry.followed_name.string_id() == user.id:
@@ -484,7 +484,7 @@ def follow_user(name,uid):
   #cur_user = ndb.Key(model.Followers, current_user.name)
   #to_follow = ndb.Key(model.Followers, user.name)
   #print cur_user.id() , to_follow.id()
-  print ui
+  #print ui
   #print "-----------He it oc------------",cur_user.string_id(), to_follow
   follower_name = ndb.Key(model.User, current_user.name)
   followed_name = ndb.Key(model.User, user.name)
@@ -537,7 +537,7 @@ def unfollow_user(name,uid):
 def user_notifications(name,uid):
   if 'username' in session:
     user_id = ndb.Key(model.User, current_user.id)
-    print user_id
+    #print user_id
     notify = model.EventInvites.query(model.EventInvites.invited_to == current_user.name, model.EventInvites.user_id == user_id)
     return render_template('notifications.html', notify=notify)
   else:
@@ -552,10 +552,10 @@ def user_profile_settings(name,uid):
     user_is = model.User.query(model.User.name == name , model.User.id == uid)
     uiid = ndb.Key(model.User, uid)
     user = model.User.retrieve_one_by('name' and 'key' ,name and uiid)
-    print "------", user
+    #print "------", user
     #
     if userSettings.validate_on_submit() and request.method == 'POST':
-      print "Scooby DOO"
+      #print "Scooby DOO"
       user.location = userSettings.location.data
       user.about_me = userSettings.about.data
       user.googleplus_id = userSettings.google_plusId.data
@@ -565,7 +565,7 @@ def user_profile_settings(name,uid):
       time.sleep(2)
       flash('Profile has been updated', category="info")
       return redirect(url_for('user_profile_settings', name=name, uid=uid))
-    print user, user_is
+    #print user, user_is
     userSettings.about.data = user.about_me
     return render_template('edit_profile.html', userSettings=userSettings, user_is =user_is, user = user)
   else:
@@ -1086,6 +1086,8 @@ search_query = ''
 @app.route('/search_results/', methods=['POST','GET'])
 def search_results():
   # print request.form['livesearch']
+  form = SearchEventsForm(request.form)
+  print form.ms.data
   return render_template('search_events.html')
 
 @app.route('/jsonified_search/', methods=['GET','POST'])
@@ -1356,8 +1358,8 @@ def Team_Profile(ename, eid, teamName , tid):
     event_name = ndb.Key(model.Event, ename)
     team_id = ndb.Key(model.TeamRegister, tid)
     team_name = ndb.Key(model.TeamRegister, teamName)
-    print event_id
-    print "TESTING THINGS",eid
+    #print event_id
+    #print "TESTING THINGS",eid
     events = model.Event.retrieve_one_by('name' and 'key', ename and event_id)
     # events = model.Event.query(model.Event.name == ename, model.Event.creator_id == eid)
     # comments_store = model.EventComments.query(model.EventComments.event_id == event_id)
@@ -1365,7 +1367,7 @@ def Team_Profile(ename, eid, teamName , tid):
 
     members = model.TeamMembers.query(model.TeamMembers.teamId == team_id)
 
-    print "All Teams", teams.teamName
+    #print "All Teams", teams.teamName
     user_id = ndb.Key(model.User, current_user.id)
     name = ndb.Key(model.User, current_user.name)
 

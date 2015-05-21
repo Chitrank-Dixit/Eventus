@@ -33,7 +33,7 @@
 {% block content %}
 <div class="row">
 <div class="span9">
-
+<div data-bind="with: EventsViewModel">
 <ul id="refreshResults" data-bind="foreach: events, visible: events().length > 0">
             
     <div class="well">
@@ -50,12 +50,18 @@
     </div>
     </div>
 </ul>
+</div>
     
-
+Today's message is: 
+<div data-bind="with: viewModel">
+<span id="agentJ" data-bind="text: fullMessage"></span>
+</div>
 
 
 </ul>
 </div>
+
+
 
 <div class="span3">
   <!-- Flipkart Widget -->
@@ -82,6 +88,7 @@
 </div>
 </div>
 {% block tail_script %}
+<script src="{{ url_for('static', filename = 'js/header_view.js') }}"></script>
 <script type="text/javascript">
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
@@ -89,7 +96,14 @@ $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
 
 $(document).ready(function () {
+    //initializing viewmodel
     
+    //binding for ko
+    
+    //bind event
+    /*$("#btnSearch").click({ handler: employeemodel.search });*/
+    //call search method
+    //employeemodel.search();
   
 
     
@@ -97,7 +111,7 @@ $(document).ready(function () {
 
 // Knockoutjs Comment Code
 
-function Event(data) {
+var Event= function(data) {
     console.log(data.eventname);
     this.eventname = ko.observable(data.eventname);
     this.eventid = ko.observable(data.eventid);
@@ -106,10 +120,10 @@ function Event(data) {
     this.creator = ko.observable(data.creator);
     this.creator_id = ko.observable(data.creator_id);
  
-}
+};
 
 
-function EventsViewModel() {
+var EventsViewModel= function() {
     var self = this;
     self.events = ko.observableArray([]);
     
@@ -155,14 +169,24 @@ function EventsViewModel() {
     
 
 
-}
+};
+
+
+/*function ViewModel(){
+    var self = this;
+
+    self.eventsViewModel = new EventsViewModel();
+    self.exampleViewModel = new 
+    ExampleViewModel()
+    
+}*/
 
 
 
+ko.applyBindings(new EventsViewModel(), document.getElementById('refreshResults'));
+ko.applyBindings(new viewModel(), document.getElementById('agentJ'));
 
 
-// Activates knockout.js
-ko.applyBindings(new EventsViewModel());
 
 
 
