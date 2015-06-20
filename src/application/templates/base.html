@@ -81,8 +81,11 @@
     
 
     <script src="{{ url_for('static', filename='bootstrap/js/jquery-1.9.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/jquery.ui.core.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/jquery.ui.widget.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/jquery.ui.autocomplete.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-2.2.2.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap/js/knockout-3.2.0.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/knockout-2.3.0.js') }}"></script>
     <!-- <script src="{{ url_for('static', filename='bootstrap/js/knockout-bootstrap.min.js') }}"></script> -->
     
     <script src="{{ url_for('static', filename='bootstrap/js/holder.js') }}"></script>
@@ -90,7 +93,7 @@
     <!--  library for parsing and manipulating dates -->
     <script src="{{ url_for('static', filename = 'bootstrap/js/moment.min.js') }}"></script>
     
-    <script src="{{ url_for('static', filename = 'bootstrap/js/knockout-bootstrap.min.js') }}"></script>
+    
     
     
     <script src="{{ url_for('static', filename = 'bootstrap/js/magicsuggest-min.js') }}"></script>
@@ -121,30 +124,9 @@
         success: success
     });
     
-    });
 
-    var ViewModel = function() {
-    //....
-    //...
-    self.jsFrameworks = ko.observableArray([
-            'Angular',
-            'Canjs',
-            'Batman',
-            
-        ]);
- 
-    self.frameworkToAdd = ko.observable("");
-    /*self.addFramework = function() {
-        self.jsFrameworks.push(self.frameworkToAdd());
-    };
- 
-    self.removeFramework = function(framework) {
-        self.jsFrameworks.remove(framework);
-    };*/
     
-};
-
-ViewModel();
+    
 
 </script>
     

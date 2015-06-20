@@ -1,31 +1,26 @@
-function SearchEvent(data) {
-    var self = this;
-    self.eventname = ko.observable(data.eventname);
-    self.eventid = ko.observable(data.eventid);
-    self.description = ko.observable(data.description);
-    self.avatar = ko.observable(data.avatar);
-    self.creator = ko.observable(data.creator);
-    self.creator_id = ko.observable(data.creator_id);
  
-}
+var searchViewModel = {
+  var self=this;
+  var users = [
+  { id: 'Jack', name: 'Jack Smith' },
+  { id: 'Jill', name: 'Jill Jones' },
+  { id: 'Jane', name: 'Jane Chung' }
+  ];
 
-
-function SearchEventsViewModel() {
-    var self = this;
-    self.events = ko.observableArray([]);
-    
-    $.getJSON("{{ url_for('pop_all_events') }}", function(eventModels) {
-        var t = $.map(eventModels.events, function(item) {
-            return new Event(item);
-            console.log(item);
-        });
-        self.events(t);
-
-    });
-
-     
-
-    
-
-
-}
+  self.users= ko.observableArray([]);
+  self.query= ko.observable('');
+ 
+  self.search= function(value) {
+    searchViewModel.users.removeAll();
+ 
+    if (value == '') return;
+ 
+    for (var user in users) {
+      if (users[user].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+        searchViewModel.users.push(users[user]);
+      }
+    }
+  };
+};
+ 
+searchViewModel.query.subscribe(searchViewModel.search);

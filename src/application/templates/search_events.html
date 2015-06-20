@@ -107,7 +107,7 @@ function EventsViewModel() {
     var self = this;
     self.events = ko.observableArray([]);
     
-    $.getJSON("{{ url_for('jsonified_search') }}", function(eventModels) {
+    $.getJSON("{{ url_for('jsonified_search', ename=name) }}", function(eventModels) {
         var t = $.map(eventModels.events, function(item) {
             console.log("Hii",item);
             return new Event(item);
@@ -130,7 +130,7 @@ function EventsViewModel() {
      },60000);
     
     self.refresh = function() {
-        return $.getJSON("{{ url_for('jsonified_search') }}", function(eventModels) {
+        return $.getJSON("{{ url_for('jsonified_search', ename=name) }}", function(eventModels) {
         var t = $.map(eventModels.events, function(item) {
             return new Event(item);
             console.log(item);

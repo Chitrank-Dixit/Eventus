@@ -1082,23 +1082,25 @@ def pop_all_events():
 #     return jsonify
 #   return render_template('search_events.html', events = events)
 
-search_query = ''
+
 @app.route('/search_results/', methods=['POST','GET'])
 def search_results():
   # print request.form['livesearch']
-  form = SearchEventsForm(request.form)
-  print form.ms.data
-  return render_template('search_events.html')
+  form = request.form['search_events']
+  events= model.Event.query(model.Event.access == "Public", model.Event.name == form)
+  print "Hello",form
+  name = form
+  return render_template('search_events.html', name= name)
 
-@app.route('/jsonified_search/', methods=['GET','POST'])
-def jsonified_search():
+@app.route('/jsonified_search/<ename>', methods=['GET','POST'])
+def jsonified_search(ename):
   # print "In JR"
   # form=SearchEventsForm(request.form)
   # print request.form['ms'];
   events = []
   # if request.method == 'POST':
   events_data = model.Event.query()
-  events_data = events_data.filter(model.Event.access == "Public")
+  events_data = events_data.filter(model.Event.access == "Public", model.Event.name==ename)
   events_data = events_data.order(-model.Event.created)
   events_store = events_data.fetch()
   first = {}
@@ -1111,7 +1113,6 @@ def jsonified_search():
     first['creator_id'] =  event.creator_id
     events.append(first)
     first = {}
-  # print events
   return jsonify(events=events)
 
 
@@ -1371,4 +1372,7 @@ def Team_Profile(ename, eid, teamName , tid):
     user_id = ndb.Key(model.User, current_user.id)
     name = ndb.Key(model.User, current_user.name)
 
-    
+
+@app.route('/testcrawler')
+def testcrawler():
+  return render_template("newtest.html")

@@ -15,3 +15,10 @@ indexes:
   - name: access
   - name: created
     direction: desc
+
+- kind: Event
+  properties:
+  - name: access
+  - name: name
+  - name: created
+    direction: desc

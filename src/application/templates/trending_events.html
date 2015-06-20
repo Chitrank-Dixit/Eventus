@@ -57,8 +57,20 @@ Today's message is:
 <span id="agentJ" data-bind="text: fullMessage"></span>
 </div>
 
+<div data-bind="with: SearchViewModel">
+<input id="searchko" type="text" data-bind="autoComplete: { selected: selectedOption, options: options }" />
 
-</ul>
+<!-- Debugging -->
+<p data-bind="text: selectedOption().object.name"></p>
+
+</div>
+
+
+
+
+
+
+
 </div>
 
 
@@ -89,13 +101,14 @@ Today's message is:
 </div>
 {% block tail_script %}
 <script src="{{ url_for('static', filename = 'js/header_view.js') }}"></script>
+<script src="{{ url_for('static', filename = 'js/ko_autocomplete.js') }}"></script>
 <script type="text/javascript">
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
 // bootstrap editable inline mode
 
 
-$(document).ready(function () {
+
     //initializing viewmodel
     
     //binding for ko
@@ -107,7 +120,7 @@ $(document).ready(function () {
   
 
     
-});
+
 
 // Knockoutjs Comment Code
 
@@ -181,11 +194,58 @@ var EventsViewModel= function() {
     
 }*/
 
+/*var masterVM = (function(){
+ this.viewModel1 = new EventsViewModel(),
+ this.viewModel2 = new viewModel(),
+ this.viewModel3 = new searchViewModel();
+})();
+
+ko.applyBindings(masterVM)*/
+
+ko.bindingHandlers.autoComplete = {
+    // Only using init event because the Jquery.UI.AutoComplete widget will take care of the update callbacks
+    init: function (element, valueAccessor, allBindings, SearchViewModel, bindingContext) {
+        // { selected: mySelectedOptionObservable, options: myArrayOfLabelValuePairs }
+        var settings = valueAccessor();
+
+        var selectedOption = settings.selected;
+        var options = settings.options;
+
+        var updateElementValueWithLabel = function (event, ui) {
+            // Stop the default behavior
+            event.preventDefault();
+
+            // Update the value of the html element with the label 
+            // of the activated option in the list (ui.item)
+            $(element).val(ui.item.label);
+
+            // Update our SelectedOption observable
+            if(typeof ui.item !== "undefined") {
+                // ui.item - label|value|...
+                selectedOption(ui.item);
+            }
+        };
+
+        $(element).autocomplete({
+            source: options,
+            select: function (event, ui) {
+                updateElementValueWithLabel(event, ui);
+            },
+            focus: function (event, ui) {
+                updateElementValueWithLabel(event, ui);
+            },
+            change: function (event, ui) {
+                updateElementValueWithLabel(event, ui);
+            }
+        });
+    }
+};
+
 
 
 ko.applyBindings(new EventsViewModel(), document.getElementById('refreshResults'));
 ko.applyBindings(new viewModel(), document.getElementById('agentJ'));
-
+ko.applyBindings(new SearchViewModel(), document.getElementById('searchko'));
 
 
 

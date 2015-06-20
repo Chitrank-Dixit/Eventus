@@ -146,7 +146,7 @@ class TeamRegisterForm(wtf.Form):
 
 
 class SearchEventsForm(wtf.Form):
-    ms = wtf.TextField('Event Name')
+    searchEvent = wtf.TextField('Event Name')
 '''     
 No need to make a model that is already made
 
